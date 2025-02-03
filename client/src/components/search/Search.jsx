@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom"; // Import search params hook
+import { useSearchParams } from "react-router-dom";
+import { motion } from "framer-motion";
 import Back from "../common/Back";
 import RecentCard from "../home/recent/RecentCard";
 import "../home/recent/recent.css";
@@ -11,9 +12,8 @@ import { FaSearch } from "react-icons/fa";
 
 const Search = () => {
   const { data, isError, isLoading } = useProperties();
-  const [searchParams] = useSearchParams(); // Get search parameters
+  const [searchParams] = useSearchParams();
 
-  // Extract query params
   const initialFilters = {
     location: searchParams.get("location") || "",
     country: searchParams.get("country") || "",
@@ -24,7 +24,6 @@ const Search = () => {
   const [filters, setFilters] = useState(initialFilters);
 
   useEffect(() => {
-    // Update filters when URL params change
     setFilters(initialFilters);
   }, [searchParams]);
 
@@ -35,47 +34,37 @@ const Search = () => {
 
   if (isError) {
     return (
-      <div className="wrapper">
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="wrapper">
         <span>Error while fetching data</span>
-      </div>
+      </motion.div>
     );
   }
 
   if (isLoading) {
     return (
-      <div className="wrapper flexCenter" style={{ height: "60vh" }}>
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="wrapper flexCenter" style={{ height: "60vh" }}>
         <PuffLoader height="80" width="80" radius={1} color="#27ae60" aria-label="puff-loading" />
-      </div>
+      </motion.div>
     );
   }
 
   const filteredProperties = data
-    .filter((property) =>
-      filters.location
-        ? property.city.toLowerCase().includes(filters.location.toLowerCase())
-        : true
-    )
-    .filter((property) =>
-      filters.country
-        ? property.country.toLowerCase().includes(filters.country.toLowerCase())
-        : true
-    )
-    .filter((property) =>
-      filters.propertyType ? property.type.toLowerCase().includes(filters.propertyType.toLowerCase()) : true
-    )
+    .filter((property) => (filters.location ? property.city.toLowerCase().includes(filters.location.toLowerCase()) : true))
+    .filter((property) => (filters.country ? property.country.toLowerCase().includes(filters.country.toLowerCase()) : true))
+    .filter((property) => (filters.propertyType ? property.type.toLowerCase().includes(filters.propertyType.toLowerCase()) : true))
     .filter((property) => {
-      if (!filters.priceRange) return true; // If no price range is set, include all properties
-      const inputPrice = parseInt(filters.priceRange, 10); // Convert input to a number
-      return property.price <= inputPrice; // Only include properties with price <= inputPrice
+      if (!filters.priceRange) return true;
+      const inputPrice = parseInt(filters.priceRange, 10);
+      return property.price <= inputPrice;
     });
 
   return (
-    <div>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
       <section className="blog-out mb">
         <Back name="Search Properties" title="Find Your Dream Property" cover={img} />
       </section>
       <div className="flexColCenter paddings properties-container">
-        <form className="flex search-filter filter-container">
+        <motion.form initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.5 }} className="flex search-filter filter-container">
           <div className="box">
             <span>City/Street</span>
             <input type="text" name="location" placeholder="Location" value={filters.location} onChange={handleInputChange} />
@@ -92,22 +81,23 @@ const Search = () => {
             <span>Price Range</span>
             <input type="number" name="priceRange" placeholder="Price Range" value={filters.priceRange} onChange={handleInputChange} />
           </div>
-          <div className="box">
-            <h4>Advance Filter</h4>
-          </div>
-          <button type="submit" className="btn1 search">
+          <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} type="submit" className="btn1 search">
             <FaSearch />
-          </button>
-        </form>
-        <div className="paddings flexCenter properties">
+          </motion.button>
+        </motion.form>
+        <motion.div className="paddings flexCenter properties" initial="hidden" animate="visible" variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.2 } } }}>
           {filteredProperties.length > 0 ? (
-            filteredProperties.map((card, i) => <RecentCard card={card} key={i} />)
+            filteredProperties.map((card, i) => (
+              <motion.div key={i} variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
+                <RecentCard card={card} />
+              </motion.div>
+            ))
           ) : (
             <p className="nothing">No properties match your criteria.</p>
           )}
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

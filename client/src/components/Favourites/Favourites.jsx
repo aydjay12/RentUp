@@ -2,9 +2,19 @@ import React, { useContext, useState } from "react";
 import SearchBar from "../../components/SearchBar/Searchbar";
 import useProperties from "../../hooks/useProperties";
 import { PuffLoader } from "react-spinners";
-import "../properties/properties.css";
+import "../Properties/Properties.css";
 import UserDetailContext from "../../context/UserDetailContext";
 import RecentCard from "../home/recent/RecentCard";
+import { motion } from "framer-motion";
+
+const listVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.1 },
+  }),
+};
 
 const Favourites = () => {
   const { data, isError, isLoading } = useProperties();
@@ -24,41 +34,30 @@ const Favourites = () => {
   if (isLoading) {
     return (
       <div className="wrapper flexCenter" style={{ height: "60vh" }}>
-        <PuffLoader
-          height="80"
-          width="80"
-          radius={1}
-          color="#4066ff"
-          aria-label="puff-loading"
-        />
+        <PuffLoader color="#4066ff" aria-label="puff-loading" />
       </div>
     );
   }
+
   return (
-    <div className="wrapper">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
       <div className="flexColCenter paddings innerWidth properties-container">
         <SearchBar filter={filter} setFilter={setFilter} />
-
-        <div className="paddings flexCenter properties">
-          {
-            data
-              .filter((property) => (favourites || []).includes(property.id))
-
-
-              .filter(
-                (property) =>
-                  property.title.toLowerCase().includes(filter.toLowerCase()) ||
-                  property.city.toLowerCase().includes(filter.toLowerCase()) ||
-                  property.country.toLowerCase().includes(filter.toLowerCase()) ||
-                  property.address.toLowerCase().includes(filter.toLowerCase())
-              )
-              .map((card, i) => (
-                <RecentCard card={card} key={i} />
-              ))
-          }
-        </div>
+        <motion.div className="paddings flexCenter properties">
+          {data
+            .filter((property) => (favourites || []).includes(property.id))
+            .filter((property) =>
+              [property.title, property.city, property.country, property.address]
+                .some((field) => field.toLowerCase().includes(filter.toLowerCase()))
+            )
+            .map((card, i) => (
+              <motion.div key={card.id} variants={listVariants} custom={i} initial="hidden" animate="visible">
+                <RecentCard card={card} />
+              </motion.div>
+            ))}
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

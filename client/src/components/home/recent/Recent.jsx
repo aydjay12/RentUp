@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion"; // Import framer-motion
 import Heading from "../../common/Heading";
 import "./recent.css";
 import RecentCard from "./RecentCard";
@@ -29,19 +30,33 @@ const Recent = () => {
       </div>
     );
   }
+
   return (
     <>
       <section className="recent">
         <div className="container">
-          <Heading
-            title="Recent Property Listed"
-            subtitle="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam."
-          />
-          <div className="recent-container">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true, amount: 0.5 }}
+          >
+            <Heading
+              title="Recent Property Listed"
+              subtitle="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam."
+            />
+          </motion.div>
+          <motion.div
+            className="recent-container"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            viewport={{ once: true, amount: 0.2 }}
+          >
             {data.slice(0, 6).map((card, i) => (
               <RecentCard key={i} card={card} />
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
     </>
