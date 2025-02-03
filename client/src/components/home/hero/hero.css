@@ -1,0 +1,98 @@
+.hero {
+  background-image: url("../../../../public/images/banner.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  min-height: 90vh;
+  width: 100%;
+}
+.hero .container {
+  padding-top: 15%;
+  padding-bottom: 7%;
+}
+.hero h1 {
+  color: #fff;
+  font-size: 60px;
+}
+.hero p {
+  color: #fff;
+  opacity: 0.8;
+}
+form {
+  background-color: #fff;
+  border-radius: 5px;
+  margin-top: 50px;
+  padding: 0 20px;
+  @media (max-width: 768px){
+    padding: 20px;
+  }
+}
+form input {
+  padding: 10px;
+  width: 100%;
+  border: 1px solid rgba(128, 128, 128, 0.2);
+  margin-top: 5px;
+  border-radius: 5px;
+}
+form span {
+  font-size: 14px;
+  color: grey;
+}
+input::placeholder {
+  font-size: 13px;
+  color: black;
+}
+form .box {
+  padding: 15px;
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+  border-left: 2px solid rgba(128, 128, 128, 0.2);
+  padding-bottom: 25px;
+}
+form .box:nth-child(1) {
+  border-left: none;
+}
+form .box:nth-child(4) {
+  border-left: none;
+}
+form .box:nth-child(3) {
+  border-right: 2px solid rgba(128, 128, 128, 0.2);
+  padding-right: 1.5em;
+  @media (max-width: 768px){
+    border-right: none;
+  }
+}
+form h4 {
+  font-weight: 500;
+  font-size: 0.9em;
+}
+.search{
+  display: flex !important;
+  align-items:center !important;
+  justify-content: center !important;
+  padding: .5em 2em;
+
+}
+@media screen and (max-width: 800px) {
+  .hero {
+    height: 120vh;
+  }
+  .hero .container {
+    padding-top: 25%;
+  }
+  form {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  form .box {
+    border-left: none;
+  }
+  form input {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 500px) {
+  .hero {
+    height: 140vh;
+  }
+}

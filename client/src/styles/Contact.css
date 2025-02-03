@@ -1,0 +1,233 @@
+.event_schedule {
+  width: 80%;
+  margin: auto;
+  margin-bottom: 4em;
+}
+
+.event_schedule hr {
+  background-color: black;
+  height: 0.3vh;
+  border-radius: 2em;
+  margin-bottom: 1em;
+  width: 100%;
+}
+
+.event_schedule section h2 {
+  margin-top: 2em;
+}
+
+.schedule_header {
+  font-size: 1em;
+  letter-spacing: 1em;
+  text-align: center;
+  margin-top: 2em;
+  line-height: 1.5em;
+}
+
+.schedule_head {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  border-radius: 2em;
+}
+
+.schedule_head section {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1.2em;
+}
+
+.schedule_head section h3 {
+  font-size: 0.6em;
+}
+
+.schedule_head section h1 {
+  font-size: 0.5em;
+}
+
+.schedule_body {
+  display: flex;
+  flex-direction: column;
+}
+
+.body_1 {
+  display: flex;
+  flex-direction: column;
+}
+
+.body_1 section {
+  display: flex;
+  justify-content: space-between;
+}
+
+.body_1 section h4 {
+  margin: 0;
+}
+
+.body_1 section h6 {
+  margin: 0;
+  padding: 0;
+}
+
+.body_1 section section {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0;
+}
+
+.body_1 section section h1 {
+  margin: 0;
+}
+
+.schedule_body h4 {
+  font-size: 0.5em;
+}
+
+.schedule_body h6 {
+  font-size: 0.5em;
+}
+
+.schedule_body h1 {
+  font-size: 0.6em;
+}
+
+.schedule_body p {
+  font-size: 0.5em;
+}
+.event_schedule {
+  width: 90%;
+}
+.day_1 {
+  width: 6%;
+}
+.day_2 {
+  width: 15%;
+}
+.day_3 {
+  width: 50%;
+}
+.day_4 {
+  width: 10%;
+}
+.body_1 section h4 {
+  width: 6%;
+}
+.body_1 section h6 {
+  width: 15%;
+}
+.body_1 section section {
+  width: 50%;
+}
+.body_1 section button {
+  width: 10%;
+  padding: 0;
+  background: blue;
+  color: white;
+  border-radius: 0.5em;
+  border: none;
+  height: 4em;
+  transition: 0.5s;
+  cursor: pointer;
+  font-weight: 600;
+  font-family: "Kumbh Sans";
+}
+.body_1 section button:hover {
+  background: rgb(235, 235, 235);
+  color: black;
+}
+@media (min-width: 400px) {
+  .body_1 section button {
+    font-size: 0.5em;
+  }
+
+  .schedule_head section h3 {
+    font-size: 0.5em;
+  }
+
+  .schedule_head section h1 {
+    font-size: 0.6em;
+  }
+
+  .schedule_head {
+    margin-top: 0;
+  }
+
+  .event_1 section h1 {
+    margin: 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .body_1 section button {
+    font-size: 0.9em;
+  }
+  .event_schedule {
+    width: 90%;
+  }
+  .schedule_head section h3 {
+    font-size: 0.9em;
+  }
+
+  .schedule_head section h1 {
+    font-size: 1em;
+  }
+
+  .schedule_body h4 {
+    font-size: 1em;
+  }
+
+  .schedule_body h6 {
+    font-size: 1em;
+    padding-left: 0.8em;
+  }
+
+  .schedule_body h1 {
+    font-size: 1.2em;
+  }
+
+  .schedule_body p {
+    font-size: 1em;
+  }
+}
+
+@media (min-width: 1200px) {
+  .event_schedule {
+    width: 80%;
+  }
+  .schedule_header {
+    margin-top: 1.8em;
+    margin-bottom: 1em;
+  }
+
+  .schedule_head {
+    margin: 0;
+    margin-bottom: 0.4em;
+  }
+
+  .schedule_head section h3 {
+    font-size: 0.8em;
+  }
+
+  .schedule_head section h1 {
+    font-size: 0.4em;
+  }
+
+  .schedule_body h4 {
+    font-size: 0.6em;
+  }
+
+  .schedule_body h6 {
+    font-size: 0.7em;
+    padding-left: 0.8em;
+  }
+
+  .schedule_body h1 {
+    font-size: 0.8em;
+  }
+
+  .schedule_body p {
+    font-size: 0.7em;
+  }
+}

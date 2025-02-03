@@ -1,0 +1,11 @@
+.home {
+  display: flex;
+}
+.postInfo a {
+  text-decoration: none;
+  color: black;
+}
+.sidebarList a {
+  text-decoration: none;
+  color: black;
+}

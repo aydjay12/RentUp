@@ -1,0 +1,302 @@
+.navbar {
+  width: 100%;
+  height: 100px;
+  margin: auto;
+  background-color: white;
+  display: flex;
+  flex-direction: row;
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  z-index: 999;
+  justify-content: space-between;
+}
+
+.navbar .leftSide {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  transition: all 0.5s ease-in-out;
+  text-transform: uppercase;
+  font-family: "Josefin Sans", sans-serif;
+  font-weight: 400;
+}
+
+.logo {
+  width: 8em;
+  height: 100%;
+  padding-left: 1em;
+}
+
+.navbar .rightSide {
+  width: 55%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  font-family: "Josefin Sans", sans-serif;
+  font-weight: lighter;
+}
+
+.navbar .rightSide a {
+  font-weight: 400;
+  color: gray;
+}
+
+.socialMedia {
+  display: flex;
+  padding-right: 2em;
+}
+
+.socialMedia i {
+  font-size: 1.3em;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  border-radius: 50%;
+  color: gray;
+  text-align: center;
+  margin-right: 15px;
+  cursor: pointer;
+  transition: 0.4s ease-in-out;
+}
+
+.socialMedia i:hover {
+  color: rgb(78, 78, 78);
+}
+
+.socialMedia div {
+  display: flex;
+  margin-left: 4em;
+  align-items: center;
+}
+
+.socialMedia div i {
+  width: 30%;
+}
+
+.topImg {
+  width: 3em;
+  height: 3em;
+  border-radius: 10em;
+  cursor: pointer;
+}
+
+.navbar a {
+  color: black;
+  font-weight: 700;
+  text-decoration: none;
+  margin: 20px;
+  position: relative;
+  transition: 0.5s;
+}
+.navbar a::after {
+  content: "";
+  width: 0;
+  height: 1px;
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: gray;
+  transition: width 0.4s;
+  margin-bottom: -0.3em;
+}
+.navbar a:hover::after {
+  width: 100%;
+}
+.topRight a:hover::after {
+  width: 0;
+}
+/* .navbar a:hover {
+  transform: scale(1.1);
+  transition: 0.5s;
+} */
+.active {
+  transform: scale(1.2);
+  font-size: 0.9em;
+}
+.navbar .rightSide button {
+  background-color: transparent;
+  border: none;
+  color: black;
+  cursor: pointer;
+}
+
+.navbar .rightSide svg {
+  font-size: 40px;
+}
+
+.navbar #open {
+  padding-left: 0px;
+}
+.navbar #open img {
+  display: none;
+}
+
+.navbar #close img {
+  display: inherit;
+}
+
+.navbar #open .hiddenLinks {
+  display: flex;
+  flex-direction: column;
+  margin-left: 15px;
+  justify-content: space-between;
+  min-width: 20em;
+}
+
+.navbar #open .hiddenLinks div {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  margin-top: 0.8em;
+}
+
+.navbar #open .hiddenLinks div a {
+  margin-right: 2em;
+}
+
+.navbar #close .hiddenLinks {
+  display: none;
+}
+
+.navbar #open a {
+  margin: 5px;
+}
+
+.top {
+  width: 100%;
+  height: 50px;
+  background-color: white;
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  z-index: 999;
+  font-family: "Josefin Sans", sans-serif;
+}
+
+.topLeft,
+.topRight {
+  flex: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.topIcon {
+  font-size: 20px;
+  margin-right: 10px;
+  color: #444;
+  cursor: pointer;
+}
+
+.topCenter {
+  flex: 6;
+}
+
+.topList {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.topListItem {
+  margin-right: 20px;
+  font-size: 1em;
+  font-weight: 300;
+  cursor: pointer;
+  display: flex;
+  transform: scale(1);
+}
+
+.topListItem a {
+  color: gray;
+  font-family: "Josefin Sans", sans-serif;
+  font-weight: 400;
+  font-size: 0.9em;
+}
+
+.topListItem a:hover::after {
+  width: 100%;
+}
+
+.topListItem:hover {
+  color: gray;
+}
+
+.topImg {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 0;
+  cursor: pointer;
+}
+
+.topSearchIcon {
+  font-size: 18px;
+  color: #666;
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 768px) {
+  .navbar .rightSide a {
+    margin: 0.5em;
+  }
+  .navbar .leftSide {
+    padding-left: 30px;
+  }
+}
+
+@media only screen and (max-width: 450px) {
+  .navbar .rightSide a {
+    display: none;
+  }
+
+  .navbar .rightSide {
+    justify-content: flex-end;
+    padding-right: 50px;
+  }
+
+  .navbar .rightSide button {
+    display: inherit;
+  }
+
+  #close {
+    padding-left: 0.8em;
+  }
+
+  #right {
+    padding-right: 0.8em;
+  }
+
+  .logo1 {
+    width: 2.5em;
+    margin-right: 0.2em;
+  }
+
+  .logo2 {
+    width: 90px;
+  }
+
+  .socialMedia div {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: 600px) {
+  .navbar .rightSide button {
+    display: none;
+  }
+
+  .hiddenLinks {
+    display: none;
+  }
+}

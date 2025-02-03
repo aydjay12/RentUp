@@ -1,0 +1,111 @@
+header {
+  background-color: #fff;
+  min-height: 8vh;
+  box-shadow: 0 5px 30px rgb(0 22 84 / 10%);
+  padding: 15px 0;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 99999;
+}
+header img {
+  width: 170px;
+}
+header a {
+  margin-left: 30px;
+  transition: 0.5s;
+  font-weight: 500;
+}
+header a:hover {
+  color: #27ae60;
+}
+header span {
+  width: auto;
+  padding: 0px 6px;
+  background: #27ae60;
+  border-radius: 50px;
+  color: #ffffff;
+  margin-right: 4px;
+  font-weight: 400;
+  font-size: 1em;
+}
+.btn1 {
+  transition: 0.5s;
+}
+.btn1:hover {
+  background: rgb(219, 219, 219);
+  color: black;
+}
+.sign-in{
+  height: unset !important;
+  @media (max-width: 768px) {}
+}
+header h4 {
+  font-weight: 500;
+  margin-right: 20px;
+}
+header .toggle {
+  display: none;
+}
+.list h4{
+  margin-top: 0;
+  margin-right: 2em;
+  cursor: pointer;
+}
+.logo{
+  margin-left: 0;
+  cursor: pointer;
+}
+.profile-menu{
+  cursor: pointer;
+}
+.dropdown{
+  margin-top: .9em;
+}
+@media screen and (max-width: 768px) {
+  header {
+    display: flex;
+    padding: 0;
+    min-height: 13vh;
+  }
+  .logo{
+    width: 30%;
+  }
+  header img {
+    width: 80%;
+  }
+  header .button {
+    display: none;
+  }
+  header .nav .flex {
+    display: none;
+  }
+  header .flex .list{
+    h4{
+      font-size: 14px;
+    }
+    button{
+      padding: .8em 1em;
+    }
+  }
+  header .toggle {
+    display: block;
+    button{
+      height: unset;
+      padding: unset 1em;
+    }
+  }
+  header .small {
+    position: absolute;
+    top: 13vh;
+    left: 0;
+    width: 100%;
+    background-color: #3ccc78;
+    padding: 20px;
+  }
+  header li a {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: #fff;
+  }
+}

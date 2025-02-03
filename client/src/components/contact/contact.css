@@ -1,0 +1,41 @@
+.contact form div {
+  display: flex;
+}
+.contact textarea {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  width: 100%;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  padding: .8em;
+}
+.contact input {
+  margin-bottom: 20px;
+  margin-right: 10px;
+}
+.contact form {
+  padding: 30px;
+}
+.shadow button {
+  transition: 0.5s;
+}
+.shadow button:hover {
+  background: white;
+  color: #27ae60;
+  border: 1px solid #27ae60;
+}
+@media screen and (max-width: 768px) {
+  .contact h4 {
+    width: 100%;
+    margin-bottom: 30px;
+  }
+  .contact form div {
+    width: 100%;
+    flex-direction: column;
+  }
+  #subject{
+    margin-right: 0;
+  }
+  .contact input {
+    width: 100%;
+  }
+}
