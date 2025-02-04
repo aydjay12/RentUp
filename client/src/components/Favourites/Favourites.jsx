@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import SearchBar from "../../components/SearchBar/Searchbar";
 import useProperties from "../../hooks/useProperties";
 import { PuffLoader } from "react-spinners";
-import "../Properties/Properties.css";
+import "../properties/properties.css";
 import UserDetailContext from "../../context/UserDetailContext";
 import RecentCard from "../home/recent/RecentCard";
 import { motion } from "framer-motion";
