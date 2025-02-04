@@ -1,11 +1,12 @@
 import asyncHandler from "express-async-handler";
 import { prisma } from "../config/prismaConfig.js";
 
+// Submit contact form
 export const submitContactForm = asyncHandler(async (req, res) => {
-  const { name, email, message, subject } = req.body;
+  const { name, email, subject, message } = req.body;
 
   // Validate input
-  if (!name || !email || !message || !subject) {
+  if (!name || !email || !subject || !message) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
@@ -15,8 +16,8 @@ export const submitContactForm = asyncHandler(async (req, res) => {
       data: {
         name,
         email,
-        message,
         subject,
+        message,
       },
     });
 
@@ -30,13 +31,8 @@ export const submitContactForm = asyncHandler(async (req, res) => {
   }
 });
 
+// Get all contacts
 export const getAllContacts = asyncHandler(async (req, res) => {
-  const token = req.headers.authorization?.split(" ")[1];
-
-  if (!token) {
-    return res.status(401).json({ message: "Unauthorized: No token provided" });
-  }
-
   try {
     const contacts = await prisma.contactForm.findMany({
       orderBy: { createdAt: "desc" },

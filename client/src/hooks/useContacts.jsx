@@ -13,7 +13,7 @@ const useContacts = () => {
     queryKey: "allContacts",
     queryFn: () => getAllContacts(user?.email, userDetails?.token),
     onSuccess: (data) =>
-      setUserDetails((prev) => ({ ...prev, contact: data })),
+      setUserDetails((prev) => ({ ...prev, contacts: data })),
     enabled: user !== undefined,
     staleTime: 30000,
   });

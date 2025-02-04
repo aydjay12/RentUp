@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { motion } from "framer-motion";
 import img from "../images/pricing.jpg";
 import Back from "../common/Back";
@@ -7,7 +7,6 @@ import { useMutation } from "react-query";
 import { submitContactForm } from "../utils/api";
 import { toast } from "react-toastify";
 import UserDetailContext from "../context/UserDetailContext";
-import { useContext } from "react";
 
 const Contact = () => {
   const { userDetails } = useContext(UserDetailContext);
