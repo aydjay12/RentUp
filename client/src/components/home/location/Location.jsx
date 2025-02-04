@@ -28,7 +28,7 @@ const Location = () => {
               key={index}
               className="box"
               onClick={() => handleBoxClick(item.city, item.country)}
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.95 }}
             >
               <img src={item.cover} alt="" />

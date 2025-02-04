@@ -94,3 +94,20 @@ export const getAllFav = async (email, token) => {
   }
 };
 
+export const submitContactForm = async (formData) => {
+  try {
+    const response = await api.post("/contact/submit", formData, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    });
+
+    if (response.status === 400 || response.status === 500) {
+      throw response.data;
+    }
+    return response.data;
+  } catch (error) {
+    toast.error("Something went wrong while submitting the form");
+    throw error;
+  }
+};

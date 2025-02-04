@@ -25,7 +25,7 @@ const Team = () => {
             className="content mtop grid3"
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.4 }}
             viewport={{ once: true }}
           >
             {team.map((val, index) => (
@@ -33,7 +33,7 @@ const Team = () => {
                 className="box"
                 key={index}
                 whileHover={{ scale: 1.05 }}
-                transition={{ type: "spring", stiffness: 300 }}
+                transition={{ type: "spring", stiffness: 100,  }}
               >
                 <button className="btn3">{val.list} Listings</button>
                 <div className="details">

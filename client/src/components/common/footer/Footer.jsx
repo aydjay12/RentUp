@@ -3,8 +3,10 @@ import { footer } from "../../data/Data";
 import Logo from "../../images/logo-light.png";
 import "./footer.css";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const Footer = () => {
+  const navigate = useNavigate();
   return (
     <>
       <motion.section
@@ -21,7 +23,7 @@ const Footer = () => {
               <p>We'll help you to grow your career and growth.</p>
             </div>
             <motion.a 
-              href="mailto:aydjay12@gmail.com"
+              onClick={() => navigate("/contact")}
               whileHover={{ scale: 1.1 }}
             >
               <button className="btn5">Contact Us Today</button>

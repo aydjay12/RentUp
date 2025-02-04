@@ -1,28 +1,48 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { toast } from "react-toastify";
 import img from "../images/pricing.jpg";
 import Back from "../common/Back";
 import "./contact.css";
+import { submitContactForm } from "../utils/api"; // Import the API function
 
 const Contact = () => {
-  const handleSubmit = (e) => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({ ...prev, [id]: value }));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent page refresh
 
-    // Get input values
-    const name = document.getElementById("name").value;
-    const email = document.getElementById("email").value;
-    const subject = document.getElementById("subject").value;
-    const message = document.getElementById("message").value;
+    // Validate form fields
+    if (!formData.name || !formData.email || !formData.subject || !formData.message) {
+      toast.error("All fields are required");
+      return;
+    }
 
-    // Format the mailto link
-    const mailtoLink = `mailto:aydjay12@gmail.com?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(
-      `Name: ${name}\nEmail: ${email}\n\n${message}`
-    )}`;
+    try {
+      // Send form data to the backend
+      await submitContactForm(formData);
+      toast.success("Form submitted successfully!");
 
-    // Open email client
-    window.location.href = mailtoLink;
+      // Clear the form
+      setFormData({
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
+      });
+    } catch (error) {
+      toast.error("Failed to submit the form. Please try again.");
+    }
   };
 
   return (
@@ -43,11 +63,40 @@ const Contact = () => {
           >
             <h4>Fill up The Form</h4> <br />
             <div>
-              <input type="text" id="name" placeholder="Name" required />
-              <input type="email" id="email" placeholder="Email" required />
+              <input
+                type="text"
+                id="name"
+                placeholder="Name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
+              <input
+                type="email"
+                id="email"
+                placeholder="Email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
             </div>
-            <input type="text" id="subject" placeholder="Subject" required />
-            <textarea id="message" cols="30" rows="10" placeholder="Your message" required></textarea>
+            <input
+              type="text"
+              id="subject"
+              placeholder="Subject"
+              value={formData.subject}
+              onChange={handleChange}
+              required
+            />
+            <textarea
+              id="message"
+              cols="30"
+              rows="10"
+              placeholder="Your message"
+              value={formData.message}
+              onChange={handleChange}
+              required
+            ></textarea>
             <motion.button
               type="submit"
               whileHover={{ scale: 1.05 }}
