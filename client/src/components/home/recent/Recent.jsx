@@ -50,8 +50,8 @@ const Recent = () => {
             className="recent-container"
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.5, }}
+            viewport={{ once: true, }}
           >
             {data.slice(0, 6).map((card, i) => (
               <RecentCard key={i} card={card} />
