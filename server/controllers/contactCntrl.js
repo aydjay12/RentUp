@@ -29,3 +29,22 @@ export const submitContactForm = asyncHandler(async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
+export const getAllContacts = asyncHandler(async (req, res) => {
+  const token = req.headers.authorization?.split(" ")[1];
+
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized: No token provided" });
+  }
+
+  try {
+    const contacts = await prisma.contactForm.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+
+    res.status(200).json(contacts);
+  } catch (error) {
+    console.error("Error fetching contacts:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});

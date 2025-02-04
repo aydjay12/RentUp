@@ -109,20 +109,20 @@ export const submitContactForm = async (formData, token) => {
   }
 };
 
-// export const getAllContacts = async (token) => {
-//   try {
-//     const response = await api.get("/contact/all", {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//       },
-//     });
+export const getAllContacts = async (token) => {
+  try {
+    const response = await api.get("/contact/all", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-//     if (response.status === 400 || response.status === 500) {
-//       throw response.data;
-//     }
-//     return response.data;
-//   } catch (error) {
-//     toast.error("Something went wrong");
-//     throw error;
-//   }
-// };
+    if (response.status === 400 || response.status === 500) {
+      throw response.data;
+    }
+    return response.data;
+  } catch (error) {
+    toast.error("Something went wrong");
+    throw error;
+  }
+};
