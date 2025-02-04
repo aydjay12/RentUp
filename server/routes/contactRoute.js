@@ -4,7 +4,7 @@ import { submitContactForm, getAllContacts } from "../controllers/contactCntrl.j
 
 const router = express.Router();
 
-router.post("/submit", submitContactForm);
+router.post("/submit", jwtCheck, submitContactForm);
 router.get("/all", getAllContacts); // New route to fetch all contacts
 
 export { router as contactRoute };

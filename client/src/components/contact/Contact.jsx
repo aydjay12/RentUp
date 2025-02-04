@@ -4,9 +4,10 @@ import img from "../images/pricing.jpg";
 import Back from "../common/Back";
 import "./contact.css";
 import { useMutation } from "react-query";
-import { submitContactForm } from "../utils/api";
-import { toast } from "react-toastify";
-import UserDetailContext from "../context/UserDetailContext";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import UserDetailContext from "../../context/UserDetailContext";
+import { submitContactForm } from "../../utils/api";
 
 const Contact = () => {
   const { userDetails } = useContext(UserDetailContext);
@@ -15,10 +16,48 @@ const Contact = () => {
   const { mutate, isLoading } = useMutation({
     mutationFn: (formData) => submitContactForm(formData, token),
     onSuccess: () => {
-      toast.success("Contact form submitted successfully");
+      // Show success toast with custom styling
+      toast.success("Contact form submitted successfully", {
+        position: "bottom-right",
+        autoClose: 5000, // Close after 5 seconds
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        style: {
+          background: "#4CAF50", // Green background
+          color: "#FFFFFF", // White text
+          borderRadius: "8px", // Rounded corners
+          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)", // Subtle shadow
+        },
+      });
+
+      // Clear the form fields
+      document.getElementById("name").value = "";
+      document.getElementById("email").value = "";
+      document.getElementById("subject").value = "";
+      document.getElementById("message").value = "";
+
+      // Scroll to the top of the page
+      window.scrollTo({ top: 0, behavior: "smooth" });
     },
     onError: (error) => {
-      toast.error("Failed to submit contact form");
+      toast.error("Failed to submit contact form", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        style: {
+          background: "#FF5252", // Red background
+          color: "#FFFFFF", // White text
+          borderRadius: "8px", // Rounded corners
+          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)", // Subtle shadow
+        },
+      });
       console.error("Error submitting contact form:", error);
     },
   });
@@ -78,6 +117,19 @@ const Contact = () => {
           </motion.form>
         </div>
       </section>
+
+      {/* Toast Container */}
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </motion.div>
   );
 };
