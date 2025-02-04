@@ -13,6 +13,8 @@ const Contact = () => {
   const { userDetails } = useContext(UserDetailContext);
   const { token } = userDetails;
 
+  console.log("Token:", token);
+
   const { mutate, isLoading } = useMutation({
     mutationFn: (formData) => submitContactForm(formData, token),
     onSuccess: () => {

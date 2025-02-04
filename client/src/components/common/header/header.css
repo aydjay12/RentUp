@@ -61,6 +61,11 @@ header .toggle {
 }
 .dropdown{
   margin-top: .9em;
+  @media (max-width: 768px){
+    margin-top: .9em;
+    padding: 1em 0 !important;
+    border-radius: 0 !important;
+  }
 }
 @media screen and (max-width: 768px) {
   header {
