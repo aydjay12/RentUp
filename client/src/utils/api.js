@@ -88,20 +88,41 @@ export const getAllFav = async (email, token) => {
 };
 
 export const submitContactForm = async (formData, token) => {
-  if (!token) return;
   try {
-    const response = await api.post("/contact/submit", formData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await api.post(
+      "/contact/submit",
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
     if (response.status === 400 || response.status === 500) {
       throw response.data;
     }
     return response.data;
   } catch (error) {
-    toast.error("Something went wrong while submitting the form");
+    toast.error("Something went wrong");
     throw error;
   }
 };
+
+// export const getAllContacts = async (token) => {
+//   try {
+//     const response = await api.get("/contact/all", {
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//       },
+//     });
+
+//     if (response.status === 400 || response.status === 500) {
+//       throw response.data;
+//     }
+//     return response.data;
+//   } catch (error) {
+//     toast.error("Something went wrong");
+//     throw error;
+//   }
+// };

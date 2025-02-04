@@ -22,6 +22,7 @@ const App = () => {
   const queryClient = new QueryClient();
   const [userDetails, setUserDetails] = useState({
     favourites: [],
+    contact: [],
     token: null,
   });
 
@@ -52,7 +53,6 @@ const App = () => {
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </UserDetailContext.Provider>
-
     </>
   );
 };
