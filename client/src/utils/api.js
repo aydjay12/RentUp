@@ -1,5 +1,4 @@
 import axios from "axios";
-import dayjs from "dayjs";
 import { toast } from "react-toastify";
 
 export const api = axios.create({
@@ -8,9 +7,7 @@ export const api = axios.create({
 
 export const getAllProperties = async () => {
   try {
-    const response = await api.get("/residency/allresd", {
-      timeout: 10 * 1000,
-    });
+    const response = await api.get("/residency/allresd", { timeout: 10000 });
 
     if (response.status === 400 || response.status === 500) {
       throw response.data;
@@ -24,9 +21,7 @@ export const getAllProperties = async () => {
 
 export const getProperty = async (id) => {
   try {
-    const response = await api.get(`/residency/${id}`, {
-      timeout: 10 * 1000,
-    });
+    const response = await api.get(`/residency/${id}`, { timeout: 10000 });
 
     if (response.status === 400 || response.status === 500) {
       throw response.data;
@@ -39,6 +34,7 @@ export const getProperty = async (id) => {
 };
 
 export const createUser = async (email, token) => {
+  if (!token) return;
   try {
     await api.post(
       `/user/register`,
@@ -56,12 +52,11 @@ export const createUser = async (email, token) => {
 };
 
 export const toFav = async (id, email, token) => {
+  if (!token) return;
   try {
     await api.post(
       `/user/toFav/${id}`,
-      {
-        email,
-      },
+      { email },
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -78,9 +73,7 @@ export const getAllFav = async (email, token) => {
   try {
     const res = await api.post(
       `/user/allFav/`,
-      {
-        email,
-      },
+      { email },
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -94,11 +87,12 @@ export const getAllFav = async (email, token) => {
   }
 };
 
-export const submitContactForm = async (formData) => {
+export const submitContactForm = async (formData, token) => {
+  if (!token) return;
   try {
     const response = await api.post("/contact/submit", formData, {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
