@@ -23,10 +23,10 @@ const Team = () => {
           </motion.div>
           <motion.div
             className="content mtop grid3"
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            viewport={{ once: true, amount: 0.3 }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
           >
             {team.map((val, index) => (
               <motion.div
