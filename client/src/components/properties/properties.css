@@ -1,48 +1,67 @@
-.properties-container{
-    display: flex;
-    justify-content: center;
-    align-items:center;
-    width: 100%;
+.properties-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
-.properties-container .search-bar{
-    width: clamp(12rem, 100%, 35rem);
-    padding: .5em 0;
-    border-radius: 30px;
-    border: 1px solid rgba(120, 120, 120, 0.374);
-    flex-wrap: nowrap;
-    margin-bottom: 1em;
-}
-
-.properties-container .search-bar .button{
-    border-radius: 30px;
-    font-size: 12px;
-    padding: 10px 15px;
-    background: #27ae60;
-}
-.properties-container .search-bar svg{
-    color: #27ae60 !important;
-    margin-right: .5em;
+.properties-container .search-bar {
+  width: clamp(12rem, 100%, 35rem);
+  padding: 0.5em 0;
+  border-radius: 30px;
+  border: 1px solid rgba(120, 120, 120, 0.374);
+  flex-wrap: nowrap;
+  margin-bottom: 1em;
+  @media (max-width: 768px){
+    padding-left: .8em;
+    padding-right: 1em;
+  }
 }
 
-.properties-container .search-bar input{
-    width: 75%;
+.properties-container .search-bar .button {
+  border-radius: 30px;
+  font-size: 12px;
+  padding: 10px 15px;
+  background: #27ae60;
+}
+.properties-container .search-bar svg {
+  color: #27ae60 !important;
+  margin-right: 0.5em;
 }
 
-.properties{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 3em;
-    @media (max-width: 768px){
-        grid-template-columns: 1fr;
+.properties-container .search-bar input {
+  width: 75%;
+}
+
+.properties {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 3em;
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.filter-container {
+  margin-top: 0;
+  margin-bottom: 2em;
+  border: 2px solid rgba(128, 128, 128, 0.2);
+}
+
+.search-box {
+  .box:nth-child(4) {
+    border-left: none;
+    @media (max-width: 768px) {
+      width: 100%;
     }
+  }
+  .box:nth-child(5) {
+    border-left: none;
+    @media (max-width: 768px) {
+      width: 50%;
+    }
+  }
 }
 
-.filter-container{
-    margin-top: 0;
-    margin-bottom: 2em;
-    border: 2px solid rgba(128, 128, 128, 0.2);
-}
-
-.nothing{
-    width: 60em;
+.nothing {
+  width: 60em;
 }

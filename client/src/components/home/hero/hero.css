@@ -8,7 +8,10 @@
 }
 .hero .container {
   padding-top: 15%;
-  padding-bottom: 7%;
+  padding-bottom: 8%;
+  @media (max-width: 768px){
+    padding-bottom: 12%;
+  }
 }
 .hero h1 {
   color: #fff;
@@ -25,6 +28,7 @@ form {
   padding: 0 20px;
   @media (max-width: 768px){
     padding: 20px;
+    margin-top: 40px;
   }
 }
 form input {
@@ -48,18 +52,28 @@ form .box {
   padding-right: 1.5em;
   border-left: 2px solid rgba(128, 128, 128, 0.2);
   padding-bottom: 25px;
+  @media (max-width: 768px){
+    padding-left: 0;
+    padding-right: 0;
+    width: 100%;
+    padding-bottom: 25px;
+  }
 }
 form .box:nth-child(1) {
   border-left: none;
 }
 form .box:nth-child(4) {
   border-left: none;
+  @media (max-width: 768px){
+    width: 50%;
+  }
 }
 form .box:nth-child(3) {
   border-right: 2px solid rgba(128, 128, 128, 0.2);
   padding-right: 1.5em;
   @media (max-width: 768px){
     border-right: none;
+    padding-right: 0;
   }
 }
 form h4 {
@@ -74,11 +88,11 @@ form h4 {
 
 }
 @media screen and (max-width: 800px) {
-  .hero {
+  /* .hero {
     height: 120vh;
-  }
+  } */
   .hero .container {
-    padding-top: 25%;
+    padding-top: 15%;
   }
   form {
     display: flex;
@@ -92,7 +106,7 @@ form h4 {
   }
 }
 @media screen and (max-width: 500px) {
-  .hero {
+  /* .hero {
     height: 140vh;
-  }
+  } */
 }

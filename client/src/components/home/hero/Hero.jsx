@@ -31,7 +31,7 @@ const Hero = () => {
   };
 
   const buttonVariants = {
-    hover: { scale: 1.1, backgroundColor: "#ff4c4c" },
+    hover: { scale: 1.1, },
     tap: { scale: 0.9 },
   };
 
