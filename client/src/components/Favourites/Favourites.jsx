@@ -34,7 +34,7 @@ const Favourites = () => {
   if (isLoading) {
     return (
       <div className="wrapper flexCenter" style={{ height: "60vh" }}>
-        <PuffLoader color="#4066ff" aria-label="puff-loading" />
+        <PuffLoader color="#27ae60" aria-label="puff-loading" />
       </div>
     );
   }
