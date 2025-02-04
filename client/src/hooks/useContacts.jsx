@@ -11,7 +11,7 @@ const useContacts = () => {
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: "allContacts",
-    queryFn: () => getAllContacts(userDetails?.token),
+    queryFn: () => getAllContacts(user?.email, userDetails?.token),
     onSuccess: (data) =>
       setUserDetails((prev) => ({ ...prev, contact: data })),
     enabled: user !== undefined,

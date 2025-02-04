@@ -109,9 +109,9 @@ export const submitContactForm = async (formData, token) => {
   }
 };
 
-export const getAllContacts = async (token) => {
+export const getAllContacts = async (email, token) => {
   try {
-    const response = await api.get("/contact/all", {
+    const response = await api.get(`/contact/all`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

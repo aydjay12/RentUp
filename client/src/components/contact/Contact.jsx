@@ -4,35 +4,44 @@ import img from "../images/pricing.jpg";
 import Back from "../common/Back";
 import "./contact.css";
 import { useMutation } from "react-query";
-import { submitContactForm } from "../../utils/api";
-import { useAuth0 } from "@auth0/auth0-react";
-import UserDetailContext from "../../context/UserDetailContext";
+import { submitContactForm } from "../utils/api";
+import { toast } from "react-toastify";
+import UserDetailContext from "../context/UserDetailContext";
 import { useContext } from "react";
 
 const Contact = () => {
   const { userDetails } = useContext(UserDetailContext);
-  const { user } = useAuth0();
+  const { token } = userDetails;
 
-  const { mutate } = useMutation({
-    mutationFn: (formData) => submitContactForm(formData, userDetails?.token),
+  const { mutate, isLoading } = useMutation({
+    mutationFn: (formData) => submitContactForm(formData, token),
     onSuccess: () => {
       toast.success("Contact form submitted successfully");
     },
-    onError: () => {
+    onError: (error) => {
       toast.error("Failed to submit contact form");
+      console.error("Error submitting contact form:", error);
     },
   });
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent page refresh
 
+    // Get input values
     const name = document.getElementById("name").value;
     const email = document.getElementById("email").value;
     const subject = document.getElementById("subject").value;
     const message = document.getElementById("message").value;
 
-    const formData = { name, email, subject, message };
+    // Create form data object
+    const formData = {
+      name,
+      email,
+      subject,
+      message,
+    };
 
+    // Submit form data
     mutate(formData);
   };
 
@@ -63,8 +72,9 @@ const Contact = () => {
               type="submit"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              disabled={isLoading}
             >
-              Submit Request
+              {isLoading ? "Submitting..." : "Submit Request"}
             </motion.button>
           </motion.form>
         </div>

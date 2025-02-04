@@ -34,6 +34,16 @@ export const updateFavourites = (id, favourites) => {
   }
 }
 
+// export const updateContacts = (id, favourites) => {
+//   if(contacts.includes(id))
+//   {
+//     return contacts.filter((resId) => resId!== id)
+//   }
+//   else {
+//     return [...favourites, id]
+//   }
+// }
+
 export const checkFavourites = (id, favourites) => {
   return favourites?.includes(id) ? '#fa3e5f' : "gray";
 }
