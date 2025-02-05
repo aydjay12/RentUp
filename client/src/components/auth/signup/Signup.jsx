@@ -91,9 +91,9 @@ const Signup = () => {
   }, [formData]);
 
   const { mutate, isLoading } = useMutation({
-    mutationFn: (formData) => createUser(formData, token),
-    onSuccess: () => {
-      toast.success("You have logged in successfully", {
+    mutationFn: (formData) => createUser(formData.email, formData.phone, formData.password, token),
+    onSuccess: (data) => {
+      toast.success("You have registered successfully", {
         position: "bottom-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -108,10 +108,15 @@ const Signup = () => {
           boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
         },
       });
+  
+      // Redirect user to home or dashboard
       navigate("/");
+  
+      // Trigger login immediately after registration
+      loginWithRedirect();
     },
     onError: (error) => {
-      toast.error("Unsuccessful login", {
+      toast.error("Unsuccessful registration", {
         position: "bottom-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -128,7 +133,7 @@ const Signup = () => {
       });
       console.error("Error submitting signup form:", error);
     },
-  });
+  });  
 
   const handleSubmit = (e) => {
     e.preventDefault();

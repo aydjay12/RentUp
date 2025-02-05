@@ -36,7 +36,7 @@ export const getProperty = async (id) => {
 export const createUser = async (email, phone, password, token) => {
   if (!token) return;
   try {
-    await api.post(
+    const response = await api.post(
       `/user/register`,
       { email, phone, password },
       {
@@ -45,11 +45,13 @@ export const createUser = async (email, phone, password, token) => {
         },
       }
     );
+    return response.data; // Ensure we return user data
   } catch (error) {
     toast.error("Something went wrong, Please try again");
     throw error;
   }
 };
+
 
 
 export const toFav = async (id, email, token) => {

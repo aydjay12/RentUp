@@ -16,20 +16,23 @@ const LayoutAuth = () => {
 
   useEffect(() => {
     const getTokenAndRegister = async () => {
+      if (!isAuthenticated || !user) return;
+  
       const res = await getAccessTokenWithPopup({
         authorizationParams: {
           audience: "https://dev-ee4hguujf503yj1e.us.auth0.com/api/v2/",
           scope: "openid profile email",
         },
       });
+  
       localStorage.setItem("access_token", res);
-      setUserDetails((prev) => ({ ...prev, token: res }));
+      setUserDetails((prev) => ({ ...prev, token: res, email: user?.email }));
+  
       mutate(res);
-      console.log(res)
     };
-
-    isAuthenticated && getTokenAndRegister();
-  }, [isAuthenticated]);
+  
+    getTokenAndRegister();
+  }, [isAuthenticated, user]);  
   return (
     <>
       <Outlet />
