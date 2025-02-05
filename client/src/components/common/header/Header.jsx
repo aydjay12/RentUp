@@ -30,7 +30,7 @@ const Header = () => {
         <div className="nav">
           <ul className={navList ? "small" : "flex"}>
             {nav.map((list, index) => (
-              <motion.li 
+              <motion.li
                 key={index}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
@@ -42,14 +42,24 @@ const Header = () => {
         </div>
         <div className="flex list">
           {!isAuthenticated ? (
-            <motion.button
-              className="btn1 sign-in"
-              onClick={loginWithRedirect}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-            >
-              <FaSignOutAlt /> Sign In
-            </motion.button>
+            <div className="auth-buttons">
+              <motion.button
+                className="btn1 sign-in"
+                onClick={() => navigate("/signin")}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                Log In
+              </motion.button>
+              <motion.button
+                className="btn1 sign-in sign-up"
+                onClick={() => navigate("/signup")}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                Sign Up
+              </motion.button>
+            </div>
           ) : (
             <ProfileMenu user={user} logout={logout} />
           )}

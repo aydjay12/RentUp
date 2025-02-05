@@ -1,10 +1,12 @@
 import express from 'express';
-import { bookVisit, cancelBooking, createUser, getAllBookings, getAllFavourites, toFav } from '../controllers/userCntrl.js';
+import { bookVisit, cancelBooking, createUser, forgotPassword, getAllBookings, getAllFavourites, toFav, verifyOTPAndResetPassword } from '../controllers/userCntrl.js';
 import jwtCheck from '../config/auth0Config.js';
 
 const router = express.Router()
 
 router.post("/register", jwtCheck, createUser)
+router.post("/forgotPassword", forgotPassword);
+router.post("/verifyOTP", verifyOTPAndResetPassword);
 router.post("/bookVisit/:id", jwtCheck, bookVisit)
 router.post("/allBookings", getAllBookings)
 router.post("/removeBooking/:id", jwtCheck, cancelBooking)

@@ -32,10 +32,6 @@ header span {
 .btn1 {
   transition: 0.5s;
 }
-.btn1:hover {
-  background: rgb(219, 219, 219);
-  color: black;
-}
 .sign-in{
   height: unset !important;
   @media (max-width: 768px) {}
@@ -51,6 +47,33 @@ header .toggle {
   margin-top: 0;
   margin-right: 2em;
   cursor: pointer;
+}
+.list .auth-buttons{
+  display: flex;
+  gap: 2em;
+  @media (max-width: 768px){
+    gap: .8em;
+  }
+  button{
+    padding: .7em 2em;
+    @media (max-width: 768px){
+      font-size: 13px;
+    }
+  }
+  .sign-up{
+    background: rgb(219, 219, 219);
+    color: black;
+  }
+  .sign-in:hover {
+    background: white;
+    color: #27ae60;
+    border: 1px solid #27ae60;
+  }
+  .sign-up:hover {
+    background: white;
+    color: #27ae60;
+    border: 1px solid #27ae60;
+  }
 }
 .logo{
   margin-left: 0;
@@ -74,7 +97,7 @@ header .toggle {
     min-height: 13vh;
   }
   .logo{
-    width: 30%;
+    width: 35%;
   }
   header img {
     width: 80%;
@@ -90,14 +113,16 @@ header .toggle {
       font-size: 14px;
     }
     button{
-      padding: .8em 1em;
+      padding: .7em 1em;
     }
   }
   header .toggle {
     display: block;
     button{
       height: unset;
-      padding: unset 1em;
+      padding: .85em 1em;
+      margin-left: .8em;
+      font-size: 14px;
     }
   }
   header .small {

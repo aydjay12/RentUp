@@ -11,6 +11,7 @@ model User {
     id String @id @default(auto()) @map("_id") @db.ObjectId
     name String?
     email String @unique
+    phone String?
     image String?
     bookedVisits Json[]
     favResidenciesID String[] @db.ObjectId
@@ -44,4 +45,11 @@ model ContactForm {
   subject String
   message String
   createdAt DateTime @default(now())
+}
+
+model OTP {
+    id       String   @id @default(auto()) @map("_id") @db.ObjectId
+    email    String
+    otp      String
+    expiresAt DateTime
 }

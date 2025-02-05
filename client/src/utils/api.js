@@ -33,12 +33,12 @@ export const getProperty = async (id) => {
   }
 };
 
-export const createUser = async (email, token) => {
+export const createUser = async (email, phone, password, token) => {
   if (!token) return;
   try {
     await api.post(
       `/user/register`,
-      { email },
+      { email, phone, password },
       {
         headers: {
           Authorization: `Bearer ${token}`,

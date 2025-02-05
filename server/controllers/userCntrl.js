@@ -1,20 +1,80 @@
 import asyncHandler from "express-async-handler";
-
 import { prisma } from "../config/prismaConfig.js";
+import { sendOTP, verifyOTP } from "../utils/otpService.js";
+import bcrypt from 'bcrypt';
 
+const hashPassword = async (password) => {
+  const saltRounds = 10;
+  return await bcrypt.hash(password, saltRounds);
+};
+
+// export const createUser = asyncHandler(async (req, res) => {
+//     console.log("creating a user");
+
+//     let {email} = req.body;
+//     const userExists = await prisma.user.findUnique({ where: { email: email } });
+//     if (!userExists) {
+//         const user = await prisma.user.create({ data: req.body });
+//         res.send({
+//             message: "User registered successfully",
+//             user: user,
+//         });
+//     }   else res.status(201).send({ message: "User already registered" });
+// })
+
+// Register User
 export const createUser = asyncHandler(async (req, res) => {
     console.log("creating a user");
 
-    let {email} = req.body;
+    let { email, phone, password } = req.body;
     const userExists = await prisma.user.findUnique({ where: { email: email } });
     if (!userExists) {
-        const user = await prisma.user.create({ data: req.body });
+        const user = await prisma.user.create({ 
+            data: { 
+                email,
+                phone,
+                // You should hash the password before saving it
+                password: await hashPassword(password),
+            } 
+        });
         res.send({
             message: "User registered successfully",
             user: user,
         });
-    }   else res.status(201).send({ message: "User already registered" });
-})
+    } else {
+        res.status(201).send({ message: "User already registered" });
+    }
+});
+
+// Forgot Password (Send OTP)
+export const forgotPassword = asyncHandler(async (req, res) => {
+    const { email } = req.body;
+    const user = await prisma.user.findUnique({ where: { email } });
+
+    if (!user) {
+        return res.status(404).send({ message: "Email not found" });
+    }
+
+    const otp = await sendOTP(email); // Send OTP to email
+    res.send({ message: "OTP sent successfully", otp });
+});
+
+// Verify OTP and Reset Password
+export const verifyOTPAndResetPassword = asyncHandler(async (req, res) => {
+    const { email, otp, newPassword } = req.body;
+
+    const isValidOTP = await verifyOTP(email, otp);
+    if (!isValidOTP) {
+        return res.status(400).send({ message: "Invalid or expired OTP" });
+    }
+
+    await prisma.user.update({
+        where: { email },
+        data: { password: newPassword },
+    });
+
+    res.send({ message: "Password reset successfully" });
+});
 
 // function to book a visit to resd
 export const bookVisit = asyncHandler(async(req, res) => {

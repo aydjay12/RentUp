@@ -1,0 +1,120 @@
+.verifiedPage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0em 3em;
+    position: relative;
+    gap: 3em;
+    overflow-x: hidden;
+    min-height: 100vh;
+    @media(max-width:768px){
+        padding: 1em;
+        padding-bottom: 3em;
+        min-height: 90vh;
+    }
+
+    img{
+        width: unset;
+        height: unset;
+        cursor: unset;
+      }
+
+    .key1, .key2{
+        position: absolute;
+        @media(max-width:768px){
+            display: none;
+        }
+    }
+    .key1{
+        top: 2em;
+        left: 20em;
+        z-index: 1000;
+    }
+    .key2{
+        bottom: 2em;
+        left: 3em;
+        z-index: 1000;
+    }
+  
+    .logo {
+        display: flex;
+        align-items: center;
+        width: 35%;
+        z-index: 999;
+        background: white;
+        min-height: 100vh;
+        cursor: unset;
+        @media(max-width:768px){
+            display: none;
+            min-height: unset;
+        }
+    }
+  
+    .message {
+        width: 70%;
+        display: flex;
+        flex-direction: column;
+        z-index: 99;
+        margin-top: 0;
+        border-left: 2px solid #b2b2b2;
+        padding: 4em 0;
+        padding-left: 3em;
+        text-align: center;
+        position: relative;
+        min-height: 100vh;
+        align-items: center;
+        justify-content: center;
+        &:hover{
+        background: unset !important;
+        background-color: unset !important;
+        }
+        @media(max-width:768px){
+            width: 100%;
+            min-height: unset;
+            border-left: none;
+            padding: 0;
+        }
+
+        .bus{
+            position: absolute;
+            bottom: 0;
+            left: -12em;
+            width: 40%;
+            object-fit: contain;
+            object-position: bottom;
+            @media(max-width:768px){
+                display: none;
+            }
+        }
+  
+      h1 {
+        margin-bottom: 0;
+      }
+  
+      p {
+        margin-bottom: 60px;
+        color: #7A7A7A;
+      }
+  
+      .doneButton {
+        padding: 15px 20px;
+        background-color: #27ae60;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 50%;
+        transition: .5s all ease-in-out;
+        @media(max-width:768px){
+            width: 100%;
+            border-radius: 40px;
+            padding: 18px 20px;
+        }
+  
+        &:hover {
+          background-color: #3cda7e;
+        }
+      }
+    }
+  }
+  
