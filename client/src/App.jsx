@@ -16,6 +16,7 @@ import UserDetailContext from "./context/UserDetailContext";
 import Property from "./components/Property/Property";
 import Favourites from "./components/Favourites/Favourites";
 import Search from "./components/search/Search";
+import LayoutAuth from "./components/auth/layout";
 import Signup from "./components/auth/signup/Signup";
 import Signin from "./components/auth/signin/signin";
 import Verified from "./components/auth/verified/Verified";
@@ -51,11 +52,13 @@ const App = () => {
                   </Route>
                   <Route path="/favourites" element={<Favourites />} />
                 </Route>
-                <Route path="/signup" element={<Signup></Signup>} />
-                <Route path="/signin" element={<Signin />} />
-                <Route path="/verified" element={<Verified />} />
-                <Route path="/forgot-password" element={<ForgotPassword />} />
-                <Route path="/new-password" element={<NewPassword />} />
+                <Route element={<LayoutAuth />}>
+                  <Route path="/signup" element={<Signup></Signup>} />
+                  <Route path="/signin" element={<Signin />} />
+                  <Route path="/verified" element={<Verified />} />
+                  <Route path="/forgot-password" element={<ForgotPassword />} />
+                  <Route path="/new-password" element={<NewPassword />} />
+                </Route>
               </Routes>
             </Suspense>
           </BrowserRouter>
