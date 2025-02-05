@@ -7,7 +7,7 @@ import GoogleIcon from "../../../../public/svg/google.svg";
 import Logo from "../../pics/logo.png";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "react-query";
-import { api } from "../../../utils/api";
+import { signupUser } from "../../../utils/api";
 import { toast } from "react-toastify";
 import UserDetailContext from "../../../context/UserDetailContext";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -15,8 +15,9 @@ import { useAuth0 } from "@auth0/auth0-react";
 const Signup = () => {
   const navigate = useNavigate();
   const { loginWithRedirect, isAuthenticated, user } = useAuth0();
-  const { userDetails, setUserDetails } = useContext(UserDetailContext);
+  const { userDetails } = useContext(UserDetailContext);
   const { token } = userDetails;
+  console.log("Token:", token);
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -77,7 +78,8 @@ const Signup = () => {
     }
 
     if (!formData.agreedToTerms) {
-      newErrors.terms = "You must agree to the terms and conditions to register";
+      newErrors.terms =
+        "You must agree to the terms and conditions to register";
     }
 
     setErrors(newErrors);
@@ -90,11 +92,7 @@ const Signup = () => {
   }, [formData]);
 
   const { mutate, isLoading } = useMutation({
-    mutationFn: (formData) => api.post("/user/register", formData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }),
+    mutationFn: (formData) => signupUser(formData),
     onSuccess: () => {
       toast.success("You have logged in successfully", {
         position: "bottom-right",
@@ -170,7 +168,9 @@ const Signup = () => {
             type="email"
             name="email"
             value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
           />
           {showMsg && errors.email && (
             <p className="error-message">{errors.email}</p>
@@ -184,7 +184,9 @@ const Signup = () => {
             type="tel"
             name="phone"
             value={formData.phone}
-            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, phone: e.target.value })
+            }
           />
           {showMsg && errors.phone && (
             <p className="error-message">{errors.phone}</p>
@@ -197,7 +199,9 @@ const Signup = () => {
               type={showPassword ? "text" : "password"}
               name="password"
               value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, password: e.target.value })
+              }
             />
             <div className="eye" onClick={handleShowPassword}>
               {showPassword ? <GoEye /> : <FaRegEyeSlash />}
@@ -214,7 +218,9 @@ const Signup = () => {
               type={showConfirmPassword ? "text" : "password"}
               name="confirmPassword"
               value={formData.confirmPassword}
-              onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, confirmPassword: e.target.value })
+              }
             />
             <div className="eye" onClick={handleShowConfirmPassword}>
               {showConfirmPassword ? <GoEye /> : <FaRegEyeSlash />}
@@ -246,7 +252,11 @@ const Signup = () => {
           <button type="submit" className="registerButton">
             {isLoading ? "Registering..." : "Register"}
           </button>
-          <button type="button" className="signup-google" onClick={handleGoogleSignup}>
+          <button
+            type="button"
+            className="signup-google"
+            onClick={handleGoogleSignup}
+          >
             <img src={GoogleIcon} alt="" />
             Sign Up with Google
           </button>

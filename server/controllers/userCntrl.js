@@ -46,6 +46,23 @@ export const createUser = asyncHandler(async (req, res) => {
     }
 });
 
+// Login User
+export const loginUser = asyncHandler(async (req, res) => {
+    const { email, password } = req.body;
+    const user = await prisma.user.findUnique({ where: { email } });
+
+    if (user && await bcrypt.compare(password, user.password)) {
+        const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        res.send({
+            message: "Login successful",
+            token,
+            user,
+        });
+    } else {
+        res.status(401).send({ message: "Invalid credentials" });
+    }
+});
+
 // Forgot Password (Send OTP)
 export const forgotPassword = asyncHandler(async (req, res) => {
     const { email } = req.body;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./header.css";
 import { nav } from "../../data/Data";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import ProfileMenu from "../../ProfileMenu/ProfileMenu";
 import Logo from "../../pics/logo.png";
@@ -9,6 +9,7 @@ import { FaBars, FaSignOutAlt, FaTimes } from "react-icons/fa";
 import { motion } from "framer-motion";
 
 const Header = () => {
+  const navigate = useNavigate();
   const [navList, setNavList] = useState(false);
   const { loginWithRedirect, isAuthenticated, user, logout } = useAuth0();
   const location = useLocation();
