@@ -7,7 +7,7 @@ import GoogleIcon from "../../../../public/svg/google.svg";
 import Logo from "../../pics/logo.png";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "react-query";
-import { signupUser } from "../../../utils/api";
+import { createUser } from "../../../utils/api";
 import { toast } from "react-toastify";
 import UserDetailContext from "../../../context/UserDetailContext";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -17,7 +17,6 @@ const Signup = () => {
   const { loginWithRedirect, isAuthenticated, user } = useAuth0();
   const { userDetails } = useContext(UserDetailContext);
   const { token } = userDetails;
-  console.log("Token:", token);
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -92,7 +91,7 @@ const Signup = () => {
   }, [formData]);
 
   const { mutate, isLoading } = useMutation({
-    mutationFn: (formData) => signupUser(formData),
+    mutationFn: (formData) => createUser(formData, token),
     onSuccess: () => {
       toast.success("You have logged in successfully", {
         position: "bottom-right",

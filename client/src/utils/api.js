@@ -33,34 +33,24 @@ export const getProperty = async (id) => {
   }
 };
 
-// export const createUser = async (email, phone, password, token) => {
-//   if (!token) return;
-//   try {
-//     await api.post(
-//       `/user/register`,
-//       { email, phone, password },
-//       {
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//         },
-//       }
-//     );
-//   } catch (error) {
-//     toast.error("Something went wrong, Please try again");
-//     throw error;
-//   }
-// };
-
-// Signup API call
-export const signupUser = async (userData) => {
+export const createUser = async (email, phone, password, token) => {
+  if (!token) return;
   try {
-    const response = await api.post("/user/register", userData);
-    return response.data;
+    await api.post(
+      `/user/register`,
+      { email, phone, password },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
   } catch (error) {
-    toast.error(error.response?.data?.message || "Signup failed");
+    toast.error("Something went wrong, Please try again");
     throw error;
   }
 };
+
 
 export const toFav = async (id, email, token) => {
   if (!token) return;
