@@ -1,3 +1,4 @@
+// useCartStore.js
 import { create } from "zustand";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -13,19 +14,21 @@ const COUPON_URL =
     : "/api/coupons";
 
 export const useCartStore = create((set, get) => ({
-  cartItems: [],
+  cartItems: [], // Ensure initial value is an array
   coupon: null,
   availableCoupons: [],
   total: 0,
   subtotal: 0,
   isCouponApplied: false,
   loading: true,
-  hasShownError: false, // ✅ New state to track if error was shown
+  hasShownError: false,
 
   getMyCoupon: async () => {
     try {
       const response = await axios.get(`${COUPON_URL}`);
-      set({ availableCoupons: response.data }); // ✅ Store all available coupons
+      set({
+        availableCoupons: Array.isArray(response.data) ? response.data : [],
+      }); // Guard against non-array
     } catch (error) {
       console.error("Error fetching coupons:", error);
     }
@@ -48,35 +51,33 @@ export const useCartStore = create((set, get) => ({
     toast.success("Coupon removed");
   },
 
-  // ✅ Fetch all cart items
   fetchCart: async () => {
     try {
       set({ loading: true });
       const response = await axios.get(`${API_URL}/all`);
+      const cartData = Array.isArray(response.data) ? response.data : [];
       set({
-        cartItems: response.data || [],
+        cartItems: cartData,
         loading: false,
         hasShownError: false,
-      }); // ✅ Reset error flag on success
+      });
       get().calculateTotals();
     } catch (error) {
       console.error("Error fetching cart:", error);
-      set({ cartItems: [], loading: false });
-
-      // ✅ Show error toast only once
+      set({ cartItems: [], loading: false }); // Reset to empty array on error
       if (!get().hasShownError) {
         toast.error("Error fetching cart items");
-        set({ hasShownError: true }); // ✅ Mark error as shown
+        set({ hasShownError: true });
       }
     }
   },
 
   clearCart: async () => {
     try {
-      await axios.delete(`${API_URL}/clear`); // ✅ Call backend
+      await axios.delete(`${API_URL}/clear`);
       set({ cartItems: [], coupon: null, total: 0, subtotal: 0 });
       if (!get().hasShownError) {
-        // toast.success("Cart cleared successfully");
+        // toast.success("Cart cleared successfully"); // Uncomment if desired
         set({ hasShownError: true });
       }
     } catch (error) {
@@ -85,48 +86,41 @@ export const useCartStore = create((set, get) => ({
         set({ hasShownError: true });
       }
     }
-  },  
+  },
 
-  // ✅ Add to Cart
   addToCart: async (rid) => {
     try {
       const response = await axios.post(`${API_URL}/add/${rid}`);
-      set({ cartItems: response.data.cartItems });
+      const cartData = Array.isArray(response.data.cartItems)
+        ? response.data.cartItems
+        : [];
+      set({ cartItems: cartData });
       toast.success("Added to cart");
     } catch (error) {
       toast.error(error.response?.data?.message || "Error adding to cart");
     }
   },
 
-  // ✅ Remove from Cart
   removeFromCart: async (rid) => {
     try {
-      // Optimistically update UI
       set((state) => ({
-        cartItems: state.cartItems.filter((item) => item._id !== rid),
+        cartItems: Array.isArray(state.cartItems)
+          ? state.cartItems.filter((item) => item._id !== rid)
+          : [],
       }));
-
-      // Call API to remove item
       await axios.delete(`${API_URL}/remove/${rid}`);
-
-      // Recalculate totals after removal
       get().calculateTotals();
-
       toast.success("Removed from cart");
     } catch (error) {
-      // Revert UI if the API call fails
-      await get().fetchCart();
+      await get().fetchCart(); // Revert UI
       toast.error(error.response?.data?.message || "Error removing from cart");
     }
   },
 
-  // ✅ Toggle Cart (Add/Remove on Click)
   toggleCart: async (rid) => {
     try {
       const response = await axios.post(`${API_URL}/toggle/${rid}`);
       toast.success(response.data.message);
-
-      // ✅ Re-fetch cart to ensure correct state update
       await get().fetchCart();
     } catch (error) {
       toast.error(error.response?.data?.message || "Error updating cart");
@@ -141,13 +135,13 @@ export const useCartStore = create((set, get) => ({
 
     try {
       const response = await axios.put(`${API_URL}/${rid}`, { quantity });
-
       set((state) => ({
-        cartItems: state.cartItems.map((item) =>
-          item._id === rid ? { ...item, quantity } : item
-        ),
+        cartItems: Array.isArray(state.cartItems)
+          ? state.cartItems.map((item) =>
+              item._id === rid ? { ...item, quantity } : item
+            )
+          : [],
       }));
-
       get().calculateTotals();
     } catch (error) {
       toast.error(error.response?.data?.message || "Error updating quantity");
@@ -156,7 +150,11 @@ export const useCartStore = create((set, get) => ({
 
   calculateTotals: () => {
     const { cartItems, coupon, isCouponApplied } = get();
-    const subtotal = cartItems.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
+    const itemsArray = Array.isArray(cartItems) ? cartItems : []; // Guard against non-array
+    const subtotal = itemsArray.reduce(
+      (sum, item) => sum + (item.price || 0) * (item.quantity || 1),
+      0
+    );
     let total = subtotal;
 
     if (coupon && isCouponApplied) {
