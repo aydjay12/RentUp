@@ -12,6 +12,9 @@ import { OAuth2Client } from "google-auth-library";
 import crypto from "crypto";
 import cloudinary from "../lib/cloudinary.js";
 import fs from "fs/promises"; // Import fs for file cleanup
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const client = new OAuth2Client(
   process.env.CLIENT_ID,

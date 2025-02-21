@@ -23,7 +23,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cookieParser());
 app.use(
-  cors({ origin: "https://your-render-app.onrender.com", credentials: true })
+  cors({ origin: "https://rentupgold.onrender.com", credentials: true })
 );
 app.use(express.json({ limit: "10mb" }));
 
