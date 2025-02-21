@@ -6,6 +6,8 @@ import { useAuthStore } from "../../store/authStore";
 import { useResidencyStore } from "../../store/useResidencyStore";
 import RecentCard from "../home/recent/RecentCard";
 import { motion } from "framer-motion";
+import Back from "../common/Back";
+import img from "../images/favourites.jpg";
 
 const listVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -39,18 +41,41 @@ const Favourites = () => {
   );
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <section className="blog-out mb">
+        <Back
+          name="Favourite Properties"
+          title="Your Favourite Properties"
+          cover={img}
+        />
+      </section>
       <div className="flexColCenter paddings innerWidth properties-container">
         <SearchBar filter={filter} setFilter={setFilter} />
         <motion.div className="paddings flexCenter properties">
           {favoriteResidencies.length > 0 ? (
             favoriteResidencies
               .filter((property) =>
-                [property.title, property.city, property.country, property.address]
-                  .some((field) => field.toLowerCase().includes(filter.toLowerCase()))
+                [
+                  property.title,
+                  property.city,
+                  property.country,
+                  property.address,
+                ].some((field) =>
+                  field.toLowerCase().includes(filter.toLowerCase())
+                )
               )
               .map((card, i) => (
-                <motion.div key={card._id} variants={listVariants} custom={i} initial="hidden" animate="visible">
+                <motion.div
+                  key={card._id}
+                  variants={listVariants}
+                  custom={i}
+                  initial="hidden"
+                  animate="visible"
+                >
                   <RecentCard card={card} />
                 </motion.div>
               ))

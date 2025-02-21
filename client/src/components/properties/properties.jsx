@@ -3,7 +3,7 @@ import Back from "../common/Back";
 import RecentCard from "../home/recent/RecentCard";
 import "../home/recent/recent.css";
 import "./properties.css";
-import img from "../images/about.jpg";
+import img from "../images/properties.jpg";
 import Searchbar from "../../components/SearchBar/Searchbar";
 import { PuffLoader } from "react-spinners";
 import { useResidencyStore } from "../../store/useResidencyStore"; // Import Zustand store
