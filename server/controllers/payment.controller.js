@@ -15,7 +15,7 @@ export const createCheckoutSession = async (req, res) => {
     let totalAmount = 0;
 
     const lineItems = residencies.map((residency) => {
-      const amount = Math.round(residency.price * 100); // Stripe requires amount in cents
+      const amount = Math.round(residency.price * 100);
       totalAmount += amount * (residency.quantity || 1);
 
       return {
@@ -71,6 +71,7 @@ export const createCheckoutSession = async (req, res) => {
       },
     });
 
+    console.log("Created Stripe session:", session.id); // Debug log
     res.status(200).json({ id: session.id, totalAmount: totalAmount / 100 });
   } catch (error) {
     console.error("Error processing checkout:", error);
