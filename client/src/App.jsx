@@ -135,7 +135,14 @@ const App = () => {
                   <Route path="/search" element={<Search />} />
                   <Route path="/pricing" element={<Pricing />} />
                   <Route path="/contact" element={<Contact />} />
-                  <Route path="/profile-page" element={<ProfilePage />} />
+                  <Route
+                    path="/profile-page"
+                    element={
+                      <ProtectedRoute>
+                        <ProfilePage />
+                      </ProtectedRoute>
+                    }
+                  />
                   <Route
                     path="/cart"
                     element={
