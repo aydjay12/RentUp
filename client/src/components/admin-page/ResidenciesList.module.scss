@@ -1,0 +1,227 @@
+$primary-color: #27ae60;
+$secondary-color: #ffeb3b;
+$background-color: #f9f9f9;
+$table-background: #ffffff;
+$highlight-background: #e8f5e9;
+$text-color: #333;
+$shadow-color: rgba(0, 0, 0, 0.1);
+
+$transition-speed: 0.3s;
+
+.residenciesList {
+  background: $table-background;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 10px $shadow-color;
+  transition: transform $transition-speed ease,
+    box-shadow $transition-speed ease;
+  @media (max-width: 768px) {
+    padding: 20px 0.8em;
+  }
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 30px $shadow-color;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    thead {
+      tr {
+        th:nth-child(1) {
+          border-top-left-radius: 10px;
+        }
+        th:nth-child(6) {
+          border-top-right-radius: 10px;
+        }
+      }
+    }
+  }
+
+  th,
+  td {
+    padding: 14px 16px;
+    text-align: left;
+    font-size: 1rem;
+    @media (max-width: 768px) {
+      font-size: 12px;
+      padding: 15px;
+      padding-left: 0.5em;
+      padding-right: 0.5em;
+      &:nth-child(2),
+      &:nth-child(5) {
+        display: none;
+      }
+    }
+  }
+
+  th {
+    background-color: $primary-color;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: bold;
+    @media (max-width: 768px) {
+      font-weight: 500;
+    }
+  }
+
+  td {
+    background-color: $table-background;
+    color: $text-color;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .residencyCell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    @media (max-width: 768px) {
+      gap: 5px;
+    }
+
+    span {
+      font-weight: 500;
+    }
+  }
+
+  .residencyImage {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: unset;
+  }
+
+  .actions {
+    display: flex;
+    gap: 10px;
+    @media (max-width: 768px) {
+      gap: 5px;
+      min-height: 8vh;
+    }
+  }
+
+  .actionButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    background: $highlight-background;
+    border-radius: 5px;
+    transition: color $transition-speed ease;
+    @media (max-width: 768px) {
+      padding: 5px;
+    }
+
+    .editButton {
+      width: 20px;
+      height: 20px;
+      color: #967c79;
+      transition: color $transition-speed ease;
+      &:hover {
+        color: #3498db;
+      }
+      @media (max-width: 768px) {
+        width: 18px;
+        height: 18px;
+      }
+    }
+
+    .trashIcon {
+      width: 20px;
+      height: 20px;
+      color: #967c79;
+      transition: color $transition-speed ease;
+      &:hover {
+        color: #e74c3c;
+      }
+      @media (max-width: 768px) {
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+}
+
+.modalPopup {
+  header {
+    box-shadow: none;
+  }
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.confirmButton {
+  background-color: #e63946;
+  color: white;
+  &:hover {
+    background-color: #d62839;
+  }
+}
+
+.cancelButton {
+  border: 1px solid #ccc;
+  color: #333;
+  &:hover {
+    background-color: #f1f1f1;
+  }
+}
+
+.editPopup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  section {
+    min-width: 100% !important;
+    height: 80vh !important;
+    margin-top: 5em;
+    /* General scrollbar styling */
+    &::-webkit-scrollbar {
+      width: 5px; // Thin scrollbar
+      height: 5px; // Horizontal scrollbar (if needed)
+    }
+
+    /* Scrollbar track */
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1; // Light gray background
+      border-radius: 10px;
+      display: none;
+    }
+
+    /* Scrollbar handle */
+    &::-webkit-scrollbar-thumb {
+      background: #aaa; // Medium gray color
+      border-radius: 10px;
+      transition: background 0.3s ease-in-out;
+    }
+
+    /* Scrollbar handle on hover */
+    &::-webkit-scrollbar-thumb:hover {
+      background: #555; // Darker gray when hovered
+    }
+    header {
+      padding: 1.5em 4.4em;
+      @media (max-width: 768px) {
+        padding: 1.2em 1em;
+      }
+      h2 {
+        font-size: 18px;
+        color: #4caf50;
+        font-weight: 600;
+      }
+    }
+    div:nth-child(1) {
+      padding-top: 0 !important;
+      form {
+        padding-top: 1.2em;
+        padding-bottom: 0.5em;
+      }
+    }
+  }
+}

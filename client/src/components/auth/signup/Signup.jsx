@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import "./signup.scss";
 import { GoEye } from "react-icons/go";
 import { FaRegEyeSlash } from "react-icons/fa";
@@ -6,23 +7,21 @@ import { FaAngleLeft } from "react-icons/fa";
 import GoogleIcon from "../../../../public/svg/google.svg";
 import Logo from "../../pics/logo.png";
 import { useNavigate } from "react-router-dom";
-import { useMutation } from "react-query";
-import { createUser } from "../../../utils/api";
+import { useAuthStore } from "../../../store/authStore";
 import { toast } from "react-toastify";
-import UserDetailContext from "../../../context/UserDetailContext";
-import { useAuth0 } from "@auth0/auth0-react";
+import { Loader } from "lucide-react";
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import { Button } from "@mui/material";
 
 const Signup = () => {
   const navigate = useNavigate();
-  const { loginWithRedirect, isAuthenticated, user } = useAuth0();
-  const { userDetails } = useContext(UserDetailContext);
-  const { token } = userDetails;
+  const { signup, isLoading, error, loginWithGoogle } = useAuthStore(); // Add loginWithGoogle
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
-    phone: "",
+    name: "",
     password: "",
     confirmPassword: "",
     agreedToTerms: false,
@@ -31,24 +30,20 @@ const Signup = () => {
   const [errors, setErrors] = useState({
     email: "",
     password: "",
-    phone: "",
+    name: "",
     confirmPassword: "",
     terms: "",
   });
 
-  const handleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const handleShowConfirmPassword = () => {
+  const handleShowPassword = () => setShowPassword(!showPassword);
+  const handleShowConfirmPassword = () =>
     setShowConfirmPassword(!showConfirmPassword);
-  };
 
   const validate = () => {
     const newErrors = {
       email: "",
       password: "",
-      phone: "",
+      name: "",
       confirmPassword: "",
       terms: "",
     };
@@ -72,17 +67,15 @@ const Signup = () => {
       newErrors.confirmPassword = "Passwords do not match";
     }
 
-    if (formData.phone.length === 0) {
-      newErrors.phone = "Phone length must be greater than 1";
+    if (!formData.name) {
+      newErrors.name = "Username is required";
     }
 
     if (!formData.agreedToTerms) {
-      newErrors.terms =
-        "You must agree to the terms and conditions to register";
+      newErrors.terms = "You must agree to the terms and conditions";
     }
 
     setErrors(newErrors);
-
     return !Object.values(newErrors).some((error) => error !== "");
   };
 
@@ -90,112 +83,102 @@ const Signup = () => {
     validate();
   }, [formData]);
 
-  const { mutate, isLoading } = useMutation({
-    mutationFn: (formData) => createUser(formData.email, formData.phone, formData.password, token),
-    onSuccess: (data) => {
-      toast.success("You have registered successfully", {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        style: {
-          background: "#4CAF50",
-          color: "#FFFFFF",
-          borderRadius: "8px",
-          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
-        },
-      });
-  
-      // Redirect user to home or dashboard
-      navigate("/");
-  
-      // Trigger login immediately after registration
-      loginWithRedirect();
-    },
-    onError: (error) => {
-      toast.error("Unsuccessful registration", {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        style: {
-          background: "#FF5252",
-          color: "#FFFFFF",
-          borderRadius: "8px",
-          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
-        },
-      });
-      console.error("Error submitting signup form:", error);
-    },
-  });  
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setShowMsg(true); // Ensure error messages are shown when user clicks submit
+    setShowMsg(true);
     if (validate()) {
-      mutate({
-        email: formData.email,
-        phone: formData.phone,
-        password: formData.password,
-      });
+      try {
+        await signup(formData.email, formData.password, formData.name);
+        navigate("/otp-verification");
+      } catch (err) {
+        toast.error("Signup failed");
+      }
     }
   };
 
-  const handleGoogleSignup = () => {
-    loginWithRedirect();
+  const handleGoogleLoginSuccess = async (credentialResponse) => {
+    try {
+      await loginWithGoogle(credentialResponse.credential); // Send the Google ID token to the backend
+      navigate("/home"); // Redirect to home or dashboard
+    } catch (error) {
+      toast.error("Google Sign-In failed");
+    }
+  };
+
+  const handleGoogleLoginFailure = () => {
+    toast.error("Google Sign-In failed");
   };
 
   return (
-    <div className="signupPage">
+    <motion.div
+      className="signupPage"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+    >
       <div className="logo">
-        <img src={Logo} alt="" />
+        <img src={Logo} alt="Logo" />
       </div>
-      <form className="form" noValidate onSubmit={handleSubmit}>
-        <FaAngleLeft className="back-arrow" onClick={() => navigate("/")} />
+
+      <motion.form
+        className="form"
+        onSubmit={handleSubmit}
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.3 }}
+      >
+        <FaAngleLeft className="back-arrow" onClick={() => navigate(-1)} />
         <h1>
           Hello <span>There !!</span>
         </h1>
         <p>
-          Have an account? <a onClick={() => navigate("/signin")}>Log In</a>
+          Have an account? <a href="/signin">Log In</a>
         </p>
+
+        {/* Username Input */}
+        <div className="phone-number-input username-input">
+          <label>
+            Username <span>*</span>
+          </label>
+          <input
+            type="name"
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          />
+          {showMsg && errors.name && (
+            <motion.p
+              className="error-message"
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+            >
+              {errors.name}
+            </motion.p>
+          )}
+        </div>
+
+        {/* Email Input */}
         <div className="email-input">
           <label>
             Email <span>*</span>
           </label>
           <input
             type="email"
-            name="email"
             value={formData.email}
             onChange={(e) =>
               setFormData({ ...formData, email: e.target.value })
             }
           />
           {showMsg && errors.email && (
-            <p className="error-message">{errors.email}</p>
+            <motion.p
+              className="error-message"
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+            >
+              {errors.email}
+            </motion.p>
           )}
         </div>
-        <div className="phone-number-input">
-          <label>
-            Phone Number <span>*</span>
-          </label>
-          <input
-            type="tel"
-            name="phone"
-            value={formData.phone}
-            onChange={(e) =>
-              setFormData({ ...formData, phone: e.target.value })
-            }
-          />
-          {showMsg && errors.phone && (
-            <p className="error-message">{errors.phone}</p>
-          )}
-        </div>
+
         <div className="password-input">
           <label>Password</label>
           <div className="input-container">
@@ -207,14 +190,22 @@ const Signup = () => {
                 setFormData({ ...formData, password: e.target.value })
               }
             />
-            <div className="eye" onClick={handleShowPassword}>
+            <motion.div
+              className="eye"
+              onClick={handleShowPassword}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              animate={{ rotate: showPassword ? 0 : 180 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
               {showPassword ? <GoEye /> : <FaRegEyeSlash />}
-            </div>
+            </motion.div>
           </div>
           {showMsg && errors.password && (
             <p className="error-message">{errors.password}</p>
           )}
         </div>
+
         <div className="confirm-password-input">
           <label>Confirm Password</label>
           <div className="input-container">
@@ -226,14 +217,22 @@ const Signup = () => {
                 setFormData({ ...formData, confirmPassword: e.target.value })
               }
             />
-            <div className="eye" onClick={handleShowConfirmPassword}>
+            <motion.div
+              className="eye"
+              onClick={handleShowConfirmPassword}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              animate={{ rotate: showConfirmPassword ? 0 : 180 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
               {showConfirmPassword ? <GoEye /> : <FaRegEyeSlash />}
-            </div>
+            </motion.div>
           </div>
           {showMsg && errors.confirmPassword && (
             <p className="error-message">{errors.confirmPassword}</p>
           )}
         </div>
+
         <div className="remember-me">
           <div>
             <input
@@ -253,20 +252,43 @@ const Signup = () => {
           )}
         </div>
         <div className="buttons">
-          <button type="submit" className="registerButton">
-            {isLoading ? "Registering..." : "Register"}
+          {error && <p className="error-message text-center">{error}</p>}
+          <button type="submit" className="registerButton" disabled={isLoading}>
+            {isLoading ? (
+              <Loader className="w-6 h-6 animate-spin mx-auto" />
+            ) : (
+              "Register"
+            )}
           </button>
-          <button
-            type="button"
+          <GoogleOAuthProvider
+            clientId="301899233164-s87ofoj53j35cjkelodhnuvkjkuid2il.apps.googleusercontent.com"
             className="signup-google"
-            onClick={handleGoogleSignup}
           >
-            <img src={GoogleIcon} alt="" />
-            Sign Up with Google
-          </button>
+            <div className="signup-google">
+              <GoogleLogin
+                onSuccess={handleGoogleLoginSuccess}
+                onError={handleGoogleLoginFailure}
+                text="signup_with"
+                className="signup-google-button"
+                width="300"
+                size="large"
+                logo_alignment="center"
+                render={(renderProps) => (
+                  <Button
+                    type="button"
+                    onClick={renderProps.onClick}
+                    disabled={renderProps.disabled}
+                  >
+                    <img src={GoogleIcon} alt="Google Icon" />
+                    Sign Up with Google
+                  </Button>
+                )}
+              />
+            </div>
+          </GoogleOAuthProvider>
         </div>
-      </form>
-    </div>
+      </motion.form>
+    </motion.div>
   );
 };
 

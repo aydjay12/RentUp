@@ -86,7 +86,7 @@ const Hero = () => {
               onChange={handleInputChange}
             />
           </motion.div>
-          <motion.div className="box" whileHover={{ y: -5 }}>
+          <motion.div className="box" whileHover={{ y: 0 }}>
             <h4>Advance Filter</h4>
           </motion.div>
           <motion.button

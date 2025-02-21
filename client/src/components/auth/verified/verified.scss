@@ -3,6 +3,7 @@
     align-items: center;
     justify-content: center;
     padding: 0em 3em;
+    padding-right: 0;
     position: relative;
     gap: 3em;
     overflow-x: hidden;
@@ -41,7 +42,6 @@
         align-items: center;
         width: 35%;
         z-index: 999;
-        background: white;
         min-height: 100vh;
         cursor: unset;
         @media(max-width:768px){
@@ -64,15 +64,15 @@
         min-height: 100vh;
         align-items: center;
         justify-content: center;
-        &:hover{
-        background: unset !important;
-        background-color: unset !important;
-        }
+        background: #fff;
+        padding-right: 3em;
+
         @media(max-width:768px){
             width: 100%;
             min-height: unset;
             border-left: none;
             padding: 0;
+            background: unset;
         }
 
         .bus{

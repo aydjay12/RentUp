@@ -1,30 +1,33 @@
-import { useContext, useEffect, useRef } from "react";
-import UserDetailContext from "../context/UserDetailContext";
+import { useEffect, useRef } from "react";
 import { useQuery } from "react-query";
-import { useAuth0 } from "@auth0/auth0-react";
-import { getAllContacts } from "../utils/api";
+import { useAuthStore } from "../store/useAuthStore";
+import { useContactStore } from "../store/useContactStore";
 
 const useContacts = () => {
-  const { userDetails, setUserDetails } = useContext(UserDetailContext);
+  const { token, user } = useAuthStore(); // ✅ Get user & token from Zustand
+  const { contacts, fetchAllContacts } = useContactStore(); // ✅ Use Zustand for contacts
   const queryRef = useRef();
-  const { user } = useAuth0();
 
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: "allContacts",
-    queryFn: () => getAllContacts(user?.email, userDetails?.token),
-    onSuccess: (data) =>
-      setUserDetails((prev) => ({ ...prev, contacts: data })),
-    enabled: user !== undefined,
+    queryKey: ["allContacts", user?.email],
+    queryFn: () => fetchAllContacts(token), // ✅ Call Zustand store function
+    enabled: !!user?.email && !!token,
     staleTime: 30000,
+    onSuccess: (data) => {
+      // ✅ Ensure contacts state updates in Zustand
+      useContactStore.getState().setContacts(data);
+    },
   });
 
   queryRef.current = refetch;
 
   useEffect(() => {
-    queryRef.current && queryRef.current();
-  }, [userDetails?.token]);
+    if (queryRef.current) {
+      queryRef.current(); // ✅ Refetch when token changes
+    }
+  }, [token]);
 
-  return { data, isError, isLoading, refetch };
+  return { data: contacts, isError, isLoading, refetch };
 };
 
 export default useContacts;

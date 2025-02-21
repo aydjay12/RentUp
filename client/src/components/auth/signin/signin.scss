@@ -3,6 +3,7 @@
   align-items: center;
   justify-content: center;
   padding: 0 3em;
+  padding-right: 0;
   gap: 3em;
   overflow-x: hidden;
   min-height: 100vh;
@@ -10,9 +11,10 @@
   @media (max-width: 768px) {
     padding: 1em;
     padding-bottom: 3em;
+    background: #fff;
   }
 
-  img{
+  img {
     width: unset;
     height: unset;
     cursor: unset;
@@ -98,17 +100,23 @@
   .form {
     flex: 1;
     width: 70%;
+    min-height: 100vh;
     display: flex;
+    justify-content: center;
     flex-direction: column;
     z-index: 99;
     margin-top: 0;
+    margin-left: -2.5em;
     border-left: 2px solid #b2b2b2;
     padding: 4em 0;
     padding-left: 3em;
+    padding-right: 3em;
 
     @media (max-width: 768px) {
       width: 100%;
       border-left: none;
+      margin-left: 0;
+      justify-content: start;
       padding: 0;
     }
     & > div {
@@ -130,6 +138,7 @@
       color: #27ae60;
       margin: 0;
       font-weight: 600;
+      font-size: 28px;
 
       span {
         color: #27364b;
@@ -156,10 +165,10 @@
       display: flex;
       flex-direction: column;
       position: relative;
-      .input-container{
+      .input-container {
         position: relative;
         height: 100%;
-        input{
+        input {
           width: 100%;
           height: 100%;
         }
@@ -224,7 +233,7 @@
       span {
         color: #27ae60;
       }
-      a{
+      a {
         cursor: pointer;
         text-decoration: underline;
       }
@@ -259,11 +268,11 @@
       color: #27ae60;
     }
     .error-message {
-        margin: 0;
-        margin-top: .5rem;
-        color: tomato;
-        font-size: 0.875rem;
-      }
+      margin: 0;
+      margin-top: 0.5rem;
+      color: tomato;
+      font-size: 0.875rem;
+    }
     .buttons {
       display: flex;
       flex-direction: column;
@@ -273,7 +282,7 @@
       justify-content: center;
 
       @media (max-width: 768px) {
-        margin-top: 4em;
+        margin-top: 1em;
       }
 
       button {
@@ -302,9 +311,66 @@
       }
 
       .signup-google {
-        border: 2px solid #b2b2b2;
+        border: 1px solid #b2b2b2;
         background: transparent;
         color: black;
+        width: 80%;
+        border-radius: 5px;
+        padding: 0.3em 0;
+        div {
+          border: none !important;
+          display: flex !important;
+          gap: 1em;
+          justify-content: center;
+          align-items: center;
+        }
+        > div:first-of-type {
+          height: 7vh !important;
+          display: flex;
+          width: 100%;
+          > div:first-of-type {
+            max-width: 100% !important;
+            height: 100% !important;
+            width: 100% !important;
+            :hover {
+              background-color: white !important;
+            }
+            > div:first-of-type {
+              max-width: 100% !important;
+              height: 100% !important;
+              width: 100% !important;
+              :hover {
+                background-color: white !important;
+              }
+              > div:first-of-type {
+                max-width: 100% !important;
+                height: 100% !important;
+                width: 100% !important;
+                :hover {
+                  background-color: white !important;
+                }
+                > div:first-of-type {
+                  max-width: 100% !important;
+                  height: 100% !important;
+                  width: 100% !important;
+                  :hover {
+                    background-color: white !important;
+                  }
+                }
+              }
+            }
+          }
+        }
+        span {
+          font-size: 16px;
+          font-weight: 600;
+          font-family: "Poppins", sans-serif;
+        }
+
+        @media (max-width: 768px) {
+          width: 100%;
+          border-radius: 40px;
+        }
       }
     }
   }

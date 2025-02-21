@@ -1,0 +1,96 @@
+// Light Theme Colors
+$primary: #ef4444; // Red for cancellation
+$background: #f8f9fa;
+$text-primary: #333;
+$text-secondary: #555;
+$card-bg: #ffffff;
+$shadow: rgba(0, 0, 0, 0.1);
+
+.container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100vh;
+	padding: 1rem;
+	background-color: $background;
+}
+
+.card {
+	background: $card-bg;
+	box-shadow: 0 4px 10px $shadow;
+	border-radius: 12px;
+	padding: 2rem;
+	max-width: 450px;
+	width: 100%;
+	text-align: center;
+	position: relative;
+}
+
+.iconWrapper {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 1rem;
+}
+
+.icon {
+	color: $primary;
+	width: 64px;
+	height: 64px;
+}
+
+.title {
+	font-size: 1.8rem;
+	font-weight: bold;
+	color: $primary;
+	margin-bottom: 0.5rem;
+}
+
+.text {
+	color: $text-primary;
+	font-size: 1rem;
+	margin-bottom: 1.5rem;
+}
+
+.infoBox {
+	background: #f1f5f9;
+	padding: 1rem;
+	border-radius: 8px;
+	margin-bottom: 1.5rem;
+}
+
+.infoText {
+	color: $text-secondary;
+	font-size: 0.9rem;
+	text-align: center;
+}
+
+.actions {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+}
+
+.returnButton {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	padding: 0.75rem;
+	border-radius: 8px;
+	font-weight: bold;
+	font-size: 1rem;
+	background-color: #e2e8f0;
+	color: $primary;
+	border: none;
+	transition: all 0.3s ease-in-out;
+	text-decoration: none;
+	cursor: pointer;
+
+	&:hover {
+		background-color: darken(#e2e8f0, 5%);
+	}
+}
+
+.buttonIcon {
+	margin-right: 0.5rem;
+}

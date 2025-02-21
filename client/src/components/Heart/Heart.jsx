@@ -1,40 +1,38 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { AiFillHeart } from "react-icons/ai";
-import useAuthCheck from "../../hooks/useAuthCheck";
-import { useMutation } from "react-query";
-import { useAuth0 } from "@auth0/auth0-react";
-import UserDetailContext from "../../context/UserDetailContext";
-import { checkFavourites, updateFavourites } from "../../utils/common";
-import { toFav } from "../../utils/api";
+import { useAuthStore } from "../../store/authStore";
+import { toast } from "react-toastify"; 
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 const Heart = ({ id }) => {
+  const { user, isAuthenticated, toFav, favourites } = useAuthStore();
   const [heartColor, setHeartColor] = useState("gray");
-  const { validateLogin } = useAuthCheck();
-  const { user } = useAuth0();
-
-  const {
-    userDetails: { favourites, token },
-    setUserDetails,
-  } = useContext(UserDetailContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    setHeartColor(() => checkFavourites(id, favourites));
-  }, [favourites]);
+    if (user && user.favResidenciesID?.includes(id)) {
+      setHeartColor("red");
+    } else {
+      setHeartColor("gray");
+    }
+  }, [user, id]); // ✅ Ensured `user` is checked before accessing properties
 
-  const { mutate } = useMutation({
-    mutationFn: () => toFav(id, user?.email, token),
-    onSuccess: () => {
-      setUserDetails((prev) => ({
-        ...prev,
-        favourites: updateFavourites(id, prev.favourites),
-      }));
-    },
-  });
+  const handleLike = async (e) => {
+    e.stopPropagation();
+    if (!isAuthenticated) {
+      toast.error("You must be logged in to like this", { position: "bottom-right", autoClose: 3000 });
+      return;
+    }
+    if (!user?.isVerified) {
+      toast.error("You must be verified to like this", { position: "bottom-right", autoClose: 3000 });
+      return navigate("/otp-verification");
+    }
 
-  const handleLike = () => {
-    if (validateLogin()) {
-      mutate();
-      setHeartColor((prev) => (prev === "#fa3e5f" ? "gray" : "#fa3e5f"));
+    try {
+      await toFav(id);
+    } catch (error) {
+      toast.error("Failed to update favorite");
     }
   };
 
@@ -43,10 +41,7 @@ const Heart = ({ id }) => {
       size={24}
       color={heartColor}
       cursor="pointer"
-      onClick={(e) => {
-        e.stopPropagation();
-        handleLike();
-      }}
+      onClick={handleLike}
     />
   );
 };

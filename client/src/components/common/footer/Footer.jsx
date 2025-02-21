@@ -26,7 +26,7 @@ const Footer = () => {
               onClick={() => navigate("/contact")}
               whileHover={{ scale: 1.1 }}
             >
-              <button className="btn5">Contact Us Today</button>
+              <button className="btn5 contact-button">Contact Us Today</button>
             </motion.a>
           </div>
         </div>
@@ -89,7 +89,7 @@ const Footer = () => {
         transition={{ duration: 1 }}
         viewport={{ once: true }}
       >
-        <span>© 2023 RentUP. Designed By GorkCoder.</span>
+        <span>© 2023 RentUP. Designed By Xel.</span>
       </motion.div>
     </>
   );

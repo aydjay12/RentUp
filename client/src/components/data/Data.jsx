@@ -26,7 +26,7 @@ import {FaFacebook, FaInstagram, FaLinkedin, FaTrophy, FaTwitter} from "react-ic
 export const nav = [
   {
     text: "home",
-    path: "/",
+    path: "/home",
   },
   {
     text: "about",

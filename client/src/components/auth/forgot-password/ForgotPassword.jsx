@@ -1,42 +1,63 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./forgot-password.scss";
 import { FaAngleLeft } from "react-icons/fa";
 import Logo from "../../pics/logo.png";
-import { OtpInput } from "reactjs-otp-input";
-import { useTimer } from "react-timer-hook";
+import { ArrowLeft, Loader, Mail } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "../../../store/authStore";
+import { toast } from "react-toastify";
+import { motion } from "framer-motion";
 
 const ForgotPassword = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [errors, setErrors] = useState({
-    email: "",
-    otp: "",
-  });
-  const [showMsg, setShowMsg] = useState(false);
-  const [formData, setFormData] = useState({
-    email: "",
-    otp: "",
-  });
+  const { isLoading, error, forgotPassword } = useAuthStore();
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({ email: "" });
   const [emailEntered, setEmailEntered] = useState(false);
-  const [otpResend, setOtpResend] = useState(false);
-  const sendOtp = () => {};
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await forgotPassword(formData.email);
+      toast.success("Password reset link sent! Check your email.");
+      setEmailEntered(true);
+    } catch (err) {
+      toast.error(error);
+    }
+  };
 
   return (
-    <div className="forgotPage">
+    <motion.div
+      className="forgotPage"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       <div className="logo">
-        <img src={Logo} alt="" />
+        <img src={Logo} alt="Logo" />
       </div>
-      <form className="form" noValidate>
-        <FaAngleLeft className="back-arrow" />
-        <h1>
+
+      <motion.div
+        className="form forgot-form"
+        initial={{ y: 30, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+      >
+        <FaAngleLeft className="back-arrow" onClick={() => navigate(-1)} />
+        <h1 className="forgot-header">
           <span>Forgot Password</span>
         </h1>
-        <p>
-          {!emailEntered
-            ? "Enter the email associated with your account and we’ll send an email with a one-time passcode to reset your password."
-            : "We have sent a one-time passcode to your email."}
-        </p>
+
         {!emailEntered ? (
-          <>
+          <motion.form
+            onSubmit={handleSubmit}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <p>
+              Enter the email associated with your account and we’ll send a
+              password reset link to your mail.
+            </p>
             <div className="email-input">
               <label>
                 Email <span>*</span>
@@ -44,44 +65,57 @@ const ForgotPassword = () => {
               <input
                 type="email"
                 name="email"
+                value={formData.email}
+                onChange={(e) => setFormData({ email: e.target.value })}
+                required
               />
-              {showMsg && errors.email && (
-                <p className="error-message">{errors.email}</p>
-              )}
             </div>
-          </>
+            <div style={{ paddingTop: "3rem" }} className="buttons">
+              <motion.button
+                type="submit"
+                className="registerButton"
+                disabled={isLoading}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {isLoading ? (
+                  <Loader className="w-6 h-6 animate-spin mx-auto" />
+                ) : (
+                  "Send Reset Link"
+                )}
+              </motion.button>
+            </div>
+          </motion.form>
         ) : (
-          <div className="otp">
-            <h1>Kindly enter your one-time pass-code here.</h1>
-            <div className="otp-input">
-              <OtpInput
-                isInputNum
-                numInputs={6}
-                containerStyle={"inputs"}
-                focusStyle={"inputFocused"}
-              />
-            </div>
-            <p>
-              Didn’t get a code?{" "}
-              {otpResend ? (
-                <span>Resend OTP</span>
-              ) : (
-                <span>Resend in {}s</span>
-              )}
-            </p>
-          </div>
+          <>
+            <motion.div
+              className="text-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <div className="mail-container">
+                <Mail className="mail-icon" />
+              </div>
+              <p>
+                If an account exists for {formData.email}, you will receive a
+                password reset link shortly.
+              </p>
+            </motion.div>
+            <motion.div
+              className="back-login-button"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.3 }}
+            >
+              <a href="/signin">
+                <ArrowLeft /> Back to Login
+              </a>
+            </motion.div>
+          </>
         )}
-        <div style={{ paddingTop: "3rem" }} className="buttons">
-          <button
-            type="submit"
-            className="registerButton"
-            disabled={emailEntered && formData.otp.length !== 6}
-          >
-            {!emailEntered ? "Reset Password" : "Verify"}
-          </button>
-        </div>
-      </form>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

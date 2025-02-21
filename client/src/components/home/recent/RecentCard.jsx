@@ -2,6 +2,7 @@ import React from "react";
 import { HiLocationMarker } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import Heart from "../../Heart/Heart";
+import Cart from "../../Cart/Cart"; // Import the new Cart component
 import { motion } from "framer-motion";
 
 const cardVariants = {
@@ -12,6 +13,8 @@ const cardVariants = {
 const RecentCard = ({ card }) => {
   const navigate = useNavigate();
 
+  if (!card) return null; // Prevent errors if card is undefined
+
   return (
     <motion.div
       className="box shadow"
@@ -20,19 +23,22 @@ const RecentCard = ({ card }) => {
       animate="visible"
       whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}
     >
-      <motion.div
-        className="img"
-        onClick={() => navigate(`../properties/${card.id}`)}
-        whileHover={{ scale: 1.02 }}
-      >
-        <img src={card.image} alt={card.title} />
-      </motion.div>
+      {/* Image Click Redirect */}
+      <div className="img">
+        <img
+          src={card.image}
+          alt={card.title}
+          onClick={() => navigate(`/properties/${card._id}`)}
+        />
+        <Cart id={card._id} />
+      </div>
 
       <div className="text">
         <div className="category flex">
           <motion.span
             style={{
-              background: card.status === "For Sale" ? "#25b5791a" : "#ff98001a",
+              background:
+                card.status === "For Sale" ? "#25b5791a" : "#ff98001a",
               color: card.status === "For Sale" ? "#25b579" : "#ff9800",
             }}
             whileHover={{ scale: 1.02 }}
@@ -40,7 +46,7 @@ const RecentCard = ({ card }) => {
             {card.status}
           </motion.span>
           <motion.div whileTap={{ scale: 0.8 }}>
-            <Heart id={card?.id} />
+            <Heart id={card._id} />
           </motion.div>
         </div>
         <h4>{card.title}</h4>
@@ -51,7 +57,8 @@ const RecentCard = ({ card }) => {
 
       <div className="flex padd">
         <motion.div whileHover={{ scale: 1 }}>
-          <button className="btn2 price-btn">${card.price}</button> <span>/sqft</span>
+          <button className="btn2 price-btn">${card.price}</button>{" "}
+          <span>/sqft</span>
         </motion.div>
         <span>{card.type}</span>
       </div>

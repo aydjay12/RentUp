@@ -1,13 +1,18 @@
-import React from "react";
-import { motion } from "framer-motion"; // Import framer-motion
+import React, { useEffect } from "react";
+import { motion } from "framer-motion";
 import Heading from "../../common/Heading";
 import "./recent.css";
 import RecentCard from "./RecentCard";
-import useProperties from "../../../hooks/useProperties";
+import { useResidencyStore } from "../../../store/useResidencyStore";
 import { PuffLoader } from "react-spinners";
 
 const Recent = () => {
-  const { data, isError, isLoading } = useProperties();
+  const { residencies, fetchAllResidencies, loading, isError } =
+    useResidencyStore();
+
+  useEffect(() => {
+    fetchAllResidencies();
+  }, [fetchAllResidencies]);
 
   if (isError) {
     return (
@@ -17,16 +22,10 @@ const Recent = () => {
     );
   }
 
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="wrapper flexCenter" style={{ height: "60vh" }}>
-        <PuffLoader
-          height="80"
-          width="80"
-          radius={1}
-          color="#27ae60"
-          aria-label="puff-loading"
-        />
+        <PuffLoader color="#27ae60" aria-label="puff-loading" />
       </div>
     );
   }
@@ -42,20 +41,38 @@ const Recent = () => {
             viewport={{ once: true, amount: 0.5 }}
           >
             <Heading
-              title="Recent Property Listed"
+              title="Featured Properties"
               subtitle="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam."
             />
           </motion.div>
+
           <motion.div
             className="recent-container"
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, }}
-            viewport={{ once: true, }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
           >
-            {data.slice(0, 6).map((card, i) => (
-              <RecentCard key={i} card={card} />
-            ))}
+            {residencies.length > 0 ? (
+              residencies.slice(0, 6).map((card, i) => (
+                <RecentCard key={i} card={card} />
+              ))
+            ) : (
+              <motion.div
+                className="no-residency"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                style={{
+                  fontSize: "1rem",
+                  color: "#2d3954",
+                  marginBottom: "4rem",
+                  fontWeight: "600",
+                }}
+              >
+                No Properties Found
+              </motion.div>
+            )}
           </motion.div>
         </div>
       </section>

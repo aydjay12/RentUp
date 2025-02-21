@@ -1,0 +1,169 @@
+$primary-color: #27ae60; // Soft green for main accents
+$secondary-color: #ffeb3b; // Yellow for highlights
+$background-color: #f9f9f9; // Soft light background color
+$form-background: #ffffff; // Form background color
+$highlight-background: #e8f5e9; // Light gradient for background of cards
+$input-background: #f3f4f6; // Soft input background color
+$shadow-color: rgba(0, 0, 0, 0.1); // Light shadow effect
+
+$transition-speed: 0.3s; // Smooth transition speed
+
+.createResidencyForm {
+  background: $form-background;
+  border-radius: 20px;
+  padding: 35px;
+  padding-bottom: 60px;
+  box-shadow: 0 4px 10px $shadow-color;
+  transition: transform $transition-speed ease, box-shadow $transition-speed ease;
+  @media(max-width: 768px){
+    padding: 25px 15px;
+  }
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 30px $shadow-color;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: $primary-color;
+    @media(max-width: 768px){
+      font-size: 1.3rem;
+      text-align: center;
+    }
+  }
+
+  form {
+    margin-top: 2em;
+    @media(max-width: 768px){
+      padding: 0;
+    }
+  }
+
+  .inputContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1em;
+
+    &:nth-child(1), &:nth-child(2), &:nth-child(5) {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .formGroup {
+    margin-bottom: 30px;
+    @media(max-width: 768px){
+      width: 100%;
+    }
+
+    label {
+      display: block;
+      font-size: 1rem;
+      color: $primary-color;
+      margin-bottom: 8px;
+      font-weight: 600;
+      @media (max-width: 768px){
+        font-size: 0.9rem;
+      }
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 12px;
+      background-color: $input-background;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      color: #333;
+      font-size: 1rem;
+      transition: all $transition-speed ease;
+      margin-top: 5px;
+
+      &:focus {
+        border-color: $primary-color;
+        outline: none;
+      }
+    }
+
+    select {
+      padding: 12px;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+  }
+
+  .uploadSection {
+    div{
+      display: flex;
+      align-items: center;
+    }
+    .errorMessage{
+      margin-top: .5em;
+      color: red;
+    }
+
+    input {
+      display: none;
+    }
+
+    label {
+      background-color: $primary-color;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color $transition-speed ease;
+      display: flex;
+      gap: 0.5em;
+
+      &:hover {
+        background-color: lighten($primary-color, 10%);
+      }
+      @media (max-width: 768px){
+        font-size: 0.9rem;
+        padding: .7em;
+      }
+    }
+
+    .uploadedImage {
+      margin-left: 15px;
+      font-size: 0.9rem;
+      color: #888;
+      @media (max-width: 768px){
+        font-size: .8rem;
+        margin-left: 8px;
+      }
+    }
+  }
+
+  .submitButton {
+    width: 100%;
+    background-color: $primary-color;
+    color: #fff;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color $transition-speed ease, transform $transition-speed ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    margin-top: 4em;
+
+    &:hover {
+      background-color: lighten($primary-color, 10%);
+      transform: scale(1.05);
+    }
+
+    &:disabled {
+      background-color: #ddd;
+      cursor: not-allowed;
+    }
+  }
+}

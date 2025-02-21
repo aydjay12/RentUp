@@ -7,6 +7,12 @@
   border: 1px solid rgb(62 28 131 / 10%);
   padding: 2rem;
   transition: 0.5s;
+  cursor: unset !important;
+}
+.team .listings{
+  background: #ff6922;
+  border-radius: 50px;
+  cursor: unset;
 }
 .team .box:hover {
   box-shadow: 0 0 20px 0 rgb(112 121 138 / 18%);
@@ -93,13 +99,13 @@
   transition: 0.5s;
 }
 .message:hover {
-  background: grey;
+  background: #31db78;
 }
 .call {
   transition: 0.5s;
 }
 .call:hover {
-  background: silver;
+  background: #31db78;
 }
 .team .button i {
   color: white;

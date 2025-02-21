@@ -1,0 +1,122 @@
+.gift-card {
+  border: 1px solid #e0e0e0; /* Light gray border */
+  background-color: #ffffff; /* White background */
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  @media (min-width: 640px) {
+    padding: 24px;
+  }
+
+  .input-container {
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #2d3954; /* Dark gray-blue */
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      border: 1px solid #d1d5db; /* Light gray */
+      background-color: #f7f9fc;
+      border-radius: 6px;
+      color: #2d3954;
+      outline: none;
+      transition: border 0.2s ease-in-out;
+
+      &::placeholder {
+        color: #72809d;
+      }
+
+      &:focus {
+        border-color: #27ae60; /* Emerald */
+        box-shadow: 0 0 4px #31db78;
+      }
+    }
+  }
+
+  .button {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #ffffff;
+    background-color: #27ae60;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+
+    &:hover {
+      background-color: #31db78;
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 4px #31db78;
+    }
+  }
+
+  .applied-coupon,
+  .available-coupon {
+    margin-top: 16px;
+
+    h3 {
+      font-size: 16px;
+      font-weight: 500;
+      color: #2d3954;
+    }
+
+    p {
+      margin-top: 8px;
+      font-size: 14px;
+      color: #72809d;
+    }
+  }
+
+  .remove-button {
+    width: 100%;
+    margin-top: 8px;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #ffffff;
+    background-color: #f87171;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+
+    &:hover {
+      background-color: #fca5a5;
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 4px #fca5a5;
+    }
+  }
+}
+
+.available-coupons{
+  p{
+    font-size: 14px;
+    color: rgb(77, 77, 77);
+    margin-top: 8px;
+  }
+}

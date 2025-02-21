@@ -1,9 +1,9 @@
-import React, { useContext, useState } from "react";
+import React, { useEffect, useState } from "react";
 import SearchBar from "../../components/SearchBar/Searchbar";
-import useProperties from "../../hooks/useProperties";
 import { PuffLoader } from "react-spinners";
 import "../properties/properties.css";
-import UserDetailContext from "../../context/UserDetailContext";
+import { useAuthStore } from "../../store/authStore";
+import { useResidencyStore } from "../../store/useResidencyStore";
 import RecentCard from "../home/recent/RecentCard";
 import { motion } from "framer-motion";
 
@@ -17,21 +17,16 @@ const listVariants = {
 };
 
 const Favourites = () => {
-  const { data, isError, isLoading } = useProperties();
+  const { favourites, getAllFav } = useAuthStore();
+  const { residencies, fetchAllResidencies, loading } = useResidencyStore();
   const [filter, setFilter] = useState("");
-  const {
-    userDetails: { favourites },
-  } = useContext(UserDetailContext);
 
-  if (isError) {
-    return (
-      <div className="wrapper">
-        <span>Error while fetching data</span>
-      </div>
-    );
-  }
+  useEffect(() => {
+    getAllFav(); // Fetch user's favorites
+    fetchAllResidencies(); // Fetch all residencies
+  }, []);
 
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="wrapper flexCenter" style={{ height: "60vh" }}>
         <PuffLoader color="#27ae60" aria-label="puff-loading" />
@@ -39,22 +34,42 @@ const Favourites = () => {
     );
   }
 
+  const favoriteResidencies = residencies.filter((property) =>
+    (favourites || []).includes(property._id)
+  );
+
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
       <div className="flexColCenter paddings innerWidth properties-container">
         <SearchBar filter={filter} setFilter={setFilter} />
         <motion.div className="paddings flexCenter properties">
-          {data
-            .filter((property) => (favourites || []).includes(property.id))
-            .filter((property) =>
-              [property.title, property.city, property.country, property.address]
-                .some((field) => field.toLowerCase().includes(filter.toLowerCase()))
-            )
-            .map((card, i) => (
-              <motion.div key={card.id} variants={listVariants} custom={i} initial="hidden" animate="visible">
-                <RecentCard card={card} />
-              </motion.div>
-            ))}
+          {favoriteResidencies.length > 0 ? (
+            favoriteResidencies
+              .filter((property) =>
+                [property.title, property.city, property.country, property.address]
+                  .some((field) => field.toLowerCase().includes(filter.toLowerCase()))
+              )
+              .map((card, i) => (
+                <motion.div key={card._id} variants={listVariants} custom={i} initial="hidden" animate="visible">
+                  <RecentCard card={card} />
+                </motion.div>
+              ))
+          ) : (
+            <motion.div
+              className="no-favourites"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              style={{
+                fontSize: "1rem",
+                color: "#2d3954",
+                marginBottom: "4rem",
+                fontWeight: "600",
+              }}
+            >
+              No residency has been added to Favourites
+            </motion.div>
+          )}
         </motion.div>
       </div>
     </motion.div>

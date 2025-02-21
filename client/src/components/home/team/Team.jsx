@@ -35,7 +35,7 @@ const Team = () => {
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 100,  }}
               >
-                <button className="btn3">{val.list} Listings</button>
+                <button className="listings">{val.list} Listings</button>
                 <div className="details">
                   <div className="img">
                     <img src={val.cover} alt="" />

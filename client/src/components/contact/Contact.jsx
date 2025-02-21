@@ -1,88 +1,92 @@
-import React, { useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import img from "../images/pricing.jpg";
 import Back from "../common/Back";
 import "./contact.css";
-import { useMutation } from "react-query";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import UserDetailContext from "../../context/UserDetailContext";
-import { submitContactForm } from "../../utils/api";
+import { useContactStore } from "../../store/useContactStore";
+import { Loader } from "lucide-react";
 
 const Contact = () => {
-  const { userDetails } = useContext(UserDetailContext);
-  const { token } = userDetails;
+  const { submitContactForm, loading } = useContactStore();
 
-  console.log("Token:", token);
-
-  const { mutate, isLoading } = useMutation({
-    mutationFn: (formData) => submitContactForm(formData, token),
-    onSuccess: () => {
-      // Show success toast with custom styling
-      toast.success("Contact form submitted successfully", {
-        position: "bottom-right",
-        autoClose: 5000, // Close after 5 seconds
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        style: {
-          background: "#4CAF50", // Green background
-          color: "#FFFFFF", // White text
-          borderRadius: "8px", // Rounded corners
-          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)", // Subtle shadow
-        },
-      });
-
-      // Clear the form fields
-      document.getElementById("name").value = "";
-      document.getElementById("email").value = "";
-      document.getElementById("subject").value = "";
-      document.getElementById("message").value = "";
-
-      // Scroll to the top of the page
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    },
-    onError: (error) => {
-      toast.error("Failed to submit contact form", {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        style: {
-          background: "#FF5252", // Red background
-          color: "#FFFFFF", // White text
-          borderRadius: "8px", // Rounded corners
-          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)", // Subtle shadow
-        },
-      });
-      console.error("Error submitting contact form:", error);
-    },
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
   });
 
-  const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent page refresh
+  const [errors, setErrors] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
 
-    // Get input values
-    const name = document.getElementById("name").value;
-    const email = document.getElementById("email").value;
-    const subject = document.getElementById("subject").value;
-    const message = document.getElementById("message").value;
+  const [showMsg, setShowMsg] = useState(false);
 
-    // Create form data object
-    const formData = {
-      name,
-      email,
-      subject,
-      message,
+  // Handle form input changes
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+  // Validation function
+  const validate = () => {
+    const newErrors = {
+      name: "",
+      email: "",
+      subject: "",
+      message: "",
     };
 
-    // Submit form data
-    mutate(formData);
+    if (!formData.name.trim()) {
+      newErrors.name = "Name is required";
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Email is invalid";
+    }
+
+    if (!formData.subject.trim()) {
+      newErrors.subject = "Subject is required";
+    }
+
+    if (!formData.message.trim()) {
+      newErrors.message = "Message is required";
+    } else if (formData.message.length < 10) {
+      newErrors.message = "Message must be at least 10 characters";
+    }
+
+    setErrors(newErrors);
+    return !Object.values(newErrors).some((error) => error !== "");
+  };
+
+  useEffect(() => {
+    validate();
+  }, [formData]);
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setShowMsg(true);
+
+    if (validate()) {
+      try {
+        await submitContactForm(formData);
+
+        // Reset form fields and errors
+        setFormData({ name: "", email: "", subject: "", message: "" });
+        setErrors({ name: "", email: "", subject: "", message: "" });
+        setShowMsg(false); // Reset error display state
+
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } catch (error) {}
+    }
   };
 
   return (
@@ -92,7 +96,11 @@ const Contact = () => {
       transition={{ duration: 0.8 }}
     >
       <section className="contact mb">
-        <Back name="Contact Us" title="Get Help & Friendly Support" cover={img} />
+        <Back
+          name="Contact Us"
+          title="Get Help & Friendly Support"
+          cover={img}
+        />
         <div className="container">
           <motion.form
             className="shadow"
@@ -100,38 +108,71 @@ const Contact = () => {
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
+            noValidate
           >
             <h4>Fill up The Form</h4> <br />
-            <div>
-              <input type="text" id="name" placeholder="Name" required />
-              <input type="email" id="email" placeholder="Email" required />
+            <div className="name-email">
+              <div className="input-group">
+                <input
+                  type="text"
+                  id="name"
+                  placeholder="Name"
+                  value={formData.name}
+                  onChange={handleChange}
+                />
+                {showMsg && errors.name && (
+                  <p className="error-message">{errors.name}</p>
+                )}
+              </div>
+              <div className="input-group">
+                <input
+                  type="email"
+                  id="email"
+                  placeholder="Email"
+                  value={formData.email}
+                  onChange={handleChange}
+                />
+                {showMsg && errors.email && (
+                  <p className="error-message">{errors.email}</p>
+                )}
+              </div>
             </div>
-            <input type="text" id="subject" placeholder="Subject" required />
-            <textarea id="message" cols="30" rows="10" placeholder="Your message" required></textarea>
+            <div className="input-group">
+              <input
+                type="text"
+                id="subject"
+                placeholder="Subject"
+                value={formData.subject}
+                onChange={handleChange}
+              />
+              {showMsg && errors.subject && (
+                <p className="error-message">{errors.subject}</p>
+              )}
+            </div>
+            <div className="input-group">
+              <textarea
+                id="message"
+                cols="30"
+                rows="10"
+                placeholder="Your message"
+                value={formData.message}
+                onChange={handleChange}
+              ></textarea>
+              {showMsg && errors.message && (
+                <p className="error-message">{errors.message}</p>
+              )}
+            </div>
             <motion.button
               type="submit"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              disabled={isLoading}
+              disabled={loading}
             >
-              {isLoading ? "Submitting..." : "Submit Request"}
+              {loading ? <Loader className="w-6 h-6 animate-spin mx-auto" /> : "Submit Request"}
             </motion.button>
           </motion.form>
         </div>
       </section>
-
-      {/* Toast Container */}
-      <ToastContainer
-        position="bottom-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
     </motion.div>
   );
 };

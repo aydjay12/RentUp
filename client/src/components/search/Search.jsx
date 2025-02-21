@@ -6,12 +6,12 @@ import RecentCard from "../home/recent/RecentCard";
 import "../home/recent/recent.css";
 import "../properties/properties.css";
 import img from "../images/services.jpg";
-import useProperties from "../../hooks/useProperties";
 import { PuffLoader } from "react-spinners";
 import { FaSearch } from "react-icons/fa";
+import { useResidencyStore } from "../../store/useResidencyStore"; // Import Zustand store
 
 const Search = () => {
-  const { data, isError, isLoading } = useProperties();
+  const { residencies, fetchAllResidencies, loading } = useResidencyStore();
   const [searchParams] = useSearchParams();
 
   const initialFilters = {
@@ -27,24 +27,16 @@ const Search = () => {
     setFilters(initialFilters);
   }, [searchParams]);
 
+  useEffect(() => {
+    fetchAllResidencies(); // Fetch properties on mount
+  }, []);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
-  if (isError) {
-    return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="wrapper"
-      >
-        <span>Error while fetching data</span>
-      </motion.div>
-    );
-  }
-
-  if (isLoading) {
+  if (loading) {
     return (
       <motion.div
         initial={{ opacity: 0 }}
@@ -52,18 +44,12 @@ const Search = () => {
         className="wrapper flexCenter"
         style={{ height: "60vh" }}
       >
-        <PuffLoader
-          height="80"
-          width="80"
-          radius={1}
-          color="#27ae60"
-          aria-label="puff-loading"
-        />
+        <PuffLoader color="#27ae60" aria-label="puff-loading" />
       </motion.div>
     );
   }
 
-  const filteredProperties = data
+  const filteredProperties = residencies
     .filter((property) =>
       filters.location
         ? property.city.toLowerCase().includes(filters.location.toLowerCase())
@@ -76,9 +62,7 @@ const Search = () => {
     )
     .filter((property) =>
       filters.propertyType
-        ? property.type
-            .toLowerCase()
-            .includes(filters.propertyType.toLowerCase())
+        ? property.type.toLowerCase().includes(filters.propertyType.toLowerCase())
         : true
     )
     .filter((property) => {
@@ -88,17 +72,9 @@ const Search = () => {
     });
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
       <section className="blog-out mb">
-        <Back
-          name="Search Properties"
-          title="Find Your Dream Property"
-          cover={img}
-        />
+        <Back name="Search Properties" title="Find Your Dream Property" cover={img} />
       </section>
       <div className="flexColCenter paddings properties-container">
         <motion.form
@@ -109,53 +85,24 @@ const Search = () => {
         >
           <div className="box">
             <span>City/Street</span>
-            <input
-              type="text"
-              name="location"
-              placeholder="Location"
-              value={filters.location}
-              onChange={handleInputChange}
-            />
+            <input type="text" name="location" placeholder="Location" value={filters.location} onChange={handleInputChange} />
           </div>
           <div className="box">
             <span>Country</span>
-            <input
-              type="text"
-              name="country"
-              placeholder="Country"
-              value={filters.country}
-              onChange={handleInputChange}
-            />
+            <input type="text" name="country" placeholder="Country" value={filters.country} onChange={handleInputChange} />
           </div>
           <div className="box">
             <span>Property Type</span>
-            <input
-              type="text"
-              name="propertyType"
-              placeholder="Property Type"
-              value={filters.propertyType}
-              onChange={handleInputChange}
-            />
+            <input type="text" name="propertyType" placeholder="Property Type" value={filters.propertyType} onChange={handleInputChange} />
           </div>
           <div className="box">
             <span>Price Range</span>
-            <input
-              type="number"
-              name="priceRange"
-              placeholder="Price Range"
-              value={filters.priceRange}
-              onChange={handleInputChange}
-            />
+            <input type="number" name="priceRange" placeholder="Price Range" value={filters.priceRange} onChange={handleInputChange} />
           </div>
-          <motion.div className="box" whileHover={{ y: -5 }}>
+          <motion.div className="box" whileHover={{ y: 0 }}>
             <h4>Advance Filter</h4>
           </motion.div>
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            type="submit"
-            className="btn1 search"
-          >
+          <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} type="submit" className="btn1 search">
             <FaSearch />
           </motion.button>
         </motion.form>
@@ -170,13 +117,7 @@ const Search = () => {
         >
           {filteredProperties.length > 0 ? (
             filteredProperties.map((card, i) => (
-              <motion.div
-                key={i}
-                variants={{
-                  hidden: { opacity: 0, y: 20 },
-                  visible: { opacity: 1, y: 0 },
-                }}
-              >
+              <motion.div key={i} variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
                 <RecentCard card={card} />
               </motion.div>
             ))

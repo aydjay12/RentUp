@@ -1,0 +1,28 @@
+.people-also-bought {
+    margin-top: 32px;
+    width: 70%;
+    @media (max-width: 768px){
+      width: 100%;
+    }
+  
+    h3 {
+      font-size: 24px;
+      font-weight: 600;
+      color: #2d3954;
+    }
+  
+    .grid-container {
+      margin-top: 24px;
+      display: grid;
+      gap: 16px;
+  
+      @media (min-width: 640px) {
+        grid-template-columns: repeat(1, 1fr);
+      }
+  
+      @media (min-width: 1024px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  }
+  

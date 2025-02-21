@@ -1,125 +1,206 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import "./signin.scss";
 import { GoEye } from "react-icons/go";
-import { FaRegEyeSlash } from "react-icons/fa";
-import { FaAngleLeft } from "react-icons/fa";
+import { FaRegEyeSlash, FaAngleLeft } from "react-icons/fa";
 import GoogleIcon from "../../../../public/svg/google.svg";
 import Logo from "../../pics/logo.png";
 import { useNavigate } from "react-router-dom";
+import { Loader } from "lucide-react";
+import { useAuthStore } from "../../../store/authStore";
+import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 
 const Signin = () => {
   const navigate = useNavigate();
+  const { login, isLoading, error, isAuthenticated, loginWithGoogle } =
+    useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
-  const [errors, setErrors] = useState({
-    email: "",
-    password: "",
-  });
-  const [showMsg, setShowMsg] = useState(false);
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    agreedToTerms: false,
-  });
-
-  const handleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const validate = () => {
-    const newErrors = {
-      email: "",
-      password: "",
-    };
-
-    if (!formData.email) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email is invalid";
-    }
-
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-    } else if (!/^(?=.*[A-Z])(?=.*[\W_]).{8,}$/.test(formData.password)) {
-      newErrors.password =
-        "Password must contain at least 8 characters, one uppercase letter, and one symbol";
-    }
-
-    setErrors(newErrors);
-
-    return !Object.values(newErrors).some((error) => error != "");
-  };
+  const [rememberMe, setRememberMe] = useState(false);
+  const [formData, setFormData] = useState({ email: "", password: "" });
 
   useEffect(() => {
-    validate();
-  }, [formData]);
+    const savedEmail = localStorage.getItem("rememberedEmail");
+    if (savedEmail) {
+      setFormData((prev) => ({ ...prev, email: savedEmail }));
+      setRememberMe(true);
+    }
+  }, []);
+
+  const handleShowPassword = () => setShowPassword(!showPassword);
+
+  const handleChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const handleRememberMe = (e) => setRememberMe(e.target.checked);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await login(formData.email, formData.password);
+      rememberMe
+        ? localStorage.setItem("rememberedEmail", formData.email)
+        : localStorage.removeItem("rememberedEmail");
+      if (isAuthenticated) navigate("/home");
+    } catch (err) {
+      console.error("Login error:", err);
+    }
+  };
+
+  const handleGoogleLoginSuccess = async (credentialResponse) => {
+    try {
+      await loginWithGoogle(credentialResponse.credential);
+      navigate("/home");
+    } catch (error) {
+      toast.error("Google Sign-In failed");
+    }
+  };
+
+  const handleGoogleLoginFailure = () => toast.error("Google Sign-In failed");
 
   return (
-    <div className="signinPage">
-      <div className="logo">
-        <img src={Logo} alt="" />
-      </div>
-      <form className="form" noValidate>
-        <FaAngleLeft className="back-arrow" />
+    <motion.div
+      className="signinPage"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+    >
+      <motion.div
+        className="logo"
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, ease: "easeOut", delay: 0.2 }}
+      >
+        <img src={Logo} alt="Logo" />
+      </motion.div>
+
+      <motion.form
+        className="form"
+        onSubmit={handleSubmit}
+        initial={{ y: 30, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, ease: "easeOut", delay: 0.3 }}
+      >
+        <motion.div whileHover={{ scale: 1.05 }}>
+          <FaAngleLeft className="back-arrow" onClick={() => navigate(-1)} />
+        </motion.div>
+
         <h1>
           Welcome <span>Back !!</span>
         </h1>
+
         <p>
-          Don't have an account? <a onClick={() => navigate("/signup")}>Sign Up</a>
+          Don't have an account? <a href="/signup">Sign Up</a>
         </p>
-        <div className="email-input">
+
+        <motion.div
+          className="email-input"
+          initial={{ x: -20, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
           <label>
-            Email or Phone Number <span>*</span>
+            Email <span>*</span>
           </label>
           <input
             type="email"
             name="email"
+            required
+            value={formData.email}
+            onChange={handleChange}
           />
-          {showMsg && errors.email && (
-            <p className="error-message">{errors.email}</p>
-          )}
-        </div>
-        <div className="confirm-password-input">
+        </motion.div>
+
+        <motion.div
+          className="confirm-password-input"
+          initial={{ x: 20, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+        >
           <label>Password</label>
           <div className="input-container">
             <input
               type={showPassword ? "text" : "password"}
               name="password"
+              required
+              value={formData.password}
+              onChange={handleChange}
             />
-            <div className="eye" onClick={handleShowPassword}>
+            <motion.div
+              className="eye"
+              onClick={handleShowPassword}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              animate={{ rotate: showPassword ? 0 : 180 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
               {showPassword ? <GoEye /> : <FaRegEyeSlash />}
-            </div>
+            </motion.div>
           </div>
-          {showMsg && errors.password && (
-            <p className="error-message">{errors.password}</p>
-          )}
-        </div>
+        </motion.div>
+
         <div className="remember-me">
           <div>
             <input
               type="checkbox"
               id="rememberMe"
-              checked={formData.agreedToTerms}
-              onChange={(e) =>
-                setFormData({ ...formData, agreedToTerms: e.target.checked })
-              }
+              checked={rememberMe}
+              onChange={handleRememberMe}
             />
             <label htmlFor="rememberMe">Remember Me</label>
           </div>
           <span>
-            <a onClick={() => navigate("/forgot-password")}>Forgot password?</a>
+            <a href="/forgot-password">Forgot password?</a>
           </span>
         </div>
+
         <div className="buttons">
-          <button type="submit" className="registerButton">
-            Log In
-          </button>
-          <button type="button" className="signup-google">
-            <img src={GoogleIcon} alt="" />
-            Log In with Google
-          </button>
+          {error && (
+            <motion.p
+              className="error-message text-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
+              {error}
+            </motion.p>
+          )}
+
+          <motion.button
+            type="submit"
+            className="registerButton"
+            disabled={isLoading}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            {isLoading ? (
+              <Loader className="w-6 h-6 animate-spin mx-auto" />
+            ) : (
+              "Log In"
+            )}
+          </motion.button>
+
+          <GoogleOAuthProvider
+            clientId="301899233164-s87ofoj53j35cjkelodhnuvkjkuid2il.apps.googleusercontent.com"
+            className="signin-google"
+          >
+            <motion.div
+              className="signup-google"
+              initial={{ y: 10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
+            >
+              <GoogleLogin
+                onSuccess={handleGoogleLoginSuccess}
+                onError={handleGoogleLoginFailure}
+                text="signin_with"
+                width="300"
+                size="large"
+                logo_alignment="center"
+              />
+            </motion.div>
+          </GoogleOAuthProvider>
         </div>
-      </form>
-    </div>
+      </motion.form>
+    </motion.div>
   );
 };
 

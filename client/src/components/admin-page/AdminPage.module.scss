@@ -1,0 +1,119 @@
+$primary-color: #27ae60;
+$secondary-color: #81C784;
+$background-color: #F5F5F5;
+$text-color: #333333;
+$highlight-color: #FFEB3B;
+$transition-speed: 0.3s;
+
+.container {
+  padding: 20px 5em;
+  padding-bottom: 60px;
+  @media(max-width: 768px){
+    padding: 1em;
+    padding-bottom: 60px;
+  }
+  h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    color: $primary-color;
+    margin-bottom: 30px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: transform $transition-speed, opacity $transition-speed;
+    @media(max-width: 768px){
+      font-size: 1.8em;
+    }
+  
+    &.visible {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 30px;
+  padding: 10px;
+  gap: 1em;
+  background: white;
+  border-radius: 30px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  @media(max-width: 768px){
+    padding: 5px;
+    gap: .2em;
+    display: flex;
+    max-width: 100%;
+    border-radius: 20px;
+  }
+
+  .tab {
+    display: flex;
+    align-items: center;
+    gap: 0em;
+    padding: 12px 20px;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all $transition-speed;
+    position: relative;
+    color: $text-color;
+    z-index: 1;
+    @media(max-width: 768px){
+      font-size: 12px;
+      gap: 0;
+      padding: 1.5em .3em;
+      border-radius: 20px;
+    }
+
+    &:hover {
+      background-color: lighten($secondary-color, 10%);
+    }
+  }
+
+  .active {
+    color: white;
+    background: $primary-color;
+    &:hover{
+      background: $primary-color;
+    }
+  }
+
+  .icon {
+    margin-right: 8px;
+    @media(max-width: 768px){
+      margin-right: 5px;
+      width: 17px;
+      height: 17px;
+      // display: none;
+    }
+  }
+
+  .underline {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 4px;
+    width: 120px;
+    background-color: $highlight-color;
+    border-radius: 2px;
+    transition: 0.3s ease-in-out;
+  }
+}
+
+.tabContent {
+  margin-top: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

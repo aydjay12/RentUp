@@ -19,6 +19,7 @@ footer .container {
 footer img {
   width: 150px;
   margin-bottom: 1em;
+  cursor: unset;
 }
 footer .container .log{
   width: unset;
@@ -38,10 +39,14 @@ footer input {
   border-radius: 5px;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
+  color: black;
 }
 footer button{
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
+}
+.contact-button:hover{
+  background-color: #fff !important;
 }
 footer .input button{
   height: unset;
