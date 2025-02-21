@@ -10,7 +10,7 @@
 		"build": "yarn add && yarn add --prefix client && yarn run build --prefix client"
   },
   "engines": {
-    "node": "22.x"
+    "node": "23.x"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
