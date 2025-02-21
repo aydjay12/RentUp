@@ -5,8 +5,9 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "start": "nodemon index.js",
-    "build": "npm install && npm install --prefix client && yarn run build --prefix client"
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+		"build": "yarn add && yarn add --prefix client && yarn run build --prefix client"
   },
   "engines": {
     "node": "22.x"
