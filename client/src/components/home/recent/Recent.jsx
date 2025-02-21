@@ -1,3 +1,4 @@
+// Recent.jsx
 import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import Heading from "../../common/Heading";
@@ -31,52 +32,50 @@ const Recent = () => {
   }
 
   return (
-    <>
-      <section className="recent">
-        <div className="container">
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true, amount: 0.5 }}
-          >
-            <Heading
-              title="Featured Properties"
-              subtitle="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam."
-            />
-          </motion.div>
+    <section className="recent">
+      <div className="container">
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true, amount: 0.5 }}
+        >
+          <Heading
+            title="Featured Properties"
+            subtitle="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam."
+          />
+        </motion.div>
 
-          <motion.div
-            className="recent-container"
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-          >
-            {residencies.length > 0 ? (
-              residencies.slice(0, 6).map((card, i) => (
-                <RecentCard key={i} card={card} />
-              ))
-            ) : (
-              <motion.div
-                className="no-residency"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                style={{
-                  fontSize: "1rem",
-                  color: "#2d3954",
-                  marginBottom: "4rem",
-                  fontWeight: "600",
-                }}
-              >
-                No Properties Found
-              </motion.div>
-            )}
-          </motion.div>
-        </div>
-      </section>
-    </>
+        <motion.div
+          className="recent-container"
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+        >
+          {residencies.length > 0 ? (
+            residencies
+              .slice(0, 6)
+              .map((card, i) => <RecentCard key={i} card={card} />)
+          ) : (
+            <motion.div
+              className="no-residency"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              style={{
+                fontSize: "1rem",
+                color: "#2d3954",
+                marginBottom: "4rem",
+                fontWeight: "600",
+              }}
+            >
+              No Properties Found
+            </motion.div>
+          )}
+        </motion.div>
+      </div>
+    </section>
   );
 };
 

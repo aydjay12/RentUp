@@ -1,39 +1,47 @@
+// useResidencyStore.js
 import { create } from "zustand";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const API_URL = import.meta.env.MODE === "development" ? "http://localhost:8000/api/residency" : "/api/residency";
+const API_URL =
+  import.meta.env.MODE === "development"
+    ? "http://localhost:8000/api/residency"
+    : "/api/residency";
 
 export const useResidencyStore = create((set, get) => ({
-  residencies: [],
+  residencies: [], // Always initialize as array
   recommendedResidencies: [],
   loading: false,
   hasShownError: false,
+  isError: false, // Add isError to track fetch failures
 
-  setResidencies: (residencies) => set({ residencies }),
+  setResidencies: (residencies) =>
+    set({ residencies: Array.isArray(residencies) ? residencies : [] }),
 
   fetchAllResidencies: async () => {
-    set({ loading: true });
+    set({ loading: true, isError: false });
     try {
       const response = await axios.get(`${API_URL}/allresd`);
-      set({ residencies: response.data, loading: false });
+      const data = Array.isArray(response.data) ? response.data : [];
+      console.log("Fetched residencies:", data); // Debug log
+      set({ residencies: data, loading: false });
     } catch (error) {
       console.error("Error fetching residencies:", error);
-      set({ loading: false });
-      // ✅ Show toast only if it hasn't been shown yet
+      set({ residencies: [], loading: false, isError: true }); // Reset to empty array on error
       if (!get().hasShownError) {
         toast.error("Failed to fetch residencies.");
-        set({ hasShownError: true }); // ✅ Mark error as shown
+        set({ hasShownError: true });
       }
     }
   },
+
   fetchResidencyById: async (id) => {
     if (!id) {
       console.error("fetchResidencyById: ID is undefined!");
       toast.error("Invalid residency ID");
       return null;
     }
-  
+
     set({ loading: true });
     try {
       const response = await axios.get(`${API_URL}/${id}`);
@@ -46,12 +54,10 @@ export const useResidencyStore = create((set, get) => ({
       return null;
     }
   },
-  
 
   createResidency: async (data) => {
     set({ loading: true });
     try {
-      // Send data directly without wrapping it in an object
       const response = await axios.post(`${API_URL}/create`, data);
       set((state) => ({
         residencies: [...state.residencies, response.data.residency],
@@ -60,24 +66,29 @@ export const useResidencyStore = create((set, get) => ({
       toast.success("Residency created successfully");
     } catch (error) {
       set({ loading: false });
-      toast.error(error.response?.data?.message || "Failed to create residency");
+      toast.error(
+        error.response?.data?.message || "Failed to create residency"
+      );
       throw error;
     }
   },
-  
 
   removeResidency: async (id) => {
     set({ loading: true });
     try {
       await axios.delete(`${API_URL}/remove/${id}`);
       set((state) => ({
-        residencies: state.residencies.filter((residency) => residency._id !== id),
+        residencies: state.residencies.filter(
+          (residency) => residency._id !== id
+        ),
         loading: false,
       }));
       toast.success("Residency removed successfully");
     } catch (error) {
       set({ loading: false });
-      toast.error(error.response?.data?.message || "Failed to remove residency");
+      toast.error(
+        error.response?.data?.message || "Failed to remove residency"
+      );
       throw error;
     }
   },
@@ -86,10 +97,15 @@ export const useResidencyStore = create((set, get) => ({
     set({ loading: true });
     try {
       const response = await axios.get(`${API_URL}/recommendations`);
-      set({ recommendedResidencies: response.data, loading: false });
+      set({
+        recommendedResidencies: Array.isArray(response.data)
+          ? response.data
+          : [],
+        loading: false,
+      });
     } catch (error) {
       console.error("Error fetching recommendations:", error);
-      set({ loading: false });
+      set({ recommendedResidencies: [], loading: false });
       toast.error("Failed to fetch recommendations");
     }
   },
@@ -98,20 +114,19 @@ export const useResidencyStore = create((set, get) => ({
     set({ loading: true });
     try {
       const response = await axios.put(`${API_URL}/update/${id}`, data);
-      
       set((state) => ({
         residencies: state.residencies.map((residency) =>
           residency._id === id ? response.data.residency : residency
         ),
         loading: false,
       }));
-  
       toast.success("Residency updated successfully");
     } catch (error) {
       set({ loading: false });
-      toast.error(error.response?.data?.message || "Failed to update residency");
+      toast.error(
+        error.response?.data?.message || "Failed to update residency"
+      );
       throw error;
     }
   },
-  
 }));
