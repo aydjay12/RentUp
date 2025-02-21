@@ -15,8 +15,6 @@ import fs from "fs/promises"; // Import fs for file cleanup
 
 const client = new OAuth2Client(
   process.env.CLIENT_ID,
-  process.env.CLIENT_SECRET,
-  "http://localhost:5173"
 );
 
 export const signup = async (req, res) => {
