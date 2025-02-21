@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 const API_URL =
   import.meta.env.MODE === "development"
-    ? "http://localhost:8000/api/auth"
+    ? "https://rent-up-servers.vercel.app/api/auth"
     : "/api/auth";
 
 axios.defaults.withCredentials = true;

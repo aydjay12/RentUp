@@ -10,7 +10,7 @@ const stripePromise = loadStripe(
 
 const API_URL =
   import.meta.env.MODE === "development"
-    ? "http://localhost:8000/api/payments"
+    ? "https://rent-up-servers.vercel.app/api/payments"
     : "/api/payments";
 
 export const usePaymentStore = create((set) => ({

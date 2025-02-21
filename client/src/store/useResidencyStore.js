@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 
 const API_URL =
   import.meta.env.MODE === "development"
-    ? "http://localhost:8000/api/residency"
+    ? "http://:8000/api/residency"
     : "/api/residency";
 
 export const useResidencyStore = create((set, get) => ({
