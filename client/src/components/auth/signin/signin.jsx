@@ -3,17 +3,17 @@ import { motion } from "framer-motion";
 import "./signin.scss";
 import { GoEye } from "react-icons/go";
 import { FaRegEyeSlash, FaAngleLeft } from "react-icons/fa";
-import GoogleIcon from "../../../../public/svg/google.svg";
+import GoogleIcon from "../../../../public/svg/google.svg"; // Ensure this path is correct
 import Logo from "../../pics/logo.png";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "lucide-react";
 import { useAuthStore } from "../../../store/authStore";
-import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
+import { toast } from "react-toastify";
 
 const Signin = () => {
   const navigate = useNavigate();
-  const { login, isLoading, error, isAuthenticated, loginWithGoogle } =
-    useAuthStore();
+  const { login, isLoading, error, isAuthenticated, loginWithGoogle } = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -46,16 +46,37 @@ const Signin = () => {
     }
   };
 
-  const handleGoogleLoginSuccess = async (credentialResponse) => {
-    try {
-      await loginWithGoogle(credentialResponse.credential);
-      navigate("/home");
-    } catch (error) {
+  // Custom Google Login handler using useGoogleLogin
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        // Fetch ID token using the code (auth code flow)
+        const response = await fetch(
+          `https://oauth2.googleapis.com/token`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({
+              code: tokenResponse.code,
+              client_id: "301899233164-s87ofoj53j35cjkelodhnuvkjkuid2il.apps.googleusercontent.com",
+              client_secret: process.env.REACT_APP_GOOGLE_CLIENT_SECRET, // Add to .env
+              redirect_uri: window.location.origin,
+              grant_type: "authorization_code",
+            }),
+          }
+        );
+        const { id_token } = await response.json();
+        await loginWithGoogle(id_token);
+        navigate("/home");
+      } catch (error) {
+        toast.error("Google Sign-In failed");
+      }
+    },
+    onError: () => {
       toast.error("Google Sign-In failed");
-    }
-  };
-
-  const handleGoogleLoginFailure = () => toast.error("Google Sign-In failed");
+    },
+    flow: "auth-code", // Use auth-code flow to get a code, then exchange for ID token
+  });
 
   return (
     <motion.div
@@ -178,30 +199,31 @@ const Signin = () => {
             )}
           </motion.button>
 
-          <GoogleOAuthProvider
-            clientId="301899233164-s87ofoj53j35cjkelodhnuvkjkuid2il.apps.googleusercontent.com"
-            className="signin-google"
+          {/* Custom Google Button */}
+          <motion.button
+            type="button"
+            className="googleButton"
+            onClick={() => handleGoogleLogin()}
+            disabled={isLoading}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
           >
-            <motion.div
-              className="signup-google"
-              initial={{ y: 10, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.6 }}
-            >
-              <GoogleLogin
-                onSuccess={handleGoogleLoginSuccess}
-                onError={handleGoogleLoginFailure}
-                text="signin_with"
-                width="300"
-                size="large"
-                logo_alignment="center"
-              />
-            </motion.div>
-          </GoogleOAuthProvider>
+              <>
+                <img src={GoogleIcon} alt="Google" className="googleIcon" />
+                Sign in with Google
+              </>
+          </motion.button>
         </div>
       </motion.form>
     </motion.div>
   );
 };
 
-export default Signin;
+// Wrap Signin with GoogleOAuthProvider
+const SigninWithProvider = () => (
+  <GoogleOAuthProvider clientId="301899233164-s87ofoj53j35cjkelodhnuvkjkuid2il.apps.googleusercontent.com">
+    <Signin />
+  </GoogleOAuthProvider>
+);
+
+export default SigninWithProvider;

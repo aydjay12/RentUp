@@ -16,8 +16,7 @@ import { useAnalyticsStore } from "../../store/useAnalyticsStore";
 import { PuffLoader } from "react-spinners";
 
 const AnalyticsTab = () => {
-  const { analyticsData, dailySalesData, loading, fetchAnalytics } =
-    useAnalyticsStore();
+  const { analyticsData, dailySalesData, loading, fetchAnalytics } = useAnalyticsStore();
 
   useEffect(() => {
     fetchAnalytics();
@@ -71,7 +70,7 @@ const AnalyticsTab = () => {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
-        <ResponsiveContainer className={styles.ResponsiveContainer} width="100%" height={400}>
+        <ResponsiveContainer width="100%" height={400} minWidth={800}>
           <LineChart data={dailySalesData}>
             <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
             <XAxis dataKey="date" stroke="#6B7280" />

@@ -74,6 +74,7 @@ export const googleLogin = async (req, res) => {
   const { token } = req.body;
 
   try {
+    console.log("Google token received:", token);
     const ticket = await client.verifyIdToken({
       idToken: token,
       audience: process.env.CLIENT_ID,
@@ -85,17 +86,15 @@ export const googleLogin = async (req, res) => {
     let user = await User.findOne({ email });
 
     if (!user) {
-      // Create a new user if they don't exist
       user = new User({
         email,
         name,
         image: picture,
-        isVerified: true, // Mark as verified since Google verified the email
+        isVerified: true,
       });
       await user.save();
     }
 
-    // Generate JWT token
     generateTokenAndSetCookie(res, user._id);
 
     res.status(200).json({
@@ -107,8 +106,8 @@ export const googleLogin = async (req, res) => {
       },
     });
   } catch (error) {
-    console.log("Error in googleLogin:", error);
-    res.status(500).json({ success: false, message: "Google Sign-In failed" });
+    console.error("Error in googleLogin:", error.message);
+    res.status(500).json({ success: false, message: "Google Sign-In failed", error: error.message });
   }
 };
 

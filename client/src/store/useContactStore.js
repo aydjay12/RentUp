@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 const API_URL =
   import.meta.env.MODE === "development"
-    ? "https://rent-up-servers.vercel.app/api/contact"
+    ? "http://localhost:8000/api/contact"
     : "/api/contact";
 
 export const useContactStore = create((set, get) => ({

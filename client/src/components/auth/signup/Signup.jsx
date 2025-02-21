@@ -2,20 +2,18 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import "./signup.scss";
 import { GoEye } from "react-icons/go";
-import { FaRegEyeSlash } from "react-icons/fa";
-import { FaAngleLeft } from "react-icons/fa";
-import GoogleIcon from "../../../../public/svg/google.svg";
+import { FaRegEyeSlash, FaAngleLeft } from "react-icons/fa";
+import GoogleIcon from "../../../../public/svg/google.svg"; // Ensure path is correct
 import Logo from "../../pics/logo.png";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../../store/authStore";
 import { toast } from "react-toastify";
 import { Loader } from "lucide-react";
-import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
-import { Button } from "@mui/material";
+import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
 
 const Signup = () => {
   const navigate = useNavigate();
-  const { signup, isLoading, error, loginWithGoogle } = useAuthStore(); // Add loginWithGoogle
+  const { signup, isLoading, error, loginWithGoogle } = useAuthStore();
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -96,18 +94,35 @@ const Signup = () => {
     }
   };
 
-  const handleGoogleLoginSuccess = async (credentialResponse) => {
-    try {
-      await loginWithGoogle(credentialResponse.credential); // Send the Google ID token to the backend
-      navigate("/home"); // Redirect to home or dashboard
-    } catch (error) {
-      toast.error("Google Sign-In failed");
-    }
-  };
-
-  const handleGoogleLoginFailure = () => {
-    toast.error("Google Sign-In failed");
-  };
+  // Custom Google Login handler using useGoogleLogin
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        // Fetch ID token using the code (auth code flow)
+        const response = await fetch(`https://oauth2.googleapis.com/token`, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({
+            code: tokenResponse.code,
+            client_id:
+              "301899233164-s87ofoj53j35cjkelodhnuvkjkuid2il.apps.googleusercontent.com",
+            client_secret: process.env.REACT_APP_GOOGLE_CLIENT_SECRET, // Add to .env
+            redirect_uri: window.location.origin,
+            grant_type: "authorization_code",
+          }),
+        });
+        const { id_token } = await response.json();
+        await loginWithGoogle(id_token);
+        navigate("/home");
+      } catch (error) {
+        toast.error("Google Sign-Up failed");
+      }
+    },
+    onError: () => {
+      toast.error("Google Sign-Up failed");
+    },
+    flow: "auth-code", // Use auth-code flow for ID token
+  });
 
   return (
     <motion.div
@@ -251,6 +266,7 @@ const Signup = () => {
             <p className="error-message">{errors.terms}</p>
           )}
         </div>
+
         <div className="buttons">
           {error && <p className="error-message text-center">{error}</p>}
           <button type="submit" className="registerButton" disabled={isLoading}>
@@ -260,36 +276,32 @@ const Signup = () => {
               "Register"
             )}
           </button>
-          <GoogleOAuthProvider
-            clientId="301899233164-s87ofoj53j35cjkelodhnuvkjkuid2il.apps.googleusercontent.com"
-            className="signup-google"
+
+          {/* Custom Google Button */}
+          <motion.button
+            type="button"
+            className="googleButton"
+            onClick={() => handleGoogleLogin()}
+            disabled={isLoading}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
           >
-            <div className="signup-google">
-              <GoogleLogin
-                onSuccess={handleGoogleLoginSuccess}
-                onError={handleGoogleLoginFailure}
-                text="signup_with"
-                className="signup-google-button"
-                width="300"
-                size="large"
-                logo_alignment="center"
-                render={(renderProps) => (
-                  <Button
-                    type="button"
-                    onClick={renderProps.onClick}
-                    disabled={renderProps.disabled}
-                  >
-                    <img src={GoogleIcon} alt="Google Icon" />
-                    Sign Up with Google
-                  </Button>
-                )}
-              />
-            </div>
-          </GoogleOAuthProvider>
+            <>
+              <img src={GoogleIcon} alt="Google" className="googleIcon" />
+              Sign Up with Google
+            </>
+          </motion.button>
         </div>
       </motion.form>
     </motion.div>
   );
 };
 
-export default Signup;
+// Wrap Signup with GoogleOAuthProvider
+const SignupWithProvider = () => (
+  <GoogleOAuthProvider clientId="301899233164-s87ofoj53j35cjkelodhnuvkjkuid2il.apps.googleusercontent.com">
+    <Signup />
+  </GoogleOAuthProvider>
+);
+
+export default SignupWithProvider;

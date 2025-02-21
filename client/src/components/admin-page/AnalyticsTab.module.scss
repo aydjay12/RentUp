@@ -12,7 +12,8 @@ $transition-speed: 0.3s;
   display: flex;
   flex-direction: column;
   gap: 30px;
-  @media(max-width: 768px){
+
+  @media (max-width: 768px) {
     padding: 30px 15px;
     overflow: hidden;
   }
@@ -21,7 +22,8 @@ $transition-speed: 0.3s;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 20px;
-    @media(max-width: 768px){
+
+    @media (max-width: 768px) {
       display: flex;
       flex-direction: column;
       width: 100%;
@@ -34,10 +36,7 @@ $transition-speed: 0.3s;
   border-radius: 15px;
   box-shadow: 0 4px 10px $card-shadow;
   padding: 20px;
-  transition: transform $transition-speed ease,
-    box-shadow $transition-speed ease;
-    @media(max-width: 768px){
-    }
+  transition: transform $transition-speed ease, box-shadow $transition-speed ease;
 
   &:hover {
     transform: translateY(-5px);
@@ -68,33 +67,39 @@ $transition-speed: 0.3s;
     color: rgba(0, 0, 0, 0.3);
   }
 
-  .analyticsCardHeader{
+  .analyticsCardHeader {
     display: flex;
     justify-content: space-between;
-    @media(max-width: 768px){
+
+    @media (max-width: 768px) {
       align-items: center;
     }
-    p{
-      @media(max-width: 768px){
+
+    p {
+      @media (max-width: 768px) {
         font-size: 14px;
       }
     }
-    h3{
+
+    h3 {
       font-size: 25px;
-      @media(max-width: 768px){
+      @media (max-width: 768px) {
         font-size: 20px;
       }
     }
-    .analyticsCardIcon{
+
+    .analyticsCardIcon {
       display: flex;
       align-items: center;
       height: 55px;
       width: 55px;
-      @media(max-width: 768px){
+
+      @media (max-width: 768px) {
         width: 50px;
         height: 50px;
       }
-      svg{
+
+      svg {
         width: 100%;
         height: 100%;
       }
@@ -108,15 +113,24 @@ $transition-speed: 0.3s;
   border-radius: 15px;
   box-shadow: 0 4px 10px $card-shadow;
   transition: opacity $transition-speed ease-in-out;
-  @media(max-width: 768px){
-    padding: 2em 0;
-    padding-right: 3em;
-    align-items: center;
-    align-self: flex-start;
-    justify-content: center;
-    overflow-x: scroll;
-    .ResponsiveContainer{
-      width: 190% !important;
+  width: 100%;
+  overflow-x: auto; // Enable horizontal scrolling
+  -webkit-overflow-scrolling: touch; // Smooth scrolling on iOS
+
+  @media (max-width: 768px) {
+    padding: 1em; // Reduced padding for mobile
+    overflow-x: scroll; // Ensure horizontal scrolling
+    white-space: nowrap; // Prevent wrapping
+  }
+
+  // Ensure ResponsiveContainer takes full available width
+  .recharts-responsive-container {
+    min-width: 800px; // Match minWidth in JSX
+    width: 100% !important; // Override any inline styles
+    height: 400px !important;
+
+    @media (max-width: 768px) {
+      min-width: 800px; // Ensure wide enough for scrolling
     }
   }
 }

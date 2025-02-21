@@ -5,12 +5,12 @@ import { toast } from "react-toastify";
 
 const API_URL =
   import.meta.env.MODE === "development"
-    ? "https://rent-up-servers.vercel.app/api/cart"
+    ? "http://localhost:8000/api/cart"
     : "/api/cart";
 
 const COUPON_URL =
   import.meta.env.MODE === "development"
-    ? "https://rent-up-servers.vercel.app/api/coupons"
+    ? "http://localhost:8000/api/coupons"
     : "/api/coupons";
 
 export const useCartStore = create((set, get) => ({

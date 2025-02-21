@@ -35,6 +35,30 @@ $transition-speed: 0.3s;
         th:nth-child(6) {
           border-top-right-radius: 10px;
         }
+        @media (max-width: 768px){
+          th:nth-child(4) {
+            text-align: center;
+          }
+          
+        }
+      }
+    }
+    tbody {
+      @media (max-width: 768px) {
+        // td:nth-child(1) {
+        //   width: 100%;
+        //   span {
+        //     width: 8.5em;
+        //   }
+        // }
+        td:nth-child(4) {
+          max-width: 6em !important;
+          text-align: center;
+        }
+        td:nth-child(5) {
+          min-width: 1em !important;
+          text-align: center;
+        }
       }
     }
   }
@@ -50,7 +74,7 @@ $transition-speed: 0.3s;
       padding-left: 0.5em;
       padding-right: 0.5em;
       &:nth-child(2),
-      &:nth-child(5) {
+      &:nth-child(3) {
         display: none;
       }
     }

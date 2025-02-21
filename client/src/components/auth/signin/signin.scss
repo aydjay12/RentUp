@@ -310,66 +310,96 @@
         color: white;
       }
 
-      .signup-google {
-        border: 1px solid #b2b2b2;
-        background: transparent;
-        color: black;
-        width: 80%;
-        border-radius: 5px;
-        padding: 0.3em 0;
-        div {
-          border: none !important;
-          display: flex !important;
-          gap: 1em;
-          justify-content: center;
-          align-items: center;
-        }
-        > div:first-of-type {
-          height: 7vh !important;
-          display: flex;
-          width: 100%;
-          > div:first-of-type {
-            max-width: 100% !important;
-            height: 100% !important;
-            width: 100% !important;
-            :hover {
-              background-color: white !important;
-            }
-            > div:first-of-type {
-              max-width: 100% !important;
-              height: 100% !important;
-              width: 100% !important;
-              :hover {
-                background-color: white !important;
-              }
-              > div:first-of-type {
-                max-width: 100% !important;
-                height: 100% !important;
-                width: 100% !important;
-                :hover {
-                  background-color: white !important;
-                }
-                > div:first-of-type {
-                  max-width: 100% !important;
-                  height: 100% !important;
-                  width: 100% !important;
-                  :hover {
-                    background-color: white !important;
-                  }
-                }
-              }
-            }
-          }
-        }
-        span {
-          font-size: 16px;
-          font-weight: 600;
-          font-family: "Poppins", sans-serif;
-        }
+      // .signup-google {
+      //   border: 1px solid #b2b2b2;
+      //   background: transparent;
+      //   color: black;
+      //   width: 80%;
+      //   border-radius: 5px;
+      //   padding: 0.3em 0;
+      //   div {
+      //     border: none !important;
+      //     display: flex !important;
+      //     gap: 1em;
+      //     justify-content: center;
+      //     align-items: center;
+      //   }
+      //   > div:first-of-type {
+      //     height: 7vh !important;
+      //     display: flex;
+      //     width: 100%;
+      //     > div:first-of-type {
+      //       max-width: 100% !important;
+      //       height: 100% !important;
+      //       width: 100% !important;
+      //       :hover {
+      //         background-color: white !important;
+      //       }
+      //       > div:first-of-type {
+      //         max-width: 100% !important;
+      //         height: 100% !important;
+      //         width: 100% !important;
+      //         :hover {
+      //           background-color: white !important;
+      //         }
+      //         > div:first-of-type {
+      //           max-width: 100% !important;
+      //           height: 100% !important;
+      //           width: 100% !important;
+      //           :hover {
+      //             background-color: white !important;
+      //           }
+      //           > div:first-of-type {
+      //             max-width: 100% !important;
+      //             height: 100% !important;
+      //             width: 100% !important;
+      //             :hover {
+      //               background-color: white !important;
+      //             }
+      //           }
+      //         }
+      //       }
+      //     }
+      //   }
+      //   span {
+      //     font-size: 16px;
+      //     font-weight: 600;
+      //     font-family: "Poppins", sans-serif;
+      //   }
 
-        @media (max-width: 768px) {
+      //   @media (max-width: 768px) {
+      //     width: 100%;
+      //     border-radius: 40px;
+      //   }
+      // }
+      .googleButton {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        width: 80%;
+        height: 8vh;
+        background-color: #fff;
+        color: #333;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s, border-color 0.3s;
+        @media (max-width: 768px){
           width: 100%;
           border-radius: 40px;
+        }
+
+        .googleIcon {
+          width: 20px;
+          height: 20px;
+        }
+
+        &:hover {
+          background-color: #f5f5f5;
+          border-color: #ccc;
         }
       }
     }

@@ -7,6 +7,7 @@ import {
   BrowserRouter,
   useNavigate,
   Navigate,
+  useLocation,
 } from "react-router-dom";
 import Home from "./components/home/Home";
 import About from "./components/about/About";
@@ -49,7 +50,7 @@ const ProtectedRoute = ({ children }) => {
       <div className="wrapper flexCenter" style={{ minHeight: "100vh" }}>
         <PuffLoader color="#27ae60" aria-label="puff-loading" />
       </div>
-    ); // Prevent flash of signup page
+    );
 
   if (!isAuthenticated) return <Navigate to="/signin" replace />;
   if (isAuthenticated && !user?.isVerified)
@@ -66,12 +67,12 @@ const AdminProtectedRoute = ({ children }) => {
       <div className="wrapper flexCenter" style={{ minHeight: "100vh" }}>
         <PuffLoader color="#27ae60" aria-label="puff-loading" />
       </div>
-    ); // Prevent UI flicker
+    );
 
   if (!isAuthenticated) return <Navigate to="/signin" replace />;
   if (isAuthenticated && !user?.isVerified)
     return <Navigate to="/otp-verification" replace />;
-  if (user?.role !== "admin") return <Navigate to="/" replace />; // Redirect non-admins
+  if (user?.role !== "admin") return <Navigate to="/" replace />;
 
   return children;
 };
@@ -84,7 +85,7 @@ const RedirectAuthenticatedUser = ({ children }) => {
       <div className="wrapper flexCenter" style={{ minHeight: "100vh" }}>
         <PuffLoader color="#27ae60" aria-label="puff-loading" />
       </div>
-    ); // Prevent redirect before check
+    );
 
   if (isAuthenticated && user?.isVerified)
     return <Navigate to="/home" replace />;
@@ -94,156 +95,162 @@ const RedirectAuthenticatedUser = ({ children }) => {
 const App = () => {
   const queryClient = new QueryClient();
   const { checkAuth } = useAuthStore();
-  const { fetchCart } = useCartStore();
+  const { fetchCart, cartItems } = useCartStore();
+  const location = useLocation(); // Track route changes
+  const navigate = useNavigate();
 
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
 
+  // Fetch cart on initial load and route changes
   useEffect(() => {
     fetchCart();
-  }, []);
+  }, [fetchCart, location.pathname]); // Re-fetch when pathname changes
+
+  // Log cart items for debugging
+  useEffect(() => {
+    console.log("Cart items updated:", cartItems);
+  }, [cartItems]);
 
   return (
-    <GoogleOAuthProvider>
-      <MantineProvider>
-        <QueryClientProvider client={queryClient}>
-          <BrowserRouter>
-            <ScrollToTop />
-            <Suspense
-              fallback={
-                <div
-                  className="wrapper flexCenter"
-                  style={{ minHeight: "100vh" }}
-                >
-                  <PuffLoader color="#27ae60" aria-label="puff-loading" />
-                </div>
-              }
-            >
-              <Routes>
-                <Route element={<Layout />}>
-                  <Route path="/" element={<Home />} />
-                  <Route
-                    path="/home"
-                    element={
-                      <ProtectedRoute>
-                        <Home />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/search" element={<Search />} />
-                  <Route path="/pricing" element={<Pricing />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route
-                    path="/profile-page"
-                    element={
-                      <ProtectedRoute>
-                        <ProfilePage />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/cart"
-                    element={
-                      <ProtectedRoute>
-                        <CartPage />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route path="/properties">
-                    <Route index element={<Properties />} />
-                    <Route path=":propertyId" element={<Property />} />
-                  </Route>
-                  <Route
-                    path="/favourites"
-                    element={
-                      <ProtectedRoute>
-                        <Favourites />
-                      </ProtectedRoute>
-                    }
-                  />
-                </Route>
-                <Route element={<LayoutPurchaseStatus />}>
-                  <Route
-                    path="/purchase-success"
-                    element={
-                      <ProtectedRoute>
-                        <PurchaseSuccessPage />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/purchase-cancel"
-                    element={
-                      <ProtectedRoute>
-                        <PurchaseCancelPage />
-                      </ProtectedRoute>
-                    }
-                  />
-                </Route>
-                <Route element={<LayoutAdmin />}>
-                  <Route
-                    path="/admin-dashboard"
-                    element={
-                      <AdminProtectedRoute>
-                        <AdminPage />
-                      </AdminProtectedRoute>
-                    }
-                  />
-                </Route>
-
-                <Route element={<LayoutAuth />}>
-                  <Route
-                    path="/signup"
-                    element={
-                      <RedirectAuthenticatedUser>
-                        <Signup />
-                      </RedirectAuthenticatedUser>
-                    }
-                  />
-                  <Route
-                    path="/signin"
-                    element={
-                      <RedirectAuthenticatedUser>
-                        <Signin />
-                      </RedirectAuthenticatedUser>
-                    }
-                  />
-                  <Route path="/verified" element={<Verified />} />
-                  <Route
-                    path="/forgot-password"
-                    element={
-                      <RedirectAuthenticatedUser>
-                        <ForgotPassword />
-                      </RedirectAuthenticatedUser>
-                    }
-                  />
-                  <Route
-                    path="/reset-password/:token"
-                    element={
-                      <RedirectAuthenticatedUser>
-                        <NewPassword />
-                      </RedirectAuthenticatedUser>
-                    }
-                  />
-                  <Route
-                    path="/password-reset-successful"
-                    element={<PasswordSuccess />}
-                  />
-                  <Route
-                    path="/otp-verification"
-                    element={<OTPVerification />}
-                  />
-                </Route>
-              </Routes>
-            </Suspense>
-          </BrowserRouter>
-          <ReactQueryDevtools initialIsOpen={false} />
-        </QueryClientProvider>
-      </MantineProvider>
-    </GoogleOAuthProvider>
+    <MantineProvider>
+      <QueryClientProvider client={queryClient}>
+        <ScrollToTop />
+        <Suspense
+          fallback={
+            <div className="wrapper flexCenter" style={{ minHeight: "100vh" }}>
+              <PuffLoader color="#27ae60" aria-label="puff-loading" />
+            </div>
+          }
+        >
+          <Routes>
+            <Route element={<Layout />}>
+              <Route path="/" element={<Home />} />
+              <Route
+                path="/home"
+                element={
+                  <ProtectedRoute>
+                    <Home />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="/about" element={<About />} />
+              <Route path="/search" element={<Search />} />
+              <Route path="/pricing" element={<Pricing />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route
+                path="/profile-page"
+                element={
+                  <ProtectedRoute>
+                    <ProfilePage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/cart"
+                element={
+                  <ProtectedRoute>
+                    <CartPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="/properties">
+                <Route index element={<Properties />} />
+                <Route path=":propertyId" element={<Property />} />
+              </Route>
+              <Route
+                path="/favourites"
+                element={
+                  <ProtectedRoute>
+                    <Favourites />
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
+            <Route element={<LayoutPurchaseStatus />}>
+              <Route
+                path="/purchase-success"
+                element={
+                  <ProtectedRoute>
+                    <PurchaseSuccessPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/purchase-cancel"
+                element={
+                  <ProtectedRoute>
+                    <PurchaseCancelPage />
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
+            <Route element={<LayoutAdmin />}>
+              <Route
+                path="/admin-dashboard"
+                element={
+                  <AdminProtectedRoute>
+                    <AdminPage />
+                  </AdminProtectedRoute>
+                }
+              />
+            </Route>
+            <Route element={<LayoutAuth />}>
+              <Route
+                path="/signup"
+                element={
+                  <RedirectAuthenticatedUser>
+                    <Signup />
+                  </RedirectAuthenticatedUser>
+                }
+              />
+              <Route
+                path="/signin"
+                element={
+                  <RedirectAuthenticatedUser>
+                    <Signin />
+                  </RedirectAuthenticatedUser>
+                }
+              />
+              <Route path="/verified" element={<Verified />} />
+              <Route
+                path="/forgot-password"
+                element={
+                  <RedirectAuthenticatedUser>
+                    <ForgotPassword />
+                  </RedirectAuthenticatedUser>
+                }
+              />
+              <Route
+                path="/reset-password/:token"
+                element={
+                  <RedirectAuthenticatedUser>
+                    <NewPassword />
+                  </RedirectAuthenticatedUser>
+                }
+              />
+              <Route
+                path="/password-reset-successful"
+                element={<PasswordSuccess />}
+              />
+              <Route path="/otp-verification" element={<OTPVerification />} />
+            </Route>
+          </Routes>
+        </Suspense>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </MantineProvider>
   );
 };
 
-export default App;
+// Wrap App with BrowserRouter and GoogleOAuthProvider
+const AppWithRouter = () => (
+  <GoogleOAuthProvider clientId="your-google-client-id">
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </GoogleOAuthProvider>
+);
+
+export default AppWithRouter;
