@@ -1,4 +1,4 @@
-// server/index.js
+// index.js (root-level)
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
@@ -22,23 +22,22 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cookieParser());
-app.use(cors({ origin: "https://your-render-app.onrender.com", credentials: true })); // Update to Render URL
+app.use(
+  cors({ origin: "https://your-render-app.onrender.com", credentials: true })
+);
 app.use(express.json({ limit: "10mb" }));
 
 const __dirname = path.resolve();
 
-// Multer setup using memory storage
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-// Cloudinary config
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Routes
 app.use("/api/auth", authRoute(upload));
 app.use("/api/residency", residencyRoute);
 app.use("/api/contact", contactRoute);
@@ -47,15 +46,13 @@ app.use("/api/coupons", couponRoute);
 app.use("/api/payments", paymentRoute);
 app.use("/api/analytics", analyticsRoute);
 
-// Production setup (adjusted path to client/dist)
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "/client/dist")));
+  app.use(express.static(path.join(__dirname, "client/dist")));
   app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "/client", "dist", "index.html"));
+    res.sendFile(path.resolve(__dirname, "client", "dist", "index.html"));
   });
 }
 
-// Start server
 app.listen(PORT, () => {
   connectDB();
   console.log(`Server is running on port ${PORT}`);
