@@ -7,7 +7,7 @@
   "scripts": {
 		"dev": "nodemon server/index.js",
 		"start": "node server/index.js",
-		"build": "yarn add --prefix server && yarn add --prefix client && yarn add build --prefix client"
+		"build": "yarn add --prefix server && yarn add --prefix client && yarn run build --prefix client"
   },
   "engines": {
     "node": "23.x"
