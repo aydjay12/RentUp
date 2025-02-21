@@ -6,15 +6,14 @@ import cors from "cors";
 import { residencyRoute } from "./routes/residencyRoute.js";
 import { contactRoute } from "./routes/contactRoute.js";
 import { connectDB } from "./db/connectDB.js";
-import { authRoute } from "./routes/auth.route.js"; // Note: .route.js, not .routes.js as in your question
+import { authRoute } from "./routes/auth.route.js";
 import path from "path";
 import { cartRoute } from "./routes/cart.route.js";
 import { couponRoute } from "./routes/coupon.route.js";
 import { paymentRoute } from "./routes/payment.route.js";
 import { analyticsRoute } from "./routes/analytics.route.js";
 import multer from "multer";
-import fs from "fs/promises"; // Import fs for directory creation
-import { v2 as cloudinary } from "cloudinary"; // Import Cloudinary
+import { v2 as cloudinary } from "cloudinary";
 
 dotenv.config();
 
@@ -29,21 +28,8 @@ app.use(express.json({ limit: "10mb" }));
 
 const __dirname = path.resolve();
 
-// Ensure uploads directory exists
-const uploadsDir = path.join(__dirname, "uploads");
-fs.mkdir(uploadsDir, { recursive: true }).catch((err) => {
-  console.error("Error creating uploads directory:", err);
-});
-
-// Multer setup
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadsDir); // Use absolute path
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
-  },
-});
+// Multer setup using memory storage
+const storage = multer.memoryStorage(); // Store files in memory
 const upload = multer({ storage });
 
 // Cloudinary config

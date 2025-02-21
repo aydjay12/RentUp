@@ -411,14 +411,20 @@ export const uploadProfileImage = asyncHandler(async (req, res) => {
       return res.status(400).json({ message: "No file provided" });
     }
 
-    // Upload to Cloudinary
-    const result = await cloudinary.uploader.upload(file.path, {
-      folder: "profile_pics",
-      resource_type: "image",
+    // Upload file buffer to Cloudinary
+    const result = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          folder: "profile_pics",
+          resource_type: "image",
+        },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      );
+      uploadStream.end(req.file.buffer); // Use buffer from memory storage
     });
-
-    // Clean up temporary file
-    await fs.unlink(file.path);
 
     res.json({ secure_url: result.secure_url });
   } catch (error) {
