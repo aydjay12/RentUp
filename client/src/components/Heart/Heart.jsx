@@ -47,8 +47,8 @@ const Heart = ({ id }) => {
   const heartVariants = {
     initial: { scale: 1 },
     clicked: {
-      scale: [1, 1.2, 0.9, 1.1, 1], // Heartbeat pulse effect
-      transition: { duration: 0.5, ease: "easeInOut", times: [0, 0.4, 0.5, 0.6, 1] },
+      scale: [1, 1.3, 0.9, 1.2, 1], // Heartbeat pulse effect
+      transition: { duration: 0.5, ease: "easeInOut", times: [0, 0.2, 0.3, 0.4, 1] }
     },
   };
 
@@ -57,7 +57,6 @@ const Heart = ({ id }) => {
       className="heart-icon-container"
       initial="initial"
       animate="initial"
-      whileHover={{ scale: 1.1 }} // Slight scale on hover
       whileTap="clicked" // Trigger animation on click
       variants={heartVariants}
       onClick={handleLike}

@@ -36,9 +36,10 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 3em;
-  width: 100%;
+  max-width: 90%;
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
+    max-width: 100%;
   }
 }
 

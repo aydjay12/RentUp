@@ -36,10 +36,12 @@
     top: 2.7rem;
     right: 3rem;
     cursor: pointer;
-    background: rgba(255, 255, 255, 0.7);
-    padding: 0.5rem;
-    border-radius: 50%;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    .heart-icon-container{
+        background: rgba(255, 255, 255, 0.7);
+        padding: 0.5rem;
+        border-radius: 50%;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
     @media(max-width: 768px){
         top: 1em;
         right: 1em;

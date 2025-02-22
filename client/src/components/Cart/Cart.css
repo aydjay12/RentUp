@@ -1,26 +1,44 @@
 .cart-icon-container {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-  }
-  
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.cart-icon:hover{
+  scale: 1.2;
+  transition: all 0.2s ease-in-out;
+}
+
+.cart-tooltip {
+  position: absolute;
+  left: -180%; /* Position to the right of the icon */
+  top: 150%;
+  margin-left: 8px; /* Space between icon and text */
+  background-color: #333;
+  color: white;
+  padding: 4px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  font-weight: 600 !important;
+  font-size: 11px !important;
+  transition: opacity 0.2s ease-in-out;
+  pointer-events: none; /* Prevents tooltip from interfering with clicks */
+}
+
+.cart-icon-container:hover .cart-tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Mobile view: Move tooltip to the left */
+@media (max-width: 768px) {
   .cart-tooltip {
-    position: absolute;
-    left: 100%; /* Position to the right of the icon */
-    margin-left: 8px; /* Space between icon and text */
-    background-color: #333;
-    color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    white-space: nowrap;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.2s ease-in-out;
-    pointer-events: none; /* Prevents tooltip from interfering with clicks */
+    left: auto;
+    top: auto; /* Reset left positioning */
+    right: 100%; /* Position to the left of the icon */
+    margin-left: 0; /* Remove right-side spacing */
+    margin-right: 8px; /* Add spacing between icon and tooltip on the left */
   }
-  
-  .cart-icon-container:hover .cart-tooltip {
-    opacity: 1;
-    visibility: visible;
-  }
+}

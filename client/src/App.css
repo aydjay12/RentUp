@@ -78,7 +78,9 @@ button i {
   color: #2d3954;
   font-weight: 600;
   text-transform: capitalize;
-  font-size: 35px;
+  font-size: 32px;
+  line-height: 1.2em;
+  margin-bottom: .3em;
 }
 .heading p {
   color: #72809d;

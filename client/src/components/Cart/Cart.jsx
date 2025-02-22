@@ -48,12 +48,11 @@ const Cart = ({ id }) => {
     }
   };
 
-  // Define the animation variants for the cart icon
   const cartVariants = {
     initial: { scale: 1, rotate: 0 },
     clicked: {
-      scale: [1, 1.2, 0.9, 1], // Bounce effect
-      rotate: [0, 10, -10, 0], // Slight wobble
+      scale: [1, 1.2, 0.9, 1],
+      rotate: [0, 10, -10, 0],
       transition: { duration: 0.4, ease: "easeInOut" },
     },
   };
@@ -64,11 +63,10 @@ const Cart = ({ id }) => {
       onClick={handleCartToggle}
       initial="initial"
       animate="initial"
-      whileHover={{ scale: 1.1 }} // Slight scale on hover
-      whileTap="clicked" // Trigger animation on click
+      whileTap="clicked"
       variants={cartVariants}
     >
-      <FaShoppingCart size={18} color={cartColor} cursor="pointer" />
+      <FaShoppingCart className="cart-icon" size={18} color={cartColor} cursor="pointer" />
       <span className="cart-tooltip">{isInCart ? "Remove from Cart" : "Add to Cart"}</span>
     </motion.div>
   );
