@@ -23,7 +23,6 @@ export const useResidencyStore = create((set, get) => ({
     try {
       const response = await axios.get(`${API_URL}/allresd`);
       const data = Array.isArray(response.data) ? response.data : [];
-      console.log("Fetched residencies:", data); // Debug log
       set({ residencies: data, loading: false });
     } catch (error) {
       console.error("Error fetching residencies:", error);

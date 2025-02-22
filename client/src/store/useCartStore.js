@@ -63,12 +63,11 @@ export const useCartStore = create((set, get) => ({
       });
       get().calculateTotals();
     } catch (error) {
-      console.error("Error fetching cart:", error);
       set({ cartItems: [], loading: false }); // Reset to empty array on error
-      if (!get().hasShownError) {
-        toast.error("Error fetching cart items");
-        set({ hasShownError: true });
-      }
+      // if (!get().hasShownError) {
+      //   toast.error("Error fetching cart items");
+      //   set({ hasShownError: true });
+      // }
     }
   },
 

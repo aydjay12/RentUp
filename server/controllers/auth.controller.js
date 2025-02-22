@@ -13,6 +13,7 @@ import crypto from "crypto";
 import cloudinary from "../lib/cloudinary.js";
 import fs from "fs/promises"; // Import fs for file cleanup
 import dotenv from "dotenv";
+import axios from "axios";
 
 dotenv.config();
 
@@ -71,17 +72,34 @@ export const signup = async (req, res) => {
 };
 
 export const googleLogin = async (req, res) => {
-  const { token } = req.body;
+  const { code } = req.body;
 
   try {
-    console.log("Google token received:", token);
+    // Log the request payload for debugging
+    const payload = {
+      code,
+      client_id: process.env.CLIENT_ID,
+      client_secret: process.env.CLIENT_SECRET,
+      redirect_uri: "https://rentupgold.onrender.com",
+      grant_type: "authorization_code",
+    };
+
+    // Exchange code for tokens
+    const tokenResponse = await axios.post("https://oauth2.googleapis.com/token", payload, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    });
+
+    const { id_token } = tokenResponse.data;
+
     const ticket = await client.verifyIdToken({
-      idToken: token,
+      idToken: id_token,
       audience: process.env.CLIENT_ID,
     });
 
-    const payload = ticket.getPayload();
-    const { email, name, picture } = payload;
+    const payloadResponse = ticket.getPayload();
+    const { email, name, picture } = payloadResponse;
 
     let user = await User.findOne({ email });
 
@@ -107,6 +125,9 @@ export const googleLogin = async (req, res) => {
     });
   } catch (error) {
     console.error("Error in googleLogin:", error.message);
+    if (error.response) {
+      console.error("Google API response:", error.response.data); // Log detailed Google error
+    }
     res.status(500).json({ success: false, message: "Google Sign-In failed", error: error.message });
   }
 };

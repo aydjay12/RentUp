@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import "./signup.scss";
 import { GoEye } from "react-icons/go";
 import { FaRegEyeSlash, FaAngleLeft } from "react-icons/fa";
-import GoogleIcon from "../../../../public/svg/google.svg"; // Ensure path is correct
+import GoogleIcon from "../../../../public/svg/google.svg";
 import Logo from "../../pics/logo.png";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../../store/authStore";
@@ -34,8 +34,7 @@ const Signup = () => {
   });
 
   const handleShowPassword = () => setShowPassword(!showPassword);
-  const handleShowConfirmPassword = () =>
-    setShowConfirmPassword(!showConfirmPassword);
+  const handleShowConfirmPassword = () => setShowConfirmPassword(!showConfirmPassword);
 
   const validate = () => {
     const newErrors = {
@@ -98,30 +97,18 @@ const Signup = () => {
   const handleGoogleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       try {
-        // Fetch ID token using the code (auth code flow)
-        const response = await fetch(`https://oauth2.googleapis.com/token`, {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: new URLSearchParams({
-            code: tokenResponse.code,
-            client_id:
-              "301899233164-s87ofoj53j35cjkelodhnuvkjkuid2il.apps.googleusercontent.com",
-            client_secret: process.env.REACT_APP_GOOGLE_CLIENT_SECRET, // Add to .env
-            redirect_uri: window.location.origin,
-            grant_type: "authorization_code",
-          }),
-        });
-        const { id_token } = await response.json();
-        await loginWithGoogle(id_token);
+        // Send the authorization code to the backend
+        await loginWithGoogle(tokenResponse.code);
         navigate("/home");
       } catch (error) {
-        toast.error("Google Sign-Up failed");
+        toast.error("Google Sign-Up failed: " + (error.message || "Unknown error"));
       }
     },
-    onError: () => {
-      toast.error("Google Sign-Up failed");
+    onError: (error) => {
+      toast.error("Google Sign-Up failed: " + (error.message || "Unknown error"));
     },
-    flow: "auth-code", // Use auth-code flow for ID token
+    flow: "auth-code",
+    redirect_uri: window.location.origin, // Must match Google Cloud Console
   });
 
   return (
@@ -277,7 +264,6 @@ const Signup = () => {
             )}
           </button>
 
-          {/* Custom Google Button */}
           <motion.button
             type="button"
             className="googleButton"
@@ -297,7 +283,6 @@ const Signup = () => {
   );
 };
 
-// Wrap Signup with GoogleOAuthProvider
 const SignupWithProvider = () => (
   <GoogleOAuthProvider clientId="301899233164-s87ofoj53j35cjkelodhnuvkjkuid2il.apps.googleusercontent.com">
     <Signup />

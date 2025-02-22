@@ -17,10 +17,6 @@ const Header = () => {
   const location = useLocation();
   const { cartItems, fetchCart } = useCartStore(); // ✅ Fetch cart on mount
 
-  // useEffect(() => {
-  //   fetchCart(); // ✅ Load cart data on mount
-  // }, [fetchCart]);
-
   // Get authentication state from authStore
   const { isAuthenticated, user, logout } = useAuthStore();
   const isAdmin = user?.role === "admin";

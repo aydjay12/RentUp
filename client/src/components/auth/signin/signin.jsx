@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import "./signin.scss";
 import { GoEye } from "react-icons/go";
 import { FaRegEyeSlash, FaAngleLeft } from "react-icons/fa";
-import GoogleIcon from "../../../../public/svg/google.svg"; // Ensure this path is correct
+import GoogleIcon from "../../../../public/svg/google.svg";
 import Logo from "../../pics/logo.png";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "lucide-react";
@@ -46,36 +46,21 @@ const Signin = () => {
     }
   };
 
-  // Custom Google Login handler using useGoogleLogin
   const handleGoogleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       try {
-        // Fetch ID token using the code (auth code flow)
-        const response = await fetch(
-          `https://oauth2.googleapis.com/token`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams({
-              code: tokenResponse.code,
-              client_id: "301899233164-s87ofoj53j35cjkelodhnuvkjkuid2il.apps.googleusercontent.com",
-              client_secret: process.env.REACT_APP_GOOGLE_CLIENT_SECRET, // Add to .env
-              redirect_uri: window.location.origin,
-              grant_type: "authorization_code",
-            }),
-          }
-        );
-        const { id_token } = await response.json();
-        await loginWithGoogle(id_token);
+        // Send the authorization code to the backend
+        await loginWithGoogle(tokenResponse.code);
         navigate("/home");
       } catch (error) {
-        toast.error("Google Sign-In failed");
+        toast.error("Google Sign-In failed: " + (error.message || "Unknown error"));
       }
     },
-    onError: () => {
-      toast.error("Google Sign-In failed");
+    onError: (error) => {
+      toast.error("Google Sign-In failed: " + (error.message || "Unknown error"));
     },
-    flow: "auth-code", // Use auth-code flow to get a code, then exchange for ID token
+    flow: "auth-code",
+    redirect_uri: window.location.origin, // Must match Google Cloud Console
   });
 
   return (
@@ -199,7 +184,6 @@ const Signin = () => {
             )}
           </motion.button>
 
-          {/* Custom Google Button */}
           <motion.button
             type="button"
             className="googleButton"
@@ -208,10 +192,10 @@ const Signin = () => {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-              <>
-                <img src={GoogleIcon} alt="Google" className="googleIcon" />
-                Sign in with Google
-              </>
+            <>
+              <img src={GoogleIcon} alt="Google" className="googleIcon" />
+              Sign in with Google
+            </>
           </motion.button>
         </div>
       </motion.form>
@@ -219,7 +203,6 @@ const Signin = () => {
   );
 };
 
-// Wrap Signin with GoogleOAuthProvider
 const SigninWithProvider = () => (
   <GoogleOAuthProvider clientId="301899233164-s87ofoj53j35cjkelodhnuvkjkuid2il.apps.googleusercontent.com">
     <Signin />

@@ -110,7 +110,7 @@ const App = () => {
 
   // Log cart items for debugging
   useEffect(() => {
-    console.log("Cart items updated:", cartItems);
+
   }, [cartItems]);
 
   return (

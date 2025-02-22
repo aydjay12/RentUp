@@ -39,11 +39,11 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
-  loginWithGoogle: async (googleToken) => {
+  loginWithGoogle: async (code) => {
     set({ isLoading: true, error: null });
     try {
       const response = await axios.post(`${API_URL}/google-login`, {
-        token: googleToken,
+        code, // Send authorization code
       });
       set({
         user: response.data.user,
