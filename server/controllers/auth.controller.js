@@ -75,16 +75,14 @@ export const googleLogin = async (req, res) => {
   const { code } = req.body;
 
   try {
-    // Log the request payload for debugging
     const payload = {
       code,
       client_id: process.env.CLIENT_ID,
       client_secret: process.env.CLIENT_SECRET,
-      redirect_uri: "https://rentupgold.onrender.com",
+      redirect_uri: "https://rentupgold.onrender.com/auth/google/callback", // Match frontend callback
       grant_type: "authorization_code",
     };
 
-    // Exchange code for tokens
     const tokenResponse = await axios.post("https://oauth2.googleapis.com/token", payload, {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -126,7 +124,7 @@ export const googleLogin = async (req, res) => {
   } catch (error) {
     console.error("Error in googleLogin:", error.message);
     if (error.response) {
-      console.error("Google API response:", error.response.data); // Log detailed Google error
+      console.error("Google API response:", error.response.data);
     }
     res.status(500).json({ success: false, message: "Google Sign-In failed", error: error.message });
   }

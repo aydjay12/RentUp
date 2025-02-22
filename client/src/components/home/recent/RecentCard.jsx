@@ -2,7 +2,7 @@ import React from "react";
 import { HiLocationMarker } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import Heart from "../../Heart/Heart";
-import Cart from "../../Cart/Cart"; // Import the new Cart component
+import Cart from "../../Cart/Cart"; // Already imported
 import { motion } from "framer-motion";
 
 const cardVariants = {
@@ -30,7 +30,7 @@ const RecentCard = ({ card }) => {
           alt={card.title}
           onClick={() => navigate(`/properties/${card._id}`)}
         />
-        <Cart id={card._id} />
+        <Heart id={card._id} />
       </div>
 
       <div className="text">
@@ -46,7 +46,7 @@ const RecentCard = ({ card }) => {
             {card.status}
           </motion.span>
           <motion.div whileTap={{ scale: 0.8 }}>
-            <Heart id={card._id} />
+            <Cart id={card._id} />
           </motion.div>
         </div>
         <h4>{card.title}</h4>

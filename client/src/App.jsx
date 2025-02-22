@@ -41,6 +41,8 @@ import { useCartStore } from "./store/useCartStore";
 import LayoutAdmin from "./components/admin-page/LayoutAdmin";
 import LayoutPurchaseStatus from "./components/cart-page/LayoutPurchaseStatus";
 import ProfilePage from "./components/profile-page/ProfilePage";
+import GoogleCallback from "./components/google-callback/GoogleCallback";
+
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, isCheckingAuth, user } = useAuthStore();
@@ -109,9 +111,7 @@ const App = () => {
   }, [fetchCart, location.pathname]); // Re-fetch when pathname changes
 
   // Log cart items for debugging
-  useEffect(() => {
-
-  }, [cartItems]);
+  useEffect(() => {}, [cartItems]);
 
   return (
     <MantineProvider>
@@ -125,6 +125,9 @@ const App = () => {
           }
         >
           <Routes>
+            {/* Add Google Callback route at the root level */}
+            <Route path="/auth/google/callback" element={<GoogleCallback />} />
+
             <Route element={<Layout />}>
               <Route path="/" element={<Home />} />
               <Route
@@ -246,7 +249,7 @@ const App = () => {
 
 // Wrap App with BrowserRouter and GoogleOAuthProvider
 const AppWithRouter = () => (
-  <GoogleOAuthProvider clientId="your-google-client-id">
+  <GoogleOAuthProvider clientId="301899233164-s87ofoj53j35cjkelodhnuvkjkuid2il.apps.googleusercontent.com">
     <BrowserRouter>
       <App />
     </BrowserRouter>

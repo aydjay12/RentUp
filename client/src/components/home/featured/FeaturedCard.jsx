@@ -25,7 +25,7 @@ const FeaturedCard = () => {
           style={{ cursor: "pointer" }}
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.2, delay: index * 0.1 }}
+          transition={{ duration: 0.2 }}
           whileHover={{ scale: 1.06 }}
           whileTap={{ scale: 0.95 }}
         >

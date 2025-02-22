@@ -63,7 +63,6 @@ export const useCartStore = create((set, get) => ({
       });
       get().calculateTotals();
     } catch (error) {
-      console.error("Error fetching cart:", error);
       set({ cartItems: [], loading: false });
       // Error handling moved to CartPage.jsx
     }

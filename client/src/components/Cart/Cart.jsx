@@ -6,20 +6,19 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import "./Cart.css";
 
 const Cart = ({ id }) => {
   const { user, isAuthenticated } = useAuthStore();
-  const { toggleCart, cartItems, fetchCart } = useCartStore(); // ✅ Include fetchCart
+  const { toggleCart, cartItems, fetchCart } = useCartStore();
   const [cartColor, setCartColor] = useState("black");
+  const [isInCart, setIsInCart] = useState(false);
   const navigate = useNavigate();
 
-  // ✅ Update cart icon color when cartItems change
   useEffect(() => {
-    if (user && cartItems?.some((item) => item.residency?._id === id || item._id === id)) {
-      setCartColor("green");
-    } else {
-      setCartColor("black");
-    }
+    const inCart = user && cartItems?.some((item) => item.residency?._id === id || item._id === id);
+    setIsInCart(inCart);
+    setCartColor(inCart ? "green" : "black");
   }, [user, id, cartItems]);
 
   const handleCartToggle = async (e) => {
@@ -49,13 +48,28 @@ const Cart = ({ id }) => {
     }
   };
 
+  // Define the animation variants for the cart icon
+  const cartVariants = {
+    initial: { scale: 1, rotate: 0 },
+    clicked: {
+      scale: [1, 1.2, 0.9, 1], // Bounce effect
+      rotate: [0, 10, -10, 0], // Slight wobble
+      transition: { duration: 0.4, ease: "easeInOut" },
+    },
+  };
+
   return (
     <motion.div
-      className="cart-icon"
-      whileTap={{ scale: 0.8 }}
+      className="cart-icon-container"
       onClick={handleCartToggle}
+      initial="initial"
+      animate="initial"
+      whileHover={{ scale: 1.1 }} // Slight scale on hover
+      whileTap="clicked" // Trigger animation on click
+      variants={cartVariants}
     >
       <FaShoppingCart size={18} color={cartColor} cursor="pointer" />
+      <span className="cart-tooltip">{isInCart ? "Remove from Cart" : "Add to Cart"}</span>
     </motion.div>
   );
 };

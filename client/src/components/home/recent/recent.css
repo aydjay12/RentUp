@@ -85,16 +85,18 @@
     height: 100%;
     object-fit: cover;
   }
-  .cart-icon{
+  .heart-icon-container{
     position: absolute;
     top: .6em;
     left: .6em;
     cursor: pointer;
     background: rgba(255, 255, 255, 0.7);
-    padding: 0.5rem;
+    padding: 0.4rem;
     border-radius: 50%;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     z-index: 999;
+    width: 32px;
+    height: 32px;
   }
 }
 .recent-container{

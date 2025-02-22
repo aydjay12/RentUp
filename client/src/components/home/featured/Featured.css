@@ -10,3 +10,6 @@
   height: 65px;
   margin: auto;
 }
+.featured .container .heading{
+  line-height: 3em;
+}

@@ -13,8 +13,14 @@ footer {
 }
 footer .container {
   display: grid;
-  grid-template-columns: 6fr 2fr 2fr 1fr;
-  grid-gap: 20px;
+  grid-template-columns: 6fr 1.5fr 1.5fr .8fr;
+  grid-gap: 10px;
+}
+footer .container .box:nth-child(1) {
+  margin-right: 8em;
+  @media (max-width: 768px){
+    margin-right: 0;
+  }
 }
 footer img {
   width: 150px;

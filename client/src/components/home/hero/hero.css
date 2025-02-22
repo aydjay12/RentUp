@@ -7,19 +7,34 @@
   width: 100%;
 }
 .hero .container {
-  padding-top: 15%;
+  padding-top: 16%;
   padding-bottom: 8%;
   @media (max-width: 768px){
     padding-bottom: 12%;
+    padding-top: 22% !important;
   }
 }
 .hero h1 {
   color: #fff;
   font-size: 60px;
+  line-height: 120%;
+  margin-bottom: .3em;
+  @media (max-width: 768px){
+    font-size: 50px;
+    width: 80%;
+    text-align: center;
+    align-self: center;
+    justify-self: center;
+    margin-bottom: .2em;
+  }
 }
 .hero p {
   color: #fff;
   opacity: 0.8;
+  width: 80%;
+  font-size: 1.1em;
+  justify-self: center;
+
 }
 form {
   background-color: #fff;

@@ -8,7 +8,6 @@ import Logo from "../../pics/logo.png";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "lucide-react";
 import { useAuthStore } from "../../../store/authStore";
-import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
 import { toast } from "react-toastify";
 
 const Signin = () => {
@@ -27,10 +26,8 @@ const Signin = () => {
   }, []);
 
   const handleShowPassword = () => setShowPassword(!showPassword);
-
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
-
   const handleRememberMe = (e) => setRememberMe(e.target.checked);
 
   const handleSubmit = async (e) => {
@@ -46,22 +43,16 @@ const Signin = () => {
     }
   };
 
-  const handleGoogleLogin = useGoogleLogin({
-    onSuccess: async (tokenResponse) => {
-      try {
-        // Send the authorization code to the backend
-        await loginWithGoogle(tokenResponse.code);
-        navigate("/home");
-      } catch (error) {
-        toast.error("Google Sign-In failed: " + (error.message || "Unknown error"));
-      }
-    },
-    onError: (error) => {
-      toast.error("Google Sign-In failed: " + (error.message || "Unknown error"));
-    },
-    flow: "auth-code",
-    redirect_uri: window.location.origin, // Must match Google Cloud Console
-  });
+  const handleGoogleLogin = () => {
+    const clientId = "301899233164-s87ofoj53j35cjkelodhnuvkjkuid2il.apps.googleusercontent.com";
+    const redirectUri = `${window.location.origin}/auth/google/callback`; // Callback route
+    const scope = "profile email";
+    const responseType = "code";
+    const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}`;
+
+    // Redirect to Google OAuth page
+    window.location.href = googleAuthUrl;
+  };
 
   return (
     <motion.div
@@ -187,7 +178,7 @@ const Signin = () => {
           <motion.button
             type="button"
             className="googleButton"
-            onClick={() => handleGoogleLogin()}
+            onClick={handleGoogleLogin}
             disabled={isLoading}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
@@ -203,10 +194,4 @@ const Signin = () => {
   );
 };
 
-const SigninWithProvider = () => (
-  <GoogleOAuthProvider clientId="301899233164-s87ofoj53j35cjkelodhnuvkjkuid2il.apps.googleusercontent.com">
-    <Signin />
-  </GoogleOAuthProvider>
-);
-
-export default SigninWithProvider;
+export default Signin; // Removed GoogleOAuthProvider since we don't need it anymore

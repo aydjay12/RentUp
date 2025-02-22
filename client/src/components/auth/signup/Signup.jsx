@@ -9,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../../store/authStore";
 import { toast } from "react-toastify";
 import { Loader } from "lucide-react";
-import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -93,23 +92,17 @@ const Signup = () => {
     }
   };
 
-  // Custom Google Login handler using useGoogleLogin
-  const handleGoogleLogin = useGoogleLogin({
-    onSuccess: async (tokenResponse) => {
-      try {
-        // Send the authorization code to the backend
-        await loginWithGoogle(tokenResponse.code);
-        navigate("/home");
-      } catch (error) {
-        toast.error("Google Sign-Up failed: " + (error.message || "Unknown error"));
-      }
-    },
-    onError: (error) => {
-      toast.error("Google Sign-Up failed: " + (error.message || "Unknown error"));
-    },
-    flow: "auth-code",
-    redirect_uri: window.location.origin, // Must match Google Cloud Console
-  });
+  // Redirect-based Google Signup
+  const handleGoogleLogin = () => {
+    const clientId = "301899233164-s87ofoj53j35cjkelodhnuvkjkuid2il.apps.googleusercontent.com";
+    const redirectUri = `${window.location.origin}/auth/google/callback`; // Same callback as Signin
+    const scope = "profile email";
+    const responseType = "code";
+    const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}`;
+
+    // Redirect to Google OAuth page
+    window.location.href = googleAuthUrl;
+  };
 
   return (
     <motion.div
@@ -267,7 +260,7 @@ const Signup = () => {
           <motion.button
             type="button"
             className="googleButton"
-            onClick={() => handleGoogleLogin()}
+            onClick={handleGoogleLogin}
             disabled={isLoading}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
@@ -283,10 +276,4 @@ const Signup = () => {
   );
 };
 
-const SignupWithProvider = () => (
-  <GoogleOAuthProvider clientId="301899233164-s87ofoj53j35cjkelodhnuvkjkuid2il.apps.googleusercontent.com">
-    <Signup />
-  </GoogleOAuthProvider>
-);
-
-export default SignupWithProvider;
+export default Signup; // Removed GoogleOAuthProvider since we don't need it

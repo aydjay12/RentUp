@@ -6,6 +6,7 @@ import CreateResidencyForm from "./CreateResidencyForm";
 import Inbox from "./Inbox";
 import ResidenciesList from "./ResidenciesList";
 import styles from "./AdminPage.module.scss";
+import { Burger, Menu } from "@mantine/core";
 
 const tabs = [
   { id: "create", label: "Create", icon: PlusCircle },
@@ -16,26 +17,67 @@ const tabs = [
 
 const AdminPage = () => {
   const [activeTab, setActiveTab] = useState(() => {
-    return localStorage.getItem("activeTab") || "create"; // Load from localStorage or default to "create"
+    return localStorage.getItem("activeTab") || "create";
   });
+  const [opened, setOpened] = useState(false);
 
-  // Save active tab to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem("activeTab", activeTab);
   }, [activeTab]);
 
+  const handleTabSelect = (tabId) => {
+    setActiveTab(tabId);
+    setOpened(false);
+  };
+
   return (
     <div className={`${styles.container} min-h-screen relative`}>
-      <motion.h1
-        className={styles.h1}
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        Admin Dashboard
-      </motion.h1>
+      <div className={styles.header}>
+        <motion.h1
+          className={styles.h1}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          Admin Dashboard
+        </motion.h1>
+        {/* Mobile Toggle Menu */}
+        <div className={styles.mobileToggle}>
+          <Menu
+            opened={opened}
+            onClose={() => setOpened(false)}
+            width={200}
+            position="bottom" // Center under the Burger
+            offset={10} // ~3cm spacing
+            withinPortal // Ensures dropdown renders in a portal for correct positioning
+          >
+            <Menu.Target>
+              <Burger
+                opened={opened}
+                onClick={() => setOpened((o) => !o)}
+                size={24}
+                color="#27ae60"
+                aria-label="Toggle menu"
+                className={styles.burger}
+              />
+            </Menu.Target>
+            <Menu.Dropdown className={styles.menuDropdown}>
+              {tabs.map((tab) => (
+                <Menu.Item
+                  key={tab.id}
+                  leftSection={<tab.icon size={16} />}
+                  onClick={() => handleTabSelect(tab.id)}
+                  className={activeTab === tab.id ? styles.activeMenuItem : ""}
+                >
+                  {tab.label}
+                </Menu.Item>
+              ))}
+            </Menu.Dropdown>
+          </Menu>
+        </div>
+      </div>
 
-      {/* Tabs Navigation */}
+      {/* Tabs Navigation (Desktop Only) */}
       <div className={styles.tabs}>
         {tabs.map((tab) => (
           <div

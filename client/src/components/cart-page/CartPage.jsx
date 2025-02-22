@@ -16,10 +16,10 @@ import NotificationBar from "./NotificationBar";
 const CartPage = () => {
   const { cartItems = [], fetchCart, total, loading } = useCartStore();
 
-  // Fetch cart items on mount
-  useEffect(() => {
-    fetchCart();
-  }, [fetchCart]);
+  // // Fetch cart items on mount
+  // useEffect(() => {
+  //   fetchCart();
+  // }, [fetchCart]);
 
   // Show notification only once when total is less than 20000
   useEffectOnce(() => {

@@ -1,0 +1,26 @@
+.cart-icon-container {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+  }
+  
+  .cart-tooltip {
+    position: absolute;
+    left: 100%; /* Position to the right of the icon */
+    margin-left: 8px; /* Space between icon and text */
+    background-color: #333;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out;
+    pointer-events: none; /* Prevents tooltip from interfering with clicks */
+  }
+  
+  .cart-icon-container:hover .cart-tooltip {
+    opacity: 1;
+    visibility: visible;
+  }
