@@ -7,7 +7,7 @@ import {
   sendResetSuccessEmail,
   sendVerificationEmail,
   sendWelcomeEmail,
-} from "../mailtrap/emails.js";
+} from "../nodemailer/emails.js";
 import { OAuth2Client } from "google-auth-library";
 import crypto from "crypto";
 import cloudinary from "../lib/cloudinary.js";

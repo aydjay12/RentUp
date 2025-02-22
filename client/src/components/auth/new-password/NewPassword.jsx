@@ -64,8 +64,7 @@ const NewPassword = () => {
 
     try {
       await resetPassword(token, formData.password);
-      toast.success("Password reset successfully! Redirecting to login...");
-      setTimeout(() => navigate("/signin"), 2000);
+      setTimeout(() => navigate("/password-reset-successful"), 2000);
     } catch (err) {
       toast.error(err?.message || "Error resetting password");
     }

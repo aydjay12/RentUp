@@ -44,7 +44,7 @@ const PasswordSuccess = () => {
           Hi Dear User, You Have Successfully Reset Your Password.
         </motion.p>
         <motion.button
-          onClick={() => navigate("/new-password")}
+          onClick={() => navigate("/signin")}
           className="doneButton"
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
