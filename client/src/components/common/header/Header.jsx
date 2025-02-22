@@ -123,7 +123,7 @@ const Header = () => {
                 <Menu.Item
                   component={NavLink}
                   to="/admin-dashboard"
-                  color="red"
+                  color="#27ae60"
                 >
                   Admin Dashboard
                 </Menu.Item>
