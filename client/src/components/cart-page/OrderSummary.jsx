@@ -62,7 +62,7 @@ const OrderSummary = () => {
 
       <div className={styles["or-text"]}>or</div>
 
-      <Link to="/" className={styles["continue-shopping"]}>
+      <Link to="/properties" className={styles["continue-shopping"]}>
         Continue Shopping
         <MoveRight size={16} />
       </Link>
