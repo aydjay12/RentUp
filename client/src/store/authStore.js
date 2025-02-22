@@ -50,7 +50,6 @@ export const useAuthStore = create((set, get) => ({
         isAuthenticated: true,
         isLoading: false,
       });
-      toast.success("Logged in with Google successfully");
     } catch (error) {
       set({
         error: error.response?.data?.message || "Error logging in with Google",
