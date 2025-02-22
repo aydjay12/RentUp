@@ -44,7 +44,8 @@
     }
     @media(max-width: 768px){
         top: 1em;
-        right: 1em;
+        left: 1em;
+        right: unset;
     }
 }
 
