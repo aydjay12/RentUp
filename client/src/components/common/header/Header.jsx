@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./header.css";
 import { nav } from "../../data/Data";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import { useAuthStore } from "../../../store/authStore"; // Import Zustand store
+import { useAuthStore } from "../../../store/authStore";
 import ProfileMenu from "../../ProfileMenu/ProfileMenu";
 import Logo from "../../pics/logo.png";
 import { ShoppingCart } from "lucide-react";
@@ -13,17 +13,21 @@ import { Menu, Button } from "@mantine/core";
 
 const Header = () => {
   const navigate = useNavigate();
-  const [navList, setNavList] = useState(false);
+  const [navList, setNavList] = useState(false); // Tracks menu open/close state
   const location = useLocation();
-  const { cartItems, fetchCart } = useCartStore(); // ✅ Fetch cart on mount
-
-  // Get authentication state from authStore
+  const { cartItems, fetchCart } = useCartStore();
   const { isAuthenticated, user, logout } = useAuthStore();
   const isAdmin = user?.role === "admin";
 
+  // Close menu on route change
   useEffect(() => {
     setNavList(false);
   }, [location]);
+
+  // Handle menu toggle state change
+  const handleMenuToggle = (opened) => {
+    setNavList(opened);
+  };
 
   return (
     <motion.header
@@ -97,7 +101,12 @@ const Header = () => {
 
         {/* Mobile Menu Toggle */}
         <div className="toggle">
-          <Menu shadow="md" width={200}>
+          <Menu
+            shadow="md"
+            width={200}
+            opened={navList} // Sync with navList state
+            onChange={handleMenuToggle} // Update state on open/close
+          >
             <Menu.Target>
               <Button variant="subtle">
                 {navList ? <FaTimes size={20} /> : <FaBars size={20} />}
@@ -110,7 +119,6 @@ const Header = () => {
                   {list.text}
                 </Menu.Item>
               ))}
-
               {isAdmin && isAuthenticated && (
                 <Menu.Item
                   component={NavLink}

@@ -205,6 +205,11 @@ $transition-speed: 0.3s;
     min-width: 100% !important;
     height: 80vh !important;
     margin-top: 5em;
+    padding-bottom: 2em !important;
+    @media (max-width: 768px){
+      height: 60vh !important;
+      padding-bottom: unset !important;
+    }
     /* General scrollbar styling */
     &::-webkit-scrollbar {
       width: 5px; // Thin scrollbar
@@ -232,12 +237,15 @@ $transition-speed: 0.3s;
     header {
       padding: 1.5em 4.4em;
       @media (max-width: 768px) {
-        padding: 1.2em 1em;
+        padding: 1em 1em;
       }
       h2 {
         font-size: 18px;
         color: #4caf50;
         font-weight: 600;
+        @media (max-width: 768px) {
+          font-size: 16px;
+        }
       }
     }
     div:nth-child(1) {
@@ -245,6 +253,15 @@ $transition-speed: 0.3s;
       form {
         padding-top: 1.2em;
         padding-bottom: 0.5em;
+        @media (max-width: 768px){
+          margin-top: 1em;
+        }
+        label{
+          width: auto;
+          display: flex;
+          align-items: center;
+          font-size: .8em;
+        }
       }
     }
   }
