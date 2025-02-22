@@ -14,13 +14,13 @@ const COUPON_URL =
     : "/api/coupons";
 
 export const useCartStore = create((set, get) => ({
-  cartItems: [], // Ensure initial value is an array
+  cartItems: [], // Initial empty array
   coupon: null,
   availableCoupons: [],
   total: 0,
   subtotal: 0,
   isCouponApplied: false,
-  loading: true,
+  loading: false, // Initial loading state is false, set to true during fetch
   hasShownError: false,
 
   getMyCoupon: async () => {
@@ -28,7 +28,7 @@ export const useCartStore = create((set, get) => ({
       const response = await axios.get(`${COUPON_URL}`);
       set({
         availableCoupons: Array.isArray(response.data) ? response.data : [],
-      }); // Guard against non-array
+      });
     } catch (error) {
       console.error("Error fetching coupons:", error);
     }
@@ -63,11 +63,9 @@ export const useCartStore = create((set, get) => ({
       });
       get().calculateTotals();
     } catch (error) {
-      set({ cartItems: [], loading: false }); // Reset to empty array on error
-      // if (!get().hasShownError) {
-      //   toast.error("Error fetching cart items");
-      //   set({ hasShownError: true });
-      // }
+      console.error("Error fetching cart:", error);
+      set({ cartItems: [], loading: false });
+      // Error handling moved to CartPage.jsx
     }
   },
 
@@ -76,7 +74,7 @@ export const useCartStore = create((set, get) => ({
       await axios.delete(`${API_URL}/clear`);
       set({ cartItems: [], coupon: null, total: 0, subtotal: 0 });
       if (!get().hasShownError) {
-        // toast.success("Cart cleared successfully"); // Uncomment if desired
+        // toast.success("Cart cleared successfully");
         set({ hasShownError: true });
       }
     } catch (error) {
@@ -111,7 +109,7 @@ export const useCartStore = create((set, get) => ({
       get().calculateTotals();
       toast.success("Removed from cart");
     } catch (error) {
-      await get().fetchCart(); // Revert UI
+      await get().fetchCart();
       toast.error(error.response?.data?.message || "Error removing from cart");
     }
   },
@@ -149,7 +147,7 @@ export const useCartStore = create((set, get) => ({
 
   calculateTotals: () => {
     const { cartItems, coupon, isCouponApplied } = get();
-    const itemsArray = Array.isArray(cartItems) ? cartItems : []; // Guard against non-array
+    const itemsArray = Array.isArray(cartItems) ? cartItems : [];
     const subtotal = itemsArray.reduce(
       (sum, item) => sum + (item.price || 0) * (item.quantity || 1),
       0

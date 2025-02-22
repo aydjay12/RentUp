@@ -53,7 +53,7 @@ const Favourites = () => {
           cover={img}
         />
       </section>
-      <div className="flexColCenter paddings innerWidth properties-container">
+      <div className="flexColCenter paddings innerWidth properties-container favourites-con">
         <SearchBar filter={filter} setFilter={setFilter} />
         <motion.div className="paddings flexCenter properties">
           {favoriteResidencies.length > 0 ? (

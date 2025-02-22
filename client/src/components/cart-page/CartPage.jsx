@@ -10,22 +10,37 @@ import { useEffect } from "react";
 import styles from "./CartPage.module.scss";
 import { PuffLoader } from "react-spinners";
 import { notifications } from "@mantine/notifications";
-import { useEffectOnce } from "react-use"; // Ensures notification shows only once
+import { useEffectOnce } from "react-use";
 import NotificationBar from "./NotificationBar";
 
 const CartPage = () => {
-  const { cartItems = [], fetchCart, total } = useCartStore();
+  const { cartItems = [], fetchCart, total, loading } = useCartStore();
 
+  // Fetch cart items on mount
+  useEffect(() => {
+    fetchCart();
+  }, [fetchCart]);
+
+  // Show notification only once when total is less than 20000
   useEffectOnce(() => {
     if (total < 20000) {
       notifications.show({
         title: "Earn Gift Coupons 🎟️",
         message: "Get a coupon when you spend over $20,000 and another at $50,000!",
         color: "blue",
-        autoClose: false, // Persistent
+        autoClose: false,
       });
     }
   });
+
+  // Show loading spinner while fetching cart
+  if (loading) {
+    return (
+      <div className="wrapper flexCenter" style={{ height: "60vh" }}>
+        <PuffLoader color="#27ae60" aria-label="puff-loading" />
+      </div>
+    );
+  }
 
   return (
     <div className={styles["cart-page"]}>

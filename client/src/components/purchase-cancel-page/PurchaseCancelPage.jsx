@@ -26,7 +26,7 @@ const PurchaseCancelPage = () => {
 				</div>
 
 				<div className={styles.actions}>
-					<Link to={"/"} className={styles.returnButton}>
+					<Link to={"/cart"} className={styles.returnButton}>
 						<ArrowLeft size={18} className={styles.buttonIcon} />
 						Return
 					</Link>
