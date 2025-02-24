@@ -67,7 +67,12 @@ const Cart = ({ id }) => {
       variants={cartVariants}
     >
       <FaShoppingCart className="cart-icon" size={18} color={cartColor} cursor="pointer" />
-      <span className="cart-tooltip">{isInCart ? "Remove from Cart" : "Add to Cart"}</span>
+      <span
+        className="cart-tooltip"
+        style={{ backgroundColor: cartColor }} // Dynamic background color
+      >
+        {isInCart ? "Remove from Cart" : "Add to Cart"}
+      </span>
     </motion.div>
   );
 };

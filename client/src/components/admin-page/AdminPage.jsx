@@ -9,7 +9,7 @@ import styles from "./AdminPage.module.scss";
 import { Burger, Menu } from "@mantine/core";
 
 const tabs = [
-  { id: "create", label: "Create", icon: PlusCircle },
+  { id: "create", label: "Create Residency", icon: PlusCircle },
   { id: "residencies", label: "Residencies", icon: ShoppingBasket },
   { id: "analytics", label: "Analytics", icon: BarChart },
   { id: "inbox", label: "Inbox", icon: Mail },

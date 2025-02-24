@@ -21,7 +21,8 @@
   margin-bottom: .3em;
   @media (max-width: 768px){
     font-size: 50px;
-    width: 80%;
+    padding-left: 1em;
+    padding-right: 1em;
     text-align: center;
     align-self: center;
     justify-self: center;
@@ -31,7 +32,8 @@
 .hero p {
   color: #fff;
   opacity: 0.8;
-  width: 80%;
+    padding-left: 1.5em;
+    padding-right: 1.5em;
   font-size: 1.1em;
   justify-self: center;
 

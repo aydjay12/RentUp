@@ -4,7 +4,7 @@
   align-items: center;
 }
 
-.cart-icon:hover{
+.cart-icon:hover {
   scale: 1.2;
   transition: all 0.2s ease-in-out;
 }
@@ -14,8 +14,7 @@
   left: -180%; /* Position to the right of the icon */
   top: 150%;
   margin-left: 8px; /* Space between icon and text */
-  background-color: #333;
-  color: white;
+  color: white; /* Ensure text is readable on black/green */
   padding: 4px 6px;
   border-radius: 4px;
   white-space: nowrap;

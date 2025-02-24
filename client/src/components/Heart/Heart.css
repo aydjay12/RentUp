@@ -5,14 +5,12 @@
   justify-content: center;
 }
 
-
 .heart-tooltip {
   position: absolute;
   left: -60%; /* Position to the right of the icon */
   top: 110%;
   margin-left: 8px; /* Space between icon and text */
-  background-color: #333;
-  color: white;
+  color: white; /* Ensure text is readable on gray/red */
   padding: 4px 6px;
   border-radius: 4px;
   font-size: 12px;
@@ -33,8 +31,8 @@
 /* Mobile view: Move tooltip to the left */
 @media (max-width: 768px) {
   .heart-tooltip {
-    top: auto; /* Reset left positioning */
-    left: 120%; /* Position to the left of the icon */
+    top: auto; /* Reset top positioning */
+    left: 120%; /* Position to the right of the icon (as per your current mobile CSS) */
     margin-left: 0; /* Remove right-side spacing */
     margin-right: 8px; /* Add spacing between icon and tooltip on the left */
   }
