@@ -3,14 +3,25 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.heart-icon {
+  transition: all 0.2s ease;
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.1));
+}
+
+.heart-icon.favorited {
+  filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.3));
 }
 
 .heart-tooltip {
   position: absolute;
-  left: -60%; /* Position to the right of the icon */
+  left: -60%;
   top: 110%;
-  margin-left: 8px; /* Space between icon and text */
-  color: white; /* Ensure text is readable on gray/red */
+  margin-left: 8px;
+  color: white;
   padding: 4px 6px;
   border-radius: 4px;
   font-size: 12px;
@@ -20,7 +31,8 @@
   font-weight: 600 !important;
   font-size: 11px !important;
   transition: opacity 0.2s ease-in-out;
-  pointer-events: none; /* Prevents tooltip from interfering with clicks */
+  pointer-events: none;
+  z-index: 10;
 }
 
 .heart-icon-container:hover .heart-tooltip {
@@ -28,12 +40,67 @@
   visibility: visible;
 }
 
+/* Particle effect container */
+.heart-particles {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 5;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #ff6b6b;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.particle:nth-child(1) {
+  background: #ff6b6b;
+}
+
+.particle:nth-child(2) {
+  background: #ff8e8e;
+  width: 3px;
+  height: 3px;
+}
+
+.particle:nth-child(3) {
+  background: #ffb3b3;
+  width: 2px;
+  height: 2px;
+}
+
+.particle:nth-child(4) {
+  background: #ff6b6b;
+  width: 3px;
+  height: 3px;
+}
+
+.particle:nth-child(5) {
+  background: #ff8e8e;
+  width: 2px;
+  height: 2px;
+}
+
+.particle:nth-child(6) {
+  background: #ffb3b3;
+  width: 4px;
+  height: 4px;
+}
+
 /* Mobile view: Move tooltip to the left */
 @media (max-width: 768px) {
   .heart-tooltip {
-    top: auto; /* Reset top positioning */
-    left: 120%; /* Position to the right of the icon (as per your current mobile CSS) */
-    margin-left: 0; /* Remove right-side spacing */
-    margin-right: 8px; /* Add spacing between icon and tooltip on the left */
+    top: auto;
+    left: 120%;
+    margin-left: 0;
+    margin-right: 8px;
   }
 }
