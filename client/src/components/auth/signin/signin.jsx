@@ -48,7 +48,8 @@ const Signin = () => {
     const redirectUri = `${window.location.origin}/auth/google/callback`; // Callback route
     const scope = "profile email";
     const responseType = "code";
-    const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}`;
+    // Add prompt=select_account to force account picker
+    const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}&prompt=select_account`;
 
     // Redirect to Google OAuth page
     window.location.href = googleAuthUrl;

@@ -3,19 +3,26 @@ import { ShoppingCart } from "lucide-react";
 import { useAuthStore } from "../../store/authStore";
 import { useCartStore } from "../../store/useCartStore";
 import styles from "./ResidencyCard.module.scss";
+import { useState } from "react";
 
 const ResidencyCard = ({ residency }) => {
   const { user } = useAuthStore();
   const { cartItems, toggleCart } = useCartStore();
+  const [buttonLoading, setButtonLoading] = useState(false);
 
   const isInCart = cartItems.some((item) => item._id === residency._id);
 
-  const handleToggleCart = () => {
+  const handleToggleCart = async () => {
     if (!user) {
       toast.error("Please login to add residencies to cart", { id: "login" });
       return;
     }
-    toggleCart(residency._id);
+    setButtonLoading(true);
+    try {
+      await toggleCart(residency._id);
+    } finally {
+      setButtonLoading(false);
+    }
   };
 
   return (
@@ -32,8 +39,13 @@ const ResidencyCard = ({ residency }) => {
         <button
           className={`${styles["add-to-cart"]} ${isInCart ? styles["in-cart"] : ""}`}
           onClick={handleToggleCart}
+          disabled={buttonLoading}
         >
-          <ShoppingCart size={22} />
+          {buttonLoading ? (
+            <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" style={{marginRight: 8}}></span>
+          ) : (
+            <ShoppingCart size={22} />
+          )}
           {isInCart ? "Remove from Cart" : "Add to Cart"}
         </button>
       </div>
