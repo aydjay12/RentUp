@@ -118,7 +118,10 @@ export const checkoutSuccess = async (req, res) => {
 
       // ✅ Grant coupons based on total amount
       if (totalAmount >= 50000) {
+        // Grant BIG50K if not already granted
         await createSpecificCoupon(session.metadata.userId, "BIG50K", 20, 50000);
+        // Also grant MID20K if not already granted
+        await createSpecificCoupon(session.metadata.userId, "MID20K", 10, 20000);
       } else if (totalAmount >= 20000) {
         await createSpecificCoupon(session.metadata.userId, "MID20K", 10, 20000);
       }

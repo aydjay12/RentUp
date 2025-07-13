@@ -162,4 +162,10 @@ export const useCartStore = create((set, get) => ({
 
     set({ subtotal, total });
   },
+
+  // Utility to check cart limit
+  isCartOverLimit: () => {
+    const { cartItems } = get();
+    return Array.isArray(cartItems) && cartItems.length > 8;
+  },
 }));

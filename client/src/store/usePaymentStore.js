@@ -17,6 +17,11 @@ export const usePaymentStore = create((set) => ({
   isProcessing: false,
 
   handlePayment: async (cartItems, coupon) => {
+    // Cart limit check
+    if (useCartStore.getState().isCartOverLimit()) {
+      toast.error("You can only checkout a maximum of 8 properties at a time.");
+      return;
+    }
     try {
       const stripe = await stripePromise;
   
