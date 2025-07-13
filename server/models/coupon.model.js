@@ -5,7 +5,7 @@ const couponSchema = new mongoose.Schema(
     code: {
       type: String,
       required: true,
-      unique: true,
+      // unique: true, // Removed global uniqueness
     },
     discountPercentage: {
       type: Number,
@@ -31,5 +31,8 @@ const couponSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+// Add compound unique index for userId + code
+couponSchema.index({ userId: 1, code: 1 }, { unique: true });
 
 export const Coupon = mongoose.model("Coupon", couponSchema);
