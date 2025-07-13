@@ -51,9 +51,11 @@ export const useCartStore = create((set, get) => ({
     toast.success("Coupon removed");
   },
 
-  fetchCart: async () => {
+  fetchCart: async (options = {}) => {
     try {
-      set({ loading: true });
+      if (!options.skipGlobalLoading) {
+        set({ loading: true });
+      }
       const response = await axios.get(`${API_URL}/all`);
       const cartData = Array.isArray(response.data) ? response.data : [];
       set({
@@ -113,11 +115,11 @@ export const useCartStore = create((set, get) => ({
     }
   },
 
-  toggleCart: async (rid) => {
+  toggleCart: async (rid, options = {}) => {
     try {
       const response = await axios.post(`${API_URL}/toggle/${rid}`);
       toast.success(response.data.message);
-      await get().fetchCart();
+      await get().fetchCart(options);
     } catch (error) {
       toast.error(error.response?.data?.message || "Error updating cart");
     }

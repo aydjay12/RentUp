@@ -9,6 +9,7 @@ const ResidencyCard = ({ residency }) => {
   const { user } = useAuthStore();
   const { cartItems, toggleCart } = useCartStore();
   const [buttonLoading, setButtonLoading] = useState(false);
+  const [actionType, setActionType] = useState(""); // "add" or "remove"
 
   const isInCart = cartItems.some((item) => item._id === residency._id);
 
@@ -18,10 +19,12 @@ const ResidencyCard = ({ residency }) => {
       return;
     }
     setButtonLoading(true);
+    setActionType(isInCart ? "remove" : "add");
     try {
-      await toggleCart(residency._id);
+      await toggleCart(residency._id, { skipGlobalLoading: true });
     } finally {
       setButtonLoading(false);
+      setActionType("");
     }
   };
 
@@ -41,12 +44,13 @@ const ResidencyCard = ({ residency }) => {
           onClick={handleToggleCart}
           disabled={buttonLoading}
         >
-          {buttonLoading ? (
-            <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" style={{marginRight: 8}}></span>
-          ) : (
-            <ShoppingCart size={22} />
-          )}
-          {isInCart ? "Remove from Cart" : "Add to Cart"}
+          {buttonLoading
+            ? actionType === "add"
+              ? "Adding to cart"
+              : "Removing from cart"
+            : isInCart
+            ? "Remove from Cart"
+            : "Add to Cart"}
         </button>
       </div>
     </div>
