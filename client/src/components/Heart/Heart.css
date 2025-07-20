@@ -5,6 +5,7 @@
   justify-content: center;
   cursor: pointer;
   user-select: none;
+  z-index: 199 !important;
 }
 
 .heart-icon {

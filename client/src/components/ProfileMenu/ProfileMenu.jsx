@@ -54,8 +54,15 @@ const ProfileMenu = () => {
         centered
       >
         <p>Are you sure you want to log out?</p>
-        <div style={{ display: "flex", justifyContent: "flex-end", gap: "1em" }}>
-          <Button color="red" onClick={handleLogout} disabled={isLoggingOut}>
+        <div style={{ display: "flex", justifyContent: "flex-end", gap: "1em", marginTop: 15 }}>
+          <Button
+            color="red"
+            onClick={handleLogout}
+            disabled={isLoggingOut}
+            style={isLoggingOut ? { backgroundColor: "", cursor: "not-allowed" } : {}}
+            // Remove hover effect when loading
+            className={isLoggingOut ? "no-hover" : ""}
+          >
             {isLoggingOut ? "Logging out" : "Yes, Logout"}
           </Button>
           <Button variant="outline" onClick={() => setLogoutModalOpen(false)} disabled={isLoggingOut}>
