@@ -1,6 +1,7 @@
 import { stripe } from "../lib/stripe.js";
 import { Coupon } from "../models/coupon.model.js";
 import { Order } from "../models/order.model.js";
+import jwt from "jsonwebtoken";
 
 export const createCheckoutSession = async (req, res) => {
   try {
@@ -45,11 +46,17 @@ export const createCheckoutSession = async (req, res) => {
       }
     }
 
+    // Generate a short-lived restore token (5 min)
+    const restoreToken = jwt.sign(
+      { userId: req.userId },
+      process.env.JWT_SECRET,
+      { expiresIn: "5m" }
+    );
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: lineItems,
       mode: "payment",
-      success_url: `${process.env.CLIENT_URL}/purchase-success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${process.env.CLIENT_URL}/purchase-success?session_id={CHECKOUT_SESSION_ID}&auth_token=${restoreToken}`,
       cancel_url: `${process.env.CLIENT_URL}/purchase-cancel`,
       discounts: coupon
         ? [

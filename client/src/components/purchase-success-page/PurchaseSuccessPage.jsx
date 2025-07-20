@@ -6,28 +6,51 @@ import styles from "./PurchaseSuccessPage.module.scss";
 import { usePaymentStore } from "../../store/usePaymentStore";
 import { useCartStore } from "../../store/useCartStore"; // ✅ Import useCartStore
 import { PuffLoader } from "react-spinners";
+import { useAuthStore } from "../../store/authStore";
 
 const PurchaseSuccessPage = () => {
   const [isProcessing, setIsProcessing] = useState(true);
   const [error, setError] = useState(null);
   const { handleCheckoutSuccess } = usePaymentStore();
   const { clearCart, cartItems } = useCartStore(); // ✅ Get clearCart function
+  const { isAuthenticated, checkAuth } = useAuthStore();
 
   useEffect(() => {
     const sessionId = new URLSearchParams(window.location.search).get(
       "session_id"
     );
+    const authToken = new URLSearchParams(window.location.search).get(
+      "auth_token"
+    );
 
-    if (sessionId) {
-      handleCheckoutSuccess(sessionId)
-        .then(() => clearCart())
-        .catch((err) => setError(err.message))
-        .finally(() => setIsProcessing(false));
-    } else {
-      setError("No session ID found in the URL");
-      setIsProcessing(false);
+    async function restoreAndProceed() {
+      if (!isAuthenticated && authToken) {
+        try {
+          await fetch("/api/auth/restore-session", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({ auth_token: authToken }),
+          });
+          await checkAuth();
+        } catch (e) {
+          setError("Could not restore session after payment. Please sign in again.");
+          setIsProcessing(false);
+          return;
+        }
+      }
+      if (sessionId) {
+        handleCheckoutSuccess(sessionId)
+          .then(() => clearCart())
+          .catch((err) => setError(err.message))
+          .finally(() => setIsProcessing(false));
+      } else {
+        setError("No session ID found in the URL");
+        setIsProcessing(false);
+      }
     }
-  }, [handleCheckoutSuccess, clearCart]);
+    restoreAndProceed();
+  }, [handleCheckoutSuccess, clearCart, isAuthenticated, checkAuth]);
 
   if (isProcessing) {
     return (

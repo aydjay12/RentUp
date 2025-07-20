@@ -14,6 +14,7 @@ import cloudinary from "../lib/cloudinary.js";
 import fs from "fs/promises"; // Import fs for file cleanup
 import dotenv from "dotenv";
 import axios from "axios";
+import jwt from "jsonwebtoken";
 
 dotenv.config();
 
@@ -354,6 +355,25 @@ export const checkAuth = async (req, res) => {
   } catch (error) {
     console.log("Error in checkAuth ", error);
     res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+export const restoreSession = async (req, res) => {
+  const { auth_token } = req.body;
+  if (!auth_token) {
+    return res.status(400).json({ success: false, message: "No token provided" });
+  }
+  try {
+    const decoded = jwt.verify(auth_token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.userId).select("-password");
+    if (!user) {
+      return res.status(400).json({ success: false, message: "User not found" });
+    }
+    // Set the cookie as in login
+    require("../utils/generateTokenAndSetCookie.js").generateTokenAndSetCookie(res, user._id);
+    res.status(200).json({ success: true, user });
+  } catch (error) {
+    res.status(401).json({ success: false, message: "Invalid or expired token" });
   }
 };
 

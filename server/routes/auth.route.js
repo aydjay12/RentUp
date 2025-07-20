@@ -15,6 +15,7 @@ import {
   updateProfile,
   uploadProfileImage,
   verifyEmail,
+  restoreSession,
 } from "../controllers/auth.controller.js";
 import { verifyToken } from "../middleware/verifyToken.js";
 
@@ -36,6 +37,7 @@ export const authRoute = (upload) => {
   router.get("/profile", verifyToken, getProfile);
   router.put("/profile", verifyToken, updateProfile);
   router.post("/profile/upload-image", verifyToken, upload.single("image"), uploadProfileImage);
+  router.post("/restore-session", restoreSession);
 
   return router;
 };
