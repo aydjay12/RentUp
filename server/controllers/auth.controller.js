@@ -79,7 +79,7 @@ export const googleLogin = async (req, res) => {
       code,
       client_id: process.env.CLIENT_ID,
       client_secret: process.env.CLIENT_SECRET,
-      redirect_uri: "https://rentupgold.onrender.com/auth/google/callback", // Match frontend callback
+      redirect_uri: "https://rent-up-gold.vercel.app/auth/google/callback", // Match frontend callback
       grant_type: "authorization_code",
     };
 
