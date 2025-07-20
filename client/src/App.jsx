@@ -174,11 +174,7 @@ const App = () => {
             <Route element={<LayoutPurchaseStatus />}>
               <Route
                 path="/purchase-success"
-                element={
-                  <ProtectedRoute>
-                    <PurchaseSuccessPage />
-                  </ProtectedRoute>
-                }
+                element={<PurchaseSuccessPage />}
               />
               <Route
                 path="/purchase-cancel"
