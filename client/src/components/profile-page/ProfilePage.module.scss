@@ -199,6 +199,18 @@
   }
 }
 
+.logout-btn-no-hover {
+  background-color: #e74c3c !important;
+  color: white !important;
+  pointer-events: none;
+  &:hover,
+  &:active,
+  &:focus {
+    background-color: #e74c3c !important;
+    color: white !important;
+  }
+}
+
 // ProfilePage.module.scss
 .profilePage {
   overflow: hidden; // Prevents content jumping

@@ -131,8 +131,7 @@ const ProfilePage = () => {
             color="red"
             onClick={handleLogout}
             disabled={isLoggingOut}
-            style={isLoggingOut ? { backgroundColor: "", cursor: "not-allowed" } : {}}
-            className={isLoggingOut ? "no-hover" : ""}
+            className={isLoggingOut ? "logout-btn-no-hover" : ""}
           >
             {isLoggingOut ? "Logging out" : "Yes, Logout"}
           </Button>

@@ -5,6 +5,7 @@ import { useAuthStore } from "../../store/authStore";
 import "@mantine/core/styles.css";
 import { useState } from "react";
 import { Modal, Button } from "@mantine/core";
+import "../profile-page/ProfilePage.module.scss";
 
 const ProfileMenu = () => {
   const navigate = useNavigate();
@@ -59,9 +60,7 @@ const ProfileMenu = () => {
             color="red"
             onClick={handleLogout}
             disabled={isLoggingOut}
-            style={isLoggingOut ? { backgroundColor: "", cursor: "not-allowed" } : {}}
-            // Remove hover effect when loading
-            className={isLoggingOut ? "no-hover" : ""}
+            className={isLoggingOut ? "logout-btn-no-hover" : ""}
           >
             {isLoggingOut ? "Logging out" : "Yes, Logout"}
           </Button>
