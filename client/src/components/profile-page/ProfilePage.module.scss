@@ -216,11 +216,6 @@
   transition: transform 0.2s ease-out; // Smooths any residual transforms
 }
 
-.confirmMessage{
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-}
-
 // Responsive design
 @media (max-width: 768px) {
   .profileCard {

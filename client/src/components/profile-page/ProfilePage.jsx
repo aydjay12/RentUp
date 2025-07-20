@@ -124,9 +124,10 @@ const ProfilePage = () => {
         onClose={() => setLogoutModalOpen(false)}
         title="Confirm Logout"
         centered
+        zIndex={10000}
       >
         <p className={styles.confirmMessage}>Are you sure you want to log out?</p>
-        <div style={{ display: "flex", justifyContent: "flex-end", gap: "1em" }}>
+        <div style={{ display: "flex", justifyContent: "flex-end", gap: "1em", marginTop: "1em" }}>
           <Button color="red" onClick={handleLogout} disabled={isLoggingOut}>
             {isLoggingOut ? "Logging out" : "Yes, Logout"}
           </Button>
