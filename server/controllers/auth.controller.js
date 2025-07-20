@@ -360,19 +360,30 @@ export const checkAuth = async (req, res) => {
 
 export const restoreSession = async (req, res) => {
   const { auth_token } = req.body;
+  console.log("Restore session called with token length:", auth_token ? auth_token.length : 0);
+  
   if (!auth_token) {
     return res.status(400).json({ success: false, message: "No token provided" });
   }
+  
   try {
+    console.log("Attempting to verify token...");
     const decoded = jwt.verify(auth_token, process.env.JWT_SECRET);
+    console.log("Token verified, userId:", decoded.userId);
+    
     const user = await User.findById(decoded.userId).select("-password");
     if (!user) {
+      console.log("User not found for userId:", decoded.userId);
       return res.status(400).json({ success: false, message: "User not found" });
     }
+    
+    console.log("User found, setting cookie...");
     // Set the cookie as in login
-    require("../utils/generateTokenAndSetCookie.js").generateTokenAndSetCookie(res, user._id);
+    generateTokenAndSetCookie(res, user._id);
     res.status(200).json({ success: true, user });
   } catch (error) {
+    console.error("Restore session error:", error.message);
+    console.error("Error stack:", error.stack);
     res.status(401).json({ success: false, message: "Invalid or expired token" });
   }
 };

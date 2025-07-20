@@ -32,12 +32,22 @@ const PurchaseSuccessPage = () => {
     async function restoreAndProceed() {
       if (!isAuthenticated && authToken) {
         try {
-          await fetch(`${API_URL}/restore-session`, {
+          console.log("Attempting to restore session with token length:", authToken.length);
+          const response = await fetch(`${API_URL}/restore-session`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
             body: JSON.stringify({ auth_token: authToken }),
           });
+          
+          if (!response.ok) {
+            const errorData = await response.json();
+            console.error("Restore session failed:", errorData);
+            throw new Error(errorData.message || "Failed to restore session");
+          }
+          
+          const data = await response.json();
+          console.log("Session restored successfully:", data);
           await checkAuth();
         } catch (e) {
           setError("Could not restore session after payment. Please sign in again.");
