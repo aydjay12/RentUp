@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 const API_URL =
   import.meta.env.MODE === "development"
     ? "http://localhost:8000/api/analytics"
-    : "/api/analytics";
+    : "https://rent-up-server.vercel.app/api/analytics";
 
 export const useAnalyticsStore = create((set, get) => ({
   analyticsData: { users: 0, products: 0, totalSales: 0, totalRevenue: 0 },
