@@ -259,7 +259,12 @@ export const login = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-  res.clearCookie("token");
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    // domain: undefined // Only set if you set domain when creating the cookie
+  });
   res.status(200).json({ success: true, message: "Logged out successfully" });
 };
 
