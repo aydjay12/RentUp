@@ -15,6 +15,11 @@ const PurchaseSuccessPage = () => {
   const { clearCart, cartItems } = useCartStore(); // ✅ Get clearCart function
   const { isAuthenticated, checkAuth } = useAuthStore();
 
+  const API_URL =
+    import.meta.env.MODE === "development"
+      ? "http://localhost:8000/api/auth"
+      : "https://rentupgold.onrender.com/api/auth";
+
   useEffect(() => {
     const sessionId = new URLSearchParams(window.location.search).get(
       "session_id"
@@ -26,7 +31,7 @@ const PurchaseSuccessPage = () => {
     async function restoreAndProceed() {
       if (!isAuthenticated && authToken) {
         try {
-          await fetch("/api/auth/restore-session", {
+          await fetch(`${API_URL}/restore-session`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
