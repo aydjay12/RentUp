@@ -24,9 +24,10 @@ const PurchaseSuccessPage = () => {
     const sessionId = new URLSearchParams(window.location.search).get(
       "session_id"
     );
-    const authToken = new URLSearchParams(window.location.search).get(
+    const authTokenRaw = new URLSearchParams(window.location.search).get(
       "auth_token"
     );
+    const authToken = authTokenRaw ? decodeURIComponent(authTokenRaw) : null;
 
     async function restoreAndProceed() {
       if (!isAuthenticated && authToken) {
