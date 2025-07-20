@@ -4,15 +4,26 @@ import { usePaymentStore } from "../../store/usePaymentStore";
 import { Link } from "react-router-dom";
 import { MoveRight } from "lucide-react";
 import styles from "./OrderSummary.module.scss";
+import { useState } from "react";
 
 const OrderSummary = () => {
   const { total, subtotal, coupon, isCouponApplied, cartItems } = useCartStore();
   const { handlePayment } = usePaymentStore();
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   const savings = subtotal - total;
   const formattedSubtotal = subtotal.toFixed(2);
   const formattedTotal = total.toFixed(2);
   const formattedSavings = savings.toFixed(2);
+
+  const handleCheckout = async () => {
+    setIsCheckingOut(true);
+    try {
+      await handlePayment(cartItems, coupon);
+    } finally {
+      setIsCheckingOut(false);
+    }
+  };
 
   return (
     <motion.div
@@ -55,9 +66,10 @@ const OrderSummary = () => {
         className={styles["checkout-btn"]}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        onClick={() => handlePayment(cartItems, coupon)}
+        onClick={handleCheckout}
+        disabled={isCheckingOut}
       >
-        Proceed to Checkout
+        {isCheckingOut ? "Checking out" : "Proceed to Checkout"}
       </motion.button>
 
       <div className={styles["or-text"]}>or</div>

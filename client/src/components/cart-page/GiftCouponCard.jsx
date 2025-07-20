@@ -5,6 +5,7 @@ import styles from "./GiftCouponCard.module.scss";
 
 const GiftCouponCard = () => {
   const [userInputCode, setUserInputCode] = useState("");
+  const [isApplying, setIsApplying] = useState(false);
   const { coupon, availableCoupons, isCouponApplied, applyCoupon, getMyCoupon, removeCoupon } = useCartStore();
 
   useEffect(() => {
@@ -15,9 +16,14 @@ const GiftCouponCard = () => {
     if (coupon) setUserInputCode(coupon.code);
   }, [coupon]);
 
-  const handleApplyCoupon = () => {
+  const handleApplyCoupon = async () => {
     if (!userInputCode) return;
-    applyCoupon(userInputCode);
+    setIsApplying(true);
+    try {
+      await applyCoupon(userInputCode);
+    } finally {
+      setIsApplying(false);
+    }
   };
 
   const handleRemoveCoupon = async () => {
@@ -49,8 +55,9 @@ const GiftCouponCard = () => {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={handleApplyCoupon}
+        disabled={isApplying}
       >
-        Apply Code
+        {isApplying ? "Applying coupon" : "Apply Code"}
       </motion.button>
 
       {isCouponApplied && coupon && (
