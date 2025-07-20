@@ -6,6 +6,8 @@ import styles from "./ProfilePage.module.scss";
 import { FaCamera, FaSave, FaSignOutAlt, FaEdit } from "react-icons/fa";
 import ProfilePic from "../pics/default-profile.png";
 import { Loader } from "lucide-react";
+import { Modal, Button } from "@mantine/core";
+import { useNavigate } from "react-router-dom";
 
 const ProfilePage = () => {
   const { user, fetchProfile, updateProfile, uploadProfileImage, logout, isLoading } = useAuthStore();
@@ -23,6 +25,9 @@ const ProfilePage = () => {
   });
   const [imageFile, setImageFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(ProfilePic);
+  const [logoutModalOpen, setLogoutModalOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchProfile();
@@ -78,6 +83,17 @@ const ProfilePage = () => {
     }
   };
 
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      await logout();
+      setLogoutModalOpen(false);
+      navigate("/");
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
+
   return (
     <motion.div
       className={styles.profilePage}
@@ -94,7 +110,7 @@ const ProfilePage = () => {
         <h1>Profile Dashboard</h1>
         <motion.button
           className={styles.logoutBtn}
-          onClick={logout}
+          onClick={() => setLogoutModalOpen(true)}
           title="Logout"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
@@ -103,6 +119,22 @@ const ProfilePage = () => {
           <FaSignOutAlt /> Sign Out
         </motion.button>
       </motion.div>
+      <Modal
+        opened={logoutModalOpen}
+        onClose={() => setLogoutModalOpen(false)}
+        title="Confirm Logout"
+        centered
+      >
+        <p>Are you sure you want to log out?</p>
+        <div style={{ display: "flex", justifyContent: "flex-end", gap: "1em" }}>
+          <Button color="red" onClick={handleLogout} disabled={isLoggingOut}>
+            {isLoggingOut ? "Logging out" : "Yes, Logout"}
+          </Button>
+          <Button variant="outline" onClick={() => setLogoutModalOpen(false)} disabled={isLoggingOut}>
+            Cancel
+          </Button>
+        </div>
+      </Modal>
 
       <motion.div
         className={styles.profileCard}
