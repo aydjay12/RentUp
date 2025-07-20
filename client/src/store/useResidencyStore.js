@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 const API_URL =
   import.meta.env.MODE === "development"
     ? "http://localhost:8000/api/residency"
-    : "https://rent-up-server.vercel.app/api/residency";
+    : "https://rentupgold.onrender.com/api/residency";
 
 export const useResidencyStore = create((set, get) => ({
   residencies: [], // Always initialize as array

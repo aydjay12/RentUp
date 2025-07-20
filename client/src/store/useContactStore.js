@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 const API_URL =
   import.meta.env.MODE === "development"
     ? "http://localhost:8000/api/contact"
-    : "https://rent-up-server.vercel.app/api/contact";
+    : "https://rentupgold.onrender.com/api/contact";
 
 export const useContactStore = create((set, get) => ({
   contacts: [],
