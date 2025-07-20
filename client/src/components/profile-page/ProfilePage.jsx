@@ -125,7 +125,7 @@ const ProfilePage = () => {
         title="Confirm Logout"
         centered
       >
-        <p>Are you sure you want to log out?</p>
+        <p style={{paddingTop: "1rem", paddingBottom: "1rem"}}>Are you sure you want to log out?</p>
         <div style={{ display: "flex", justifyContent: "flex-end", gap: "1em" }}>
           <Button color="red" onClick={handleLogout} disabled={isLoggingOut}>
             {isLoggingOut ? "Logging out" : "Yes, Logout"}
