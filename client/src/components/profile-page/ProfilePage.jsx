@@ -135,7 +135,7 @@ const ProfilePage = () => {
           >
             {isLoggingOut ? "Logging out" : "Yes, Logout"}
           </Button>
-          <Button variant="outline" onClick={() => setLogoutModalOpen(false)} disabled={isLoggingOut}>
+          <Button variant="outline" onClick={() => setLogoutModalOpen(false)} disabled={isLoggingOut} className={isLoggingOut ? "cancel-btn-no-hover" : ""}>
             Cancel
           </Button>
         </div>

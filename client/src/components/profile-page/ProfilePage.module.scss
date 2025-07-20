@@ -221,6 +221,17 @@
   box-shadow: none !important;
 }
 
+:global(.cancel-btn-no-hover),
+:global(.cancel-btn-no-hover:hover),
+:global(.cancel-btn-no-hover:active),
+:global(.cancel-btn-no-hover:focus) {
+  background-color: white !important;
+  color: #e74c3c !important;
+  border: 1px solid #e74c3c !important;
+  pointer-events: none;
+  box-shadow: none !important;
+}
+
 // ProfilePage.module.scss
 .profilePage {
   overflow: hidden; // Prevents content jumping
