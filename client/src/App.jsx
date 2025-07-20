@@ -219,11 +219,7 @@ const App = () => {
               <Route path="/verified" element={<Verified />} />
               <Route
                 path="/forgot-password"
-                element={
-                  <RedirectAuthenticatedUser>
-                    <ForgotPassword />
-                  </RedirectAuthenticatedUser>
-                }
+                element={<ForgotPassword />}
               />
               <Route
                 path="/reset-password/:token"

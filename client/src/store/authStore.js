@@ -91,6 +91,8 @@ export const useAuthStore = create((set, get) => ({
         error: null,
         isLoading: false,
       });
+      localStorage.removeItem("rememberedEmail");
+      // Optionally clear all localStorage/sessionStorage if you store user data there
     } catch (error) {
       set({ error: "Error logging out", isLoading: false });
       throw error;
