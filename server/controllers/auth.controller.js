@@ -88,7 +88,7 @@ export const verifyEmail = async (req, res) => {
     user.isVerified = true;
     user.verificationToken = undefined;
     user.verificationTokenExpiresAt = undefined;
-    await user.save();
+    await user.save({ validateBeforeSave: false });
 
     await sendWelcomeEmail(user.email, user.username || user.name);
 
@@ -128,7 +128,7 @@ export const resendVerification = async (req, res) => {
     const verificationToken = Math.floor(100000 + Math.random() * 900000).toString();
     user.verificationToken = verificationToken;
     user.verificationTokenExpiresAt = Date.now() + 60 * 60 * 1000; // 1 hour
-    await user.save();
+    await user.save({ validateBeforeSave: false });
 
     await sendVerificationEmail(user.email, verificationToken);
 
@@ -164,7 +164,7 @@ export const login = async (req, res) => {
 
     user.lastLogin = Date.now();
     user.rememberMe = rememberMe || false;
-    await user.save();
+    await user.save({ validateBeforeSave: false });
 
     const token = generateTokenAndSetCookie(res, user._id, user.rememberMe);
 
@@ -222,7 +222,7 @@ export const forgotPassword = async (req, res) => {
 
     user.resetPasswordToken = hashedToken;
     user.resetPasswordExpiresAt = resetTokenExpiresAt;
-    await user.save();
+    await user.save({ validateBeforeSave: false });
 
     const resetURL = `${process.env.CLIENT_URL}/new-password?token=${resetToken}`;
     await sendPasswordResetEmail(user.email, resetURL);
@@ -252,7 +252,7 @@ export const resetPassword = async (req, res) => {
     user.password = hashedPassword;
     user.resetPasswordToken = undefined;
     user.resetPasswordExpiresAt = undefined;
-    await user.save();
+    await user.save({ validateBeforeSave: false });
 
     await sendResetSuccessEmail(user.email);
 
@@ -334,11 +334,11 @@ export const toFav = asyncHandler(async (req, res) => {
 
     if (index !== -1) {
       user.favResidenciesID.splice(index, 1);
-      await user.save();
+      await user.save({ validateBeforeSave: false });
       return res.json({ message: "Removed from favourites", user });
     } else {
       user.favResidenciesID.push(rid);
-      await user.save();
+      await user.save({ validateBeforeSave: false });
       return res.json({ message: "Added to favourites", user });
     }
   } catch (err) {

@@ -23,7 +23,7 @@ import Favourites from "./components/Favourites/Favourites";
 import Search from "./components/search/Search";
 import LayoutAuth from "./components/auth/layout";
 import Signup from "./components/auth/signup/Signup";
-import Signin from "./components/auth/signin/signin";
+import Signin from "./components/auth/signin/Signin";
 import Verified from "./components/auth/verified/Verified";
 import ForgotPassword from "./components/auth/forgot-password/ForgotPassword";
 import NewPassword from "./components/auth/new-password/NewPassword";
