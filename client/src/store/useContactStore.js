@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const API_URL =
-  import.meta.env.MODE === "development"
+  import.meta.env.MODE === "production"
     ? "http://localhost:8000/api/contact"
     : "https://rentupgold.onrender.com/api/contact";
 
@@ -44,7 +44,7 @@ export const useContactStore = create((set, get) => ({
       throw error;
     }
   },
-  
+
   deleteContact: async (id) => {
     set({ loading: true });
     try {

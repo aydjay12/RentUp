@@ -1,198 +1,175 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import "./signin.scss";
-import { GoEye } from "react-icons/go";
-import { FaRegEyeSlash, FaAngleLeft } from "react-icons/fa";
-import GoogleIcon from "../../../../public/svg/google.svg";
-import Logo from "../../pics/logo.png";
-import { useNavigate } from "react-router-dom";
-import { Loader } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuthStore } from "../../../store/authStore";
 import { toast } from "react-toastify";
+import { Loader, Eye, EyeOff, ArrowLeft } from "lucide-react";
+import Logo from "../../pics/logo.png";
+import "../../../styles/auth_modern.scss";
 
 const Signin = () => {
   const navigate = useNavigate();
-  const { login, isLoading, error, isAuthenticated, loginWithGoogle } = useAuthStore();
+  const { login, isLoading, error, clearError, isAuthenticated } = useAuthStore();
+
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    rememberMe: false,
+  });
+
+  const [formErrors, setFormErrors] = useState({});
 
   useEffect(() => {
+    clearError();
     const savedEmail = localStorage.getItem("rememberedEmail");
     if (savedEmail) {
-      setFormData((prev) => ({ ...prev, email: savedEmail }));
-      setRememberMe(true);
+      setFormData((prev) => ({ ...prev, email: savedEmail, rememberMe: true }));
     }
-  }, []);
+  }, [clearError]);
 
-  const handleShowPassword = () => setShowPassword(!showPassword);
-  const handleChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  const handleRememberMe = (e) => setRememberMe(e.target.checked);
+  const validate = () => {
+    const errors = {};
+    if (!formData.email) {
+      errors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      errors.email = "Invalid email address";
+    }
+    if (!formData.password) {
+      errors.password = "Password is required";
+    }
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+    if (formErrors[name]) {
+      setFormErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      await login(formData.email, formData.password);
-      rememberMe
-        ? localStorage.setItem("rememberedEmail", formData.email)
-        : localStorage.removeItem("rememberedEmail");
-      if (isAuthenticated) navigate("/home");
-    } catch (err) {
-      console.error("Login error:", err);
+    if (validate()) {
+      try {
+        await login({
+          email: formData.email,
+          password: formData.password,
+          rememberMe: formData.rememberMe,
+        });
+
+        if (formData.rememberMe) {
+          localStorage.setItem("rememberedEmail", formData.email);
+        } else {
+          localStorage.removeItem("rememberedEmail");
+        }
+
+        toast.success("Welcome back!");
+        navigate("/");
+      } catch (err) {
+        // Error handled in store
+      }
     }
   };
 
-  const handleGoogleLogin = () => {
-    const clientId = "301899233164-s87ofoj53j35cjkelodhnuvkjkuid2il.apps.googleusercontent.com";
-    const redirectUri = `${window.location.origin}/auth/google/callback`; // Callback route
-    const scope = "profile email";
-    const responseType = "code";
-    // Add prompt=select_account to force account picker
-    const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}&prompt=select_account`;
-
-    // Redirect to Google OAuth page
-    window.location.href = googleAuthUrl;
-  };
-
   return (
-    <motion.div
-      className="signinPage"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-    >
+    <div className="auth-page">
+      <Link to="/" className="back-link">
+        <ArrowLeft size={18} />
+        Back to Home
+      </Link>
+
       <motion.div
-        className="logo"
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, ease: "easeOut", delay: 0.2 }}
+        className="auth-card"
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.4 }}
       >
-        <img src={Logo} alt="Logo" />
-      </motion.div>
+        <div className="auth-header">
+          <img src={Logo} alt="RentUp Logo" className="auth-logo" />
+          <h2>Welcome Back</h2>
+          <p>Signin to your account to continue</p>
+        </div>
 
-      <motion.form
-        className="form"
-        onSubmit={handleSubmit}
-        initial={{ y: 30, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: "easeOut", delay: 0.3 }}
-      >
-        <motion.div whileHover={{ scale: 1.05 }}>
-          <FaAngleLeft className="back-arrow" onClick={() => navigate(-1)} />
-        </motion.div>
-
-        <h1>
-          Welcome <span>Back !!</span>
-        </h1>
-
-        <p>
-          Don't have an account? <a href="/signup">Sign Up</a>
-        </p>
-
-        <motion.div
-          className="email-input"
-          initial={{ x: -20, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
-          <label>
-            Email <span>*</span>
-          </label>
-          <input
-            type="email"
-            name="email"
-            required
-            value={formData.email}
-            onChange={handleChange}
-          />
-        </motion.div>
-
-        <motion.div
-          className="confirm-password-input"
-          initial={{ x: 20, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-        >
-          <label>Password</label>
-          <div className="input-container">
-            <input
-              type={showPassword ? "text" : "password"}
-              name="password"
-              required
-              value={formData.password}
-              onChange={handleChange}
-            />
-            <motion.div
-              className="eye"
-              onClick={handleShowPassword}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              animate={{ rotate: showPassword ? 0 : 180 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              {showPassword ? <GoEye /> : <FaRegEyeSlash />}
-            </motion.div>
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <div className="input-group">
+            <label>Email Address</label>
+            <div className="input-wrapper">
+              <input
+                type="email"
+                name="email"
+                placeholder="your@email.com"
+                value={formData.email}
+                onChange={handleChange}
+                className={formErrors.email ? "error" : ""}
+              />
+            </div>
+            {formErrors.email && (
+              <span className="error-hint">{formErrors.email}</span>
+            )}
           </div>
-        </motion.div>
 
-        <div className="remember-me">
-          <div>
+          <div className="input-group">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <label>Password</label>
+              <Link to="/forgot-password" style={{ fontSize: '0.8rem', fontWeight: '600', color: '#2563eb' }}>
+                Forgot Password?
+              </Link>
+            </div>
+            <div className="input-wrapper">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="••••••••"
+                value={formData.password}
+                onChange={handleChange}
+                className={formErrors.password ? "error" : ""}
+              />
+              <div
+                className="eye-icon"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </div>
+            </div>
+            {formErrors.password && (
+              <span className="error-hint">{formErrors.password}</span>
+            )}
+          </div>
+
+          <div className="terms-check">
             <input
               type="checkbox"
               id="rememberMe"
-              checked={rememberMe}
-              onChange={handleRememberMe}
+              name="rememberMe"
+              checked={formData.rememberMe}
+              onChange={handleChange}
             />
-            <label htmlFor="rememberMe">Remember Me</label>
+            <label htmlFor="rememberMe">Remember me on this device</label>
           </div>
-          <span>
-            <a href="/forgot-password">Forgot password?</a>
-          </span>
-        </div>
 
-        <div className="buttons">
-          {error && (
-            <motion.p
-              className="error-message text-center"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-            >
-              {error}
-            </motion.p>
-          )}
+          {error && <div className="error-hint text-center">{error}</div>}
 
-          <motion.button
-            type="submit"
-            className="registerButton"
-            disabled={isLoading}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
+          <button className="auth-btn" type="submit" disabled={isLoading}>
             {isLoading ? (
-              <Loader className="w-6 h-6 animate-spin mx-auto" />
+              <Loader className="animate-spin" size={20} />
             ) : (
-              "Log In"
+              "Sign In to Account"
             )}
-          </motion.button>
+          </button>
+        </form>
 
-          <motion.button
-            type="button"
-            className="googleButton"
-            onClick={handleGoogleLogin}
-            disabled={isLoading}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <>
-              <img src={GoogleIcon} alt="Google" className="googleIcon" />
-              Sign in with Google
-            </>
-          </motion.button>
+        <div className="auth-footer">
+          Don't have an account? <Link to="/signup">Create Account</Link>
         </div>
-      </motion.form>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 };
 
-export default Signin; // Removed GoogleOAuthProvider since we don't need it anymore
+export default Signin;

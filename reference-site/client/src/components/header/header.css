@@ -1,0 +1,51 @@
+.header {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.headerTitles {
+  position: absolute;
+  top: 43px;
+  /* Consistent top spacing */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: "Lora", serif;
+  color: #444;
+  text-align: center;
+  width: 100%;
+}
+
+.headerTitleSm {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.headerTitleLg {
+  font-size: 100px;
+  font-weight: 400;
+  line-height: 0.8;
+}
+
+.headerImg {
+  width: 100%;
+  height: 450px;
+  margin-top: 80px;
+  object-fit: cover;
+}
+
+@media only screen and (max-width: 768px) {
+  .headerTitleSm {
+    font-size: 18px;
+  }
+
+  .headerTitleLg {
+    font-size: 60px;
+  }
+
+  .headerImg {
+    height: 350px;
+  }
+}

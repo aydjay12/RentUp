@@ -1,61 +1,49 @@
 import React from "react";
-import "./verified.scss";
+import { motion } from "framer-motion";
+import { useNavigate, Link } from "react-router-dom";
+import { CheckCircle, ArrowRight } from "lucide-react";
 import Logo from "../../pics/logo.png";
-import tick from "../../../../public/svg/tick.svg";
-import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion"; // Import Framer Motion
+import "../../../styles/auth_modern.scss";
 
 const Verified = () => {
   const navigate = useNavigate();
 
   return (
-    <motion.div
-      className="verifiedPage"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-    >
-      <div className="logo">
-        <img src={Logo} alt="" />
-      </div>
+    <div className="auth-page">
       <motion.div
-        className="message"
+        className="auth-card"
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.4 }}
       >
-        <motion.img
-          className="tick"
-          src={tick}
-          alt=""
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        />
-        <motion.h1
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
+        <div className="auth-header">
+          <img src={Logo} alt="RentUp Logo" className="auth-logo" />
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.2 }}
+            style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'center' }}
+          >
+            <CheckCircle size={80} color="#10b981" />
+          </motion.div>
+          <h2>Verified Successfully!</h2>
+          <p>Your email has been verified. You can now access all features of RentUp.</p>
+        </div>
+
+        <button
+          className="auth-btn"
+          onClick={() => navigate("/")}
+          style={{ width: '100%' }}
         >
-          Email Verification
-        </motion.h1>
-        <motion.p
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.8 }}
-        >
-          Hi Dear User, You Have Successfully Verified Your Email.
-        </motion.p>
-        <motion.button
-          onClick={() => navigate("/home")}
-          className="doneButton"
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 1 }}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          Done
-        </motion.button>
+          Go to Dashboard
+          <ArrowRight size={20} />
+        </button>
+
+        <div className="auth-footer" style={{ marginTop: '1.5rem' }}>
+          Welcome to the family!
+        </div>
       </motion.div>
-    </motion.div>
+    </div>
   );
 };
 

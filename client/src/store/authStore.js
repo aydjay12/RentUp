@@ -12,97 +12,33 @@ axios.defaults.withCredentials = true;
 export const useAuthStore = create((set, get) => ({
   user: null,
   isAuthenticated: false,
-  error: null,
   isLoading: false,
-  isCheckingAuth: true,
+  isCheckingAuth: false,
+  error: null,
   message: null,
+  favorites: [],
+  favoritesLoading: false,
+  lastAuthCheck: null,
 
-  signup: async (email, password, name) => {
+  // Register user
+  register: async (userData) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axios.post(`${API_URL}/signup`, {
-        email,
-        password,
-        name,
-      });
-      set({
-        user: response.data.user,
-        isAuthenticated: true,
-        isLoading: false,
-      });
+      const response = await axios.post(`${API_URL}/register`, userData);
+      set({ isLoading: false });
+      return response.data;
     } catch (error) {
-      set({
-        error: error.response.data.message || "Error signing up",
-        isLoading: false,
-      });
+      const errorMessage = error.response?.data?.message || "Registration failed";
+      set({ isLoading: false, error: errorMessage });
       throw error;
     }
   },
 
-  loginWithGoogle: async (code) => {
+  // Verify email
+  verifyEmail: async (email, token) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axios.post(`${API_URL}/google-login`, {
-        code, // Send authorization code
-      });
-      set({
-        user: response.data.user,
-        isAuthenticated: true,
-        isLoading: false,
-      });
-    } catch (error) {
-      set({
-        error: error.response?.data?.message || "Error logging in with Google",
-        isLoading: false,
-      });
-      throw error;
-    }
-  },
-  
-  login: async (email, password) => {
-    set({ isLoading: true, error: null });
-    try {
-      const response = await axios.post(`${API_URL}/login`, {
-        email,
-        password,
-      });
-      set({
-        isAuthenticated: true,
-        user: response.data.user,
-        error: null,
-        isLoading: false,
-      });
-    } catch (error) {
-      set({
-        error: error.response?.data?.message || "Error logging in",
-        isLoading: false,
-      });
-      throw error;
-    }
-  },
-
-  logout: async () => {
-    set({ isLoading: true, error: null });
-    try {
-      await axios.post(`${API_URL}/logout`, {}, { withCredentials: true });
-      set({
-        user: null,
-        isAuthenticated: false,
-        error: null,
-        isLoading: false,
-      });
-      localStorage.removeItem("rememberedEmail");
-      // Optionally clear all localStorage/sessionStorage if you store user data there
-    } catch (error) {
-      set({ error: "Error logging out", isLoading: false });
-      throw error;
-    }
-  },
-
-  verifyEmail: async (code) => {
-    set({ isLoading: true, error: null });
-    try {
-      const response = await axios.post(`${API_URL}/verify-email`, { code });
+      const response = await axios.post(`${API_URL}/verify-email`, { email, token });
       set({
         user: response.data.user,
         isAuthenticated: true,
@@ -110,29 +46,48 @@ export const useAuthStore = create((set, get) => ({
       });
       return response.data;
     } catch (error) {
-      set({
-        error: error.response.data.message || "Error verifying email",
-        isLoading: false,
-      });
+      const errorMessage = error.response?.data?.message || "Email verification failed";
+      set({ isLoading: false, error: errorMessage });
       throw error;
     }
   },
 
-  resendVerificationEmail: async (email) => {
+  // Resend verification email
+  resendVerification: async (email) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axios.post(`${API_URL}/resend-otp`, { email });
+      const response = await axios.post(`${API_URL}/resend-verification`, { email });
       set({ isLoading: false });
-      return response.data; // Return response to check if it worked
+      return response.data;
     } catch (error) {
-      set({
-        error: error.response?.data?.message || "Error resending OTP",
-        isLoading: false,
-      });
+      const errorMessage = error.response?.data?.message || "Failed to resend verification email";
+      set({ isLoading: false, error: errorMessage });
       throw error;
     }
-  },  
+  },
 
+  // Login user
+  login: async (credentials) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await axios.post(`${API_URL}/login`, credentials);
+      set({
+        user: response.data.user,
+        isAuthenticated: true,
+        isLoading: false,
+        lastAuthCheck: Date.now(),
+      });
+      // Optionally fetch favorites/profile after login
+      await get().getAllFav();
+      return response.data;
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || "Login failed";
+      set({ isLoading: false, error: errorMessage });
+      throw error;
+    }
+  },
+
+  // Check authentication status
   checkAuth: async () => {
     set({ isCheckingAuth: true, error: null });
     try {
@@ -141,116 +96,136 @@ export const useAuthStore = create((set, get) => ({
         user: response.data.user,
         isAuthenticated: true,
         isCheckingAuth: false,
+        lastAuthCheck: Date.now(),
       });
+      await get().getAllFav();
+      return response.data;
     } catch (error) {
-      set({ error: null, isCheckingAuth: false, isAuthenticated: false });
+      set({
+        user: null,
+        isAuthenticated: false,
+        isCheckingAuth: false,
+        error: null,
+        lastAuthCheck: Date.now(),
+      });
+      return null;
     }
   },
 
+  // Logout user
+  logout: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      await axios.post(`${API_URL}/logout`);
+      set({
+        user: null,
+        isAuthenticated: false,
+        isLoading: false,
+        favorites: [],
+      });
+    } catch (error) {
+      set({ isLoading: false, error: "Logout failed" });
+      throw error;
+    }
+  },
+
+  // Forgot Password
   forgotPassword: async (email) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axios.post(`${API_URL}/forgot-password`, {
-        email,
-      });
-      set({ message: response.data.message, isLoading: false });
+      const response = await axios.post(`${API_URL}/forgot-password`, { email });
+      set({ isLoading: false, message: response.data.message });
+      return response.data;
     } catch (error) {
-      set({
-        isLoading: false,
-        error:
-          error.response.data.message || "Error sending reset password email",
-      });
+      const errorMessage = error.response?.data?.message || "Failed to send reset email";
+      set({ isLoading: false, error: errorMessage });
       throw error;
     }
   },
 
+  // Reset Password
   resetPassword: async (token, password) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axios.post(`${API_URL}/reset-password/${token}`, {
-        password,
-      });
-      set({ message: response.data.message, isLoading: false });
+      const response = await axios.post(`${API_URL}/reset-password`, { token, password });
+      set({ isLoading: false, message: response.data.message });
+      return response.data;
     } catch (error) {
-      set({
-        isLoading: false,
-        error: error.response.data.message || "Error resetting password",
-      });
+      const errorMessage = error.response?.data?.message || "Password reset failed";
+      set({ isLoading: false, error: errorMessage });
       throw error;
     }
   },
 
+  // RentUp specific: Toggle favorited residency
   toFav: async (rid) => {
     try {
       const response = await axios.post(`${API_URL}/toFav/${rid}`);
-
       set((state) => ({
         user: {
           ...state.user,
           favResidenciesID: response.data.user.favResidenciesID,
         },
-        favourites: response.data.user.favResidenciesID, // Update favourites list
+        favorites: response.data.user.favResidenciesID,
       }));
-
       toast.success(response.data.message);
     } catch (error) {
-      toast.error(error.response?.data?.message || "Error updating favourites");
+      toast.error(error.response?.data?.message || "Error updating favorites");
     }
   },
 
+  // RentUp specific: Get all favorited residencies
   getAllFav: async () => {
+    set({ favoritesLoading: true });
     try {
       const response = await axios.get(`${API_URL}/allFav`);
-      
-      // // Log the response for debugging
-      // console.log("Favourites Fetched:", response.data);
-  
-      // Update the favourites state with the response data (array of favourite IDs)
-      set({ favourites: response.data });
+      set({ favorites: response.data, favoritesLoading: false });
     } catch (error) {
-      // Handle errors
-      console.error("Error fetching favourites:", error.response?.data?.message || error.message);
-      toast.error(error.response?.data?.message || "Error fetching favourites");
+      set({ favoritesLoading: false });
+      toast.error(error.response?.data?.message || "Error fetching favorites");
     }
   },
 
   fetchProfile: async () => {
     try {
       const response = await axios.get(`${API_URL}/profile`);
-      set({ user: response.data });
+      set({ user: response.data.user });
     } catch (error) {
       console.error("Error fetching profile:", error);
     }
   },
 
   updateProfile: async (updatedData) => {
+    set({ isLoading: true });
     try {
       const response = await axios.put(`${API_URL}/profile`, updatedData);
-      set({ user: response.data.user });
+      set({ user: response.data.user, isLoading: false });
+      toast.success(response.data.message || "Profile updated");
     } catch (error) {
-      console.error("Error updating profile:", error);
+      set({ isLoading: false });
+      toast.error(error.response?.data?.message || "Failed to update profile");
     }
   },
 
   uploadProfileImage: async (file) => {
-    set({ isLoading: true, error: null });
+    set({ isLoading: true });
     const formData = new FormData();
     formData.append("image", file);
-
     try {
       const response = await axios.post(`${API_URL}/profile/upload-image`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        headers: { "Content-Type": "multipart/form-data" },
       });
-      set({ isLoading: false });
-      return response.data.secure_url; // Return Cloudinary URL
+      set((state) => ({
+        user: { ...state.user, image: response.data.secure_url },
+        isLoading: false,
+      }));
+      return response.data.secure_url;
     } catch (error) {
-      console.error("Error uploading image:", error);
-      set({ error: "Failed to upload image", isLoading: false });
+      set({ isLoading: false });
       toast.error(error.response?.data?.message || "Failed to upload image");
       throw error;
     }
   },
 
+  clearError: () => set({ error: null }),
 }));

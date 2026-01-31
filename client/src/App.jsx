@@ -32,7 +32,6 @@ import OTPVerification from "./components/auth/otp-verification/otp-verification
 import { useAuthStore } from "./store/authStore";
 import { MantineProvider } from "@mantine/core";
 import { PuffLoader } from "react-spinners";
-import { GoogleOAuthProvider } from "@react-oauth/google";
 import CartPage from "./components/cart-page/CartPage";
 import PurchaseSuccessPage from "./components/purchase-success-page/PurchaseSuccessPage";
 import PurchaseCancelPage from "./components/purchase-cancel-page/PurchaseCancelPage";
@@ -41,7 +40,6 @@ import { useCartStore } from "./store/useCartStore";
 import LayoutAdmin from "./components/admin-page/LayoutAdmin";
 import LayoutPurchaseStatus from "./components/cart-page/LayoutPurchaseStatus";
 import ProfilePage from "./components/profile-page/ProfilePage";
-import GoogleCallback from "./components/google-callback/GoogleCallback";
 
 
 const ProtectedRoute = ({ children }) => {
@@ -111,7 +109,7 @@ const App = () => {
   }, [fetchCart, location.pathname]); // Re-fetch when pathname changes
 
   // Log cart items for debugging
-  useEffect(() => {}, [cartItems]);
+  useEffect(() => { }, [cartItems]);
 
   return (
     <MantineProvider>
@@ -125,9 +123,6 @@ const App = () => {
           }
         >
           <Routes>
-            {/* Add Google Callback route at the root level */}
-            <Route path="/auth/google/callback" element={<GoogleCallback />} />
-
             <Route element={<Layout />}>
               <Route path="/" element={<Home />} />
               <Route
@@ -218,7 +213,7 @@ const App = () => {
                 element={<ForgotPassword />}
               />
               <Route
-                path="/reset-password/:token"
+                path="/new-password"
                 element={
                   <RedirectAuthenticatedUser>
                     <NewPassword />
@@ -239,13 +234,11 @@ const App = () => {
   );
 };
 
-// Wrap App with BrowserRouter and GoogleOAuthProvider
+// Wrap App with BrowserRouter
 const AppWithRouter = () => (
-  <GoogleOAuthProvider clientId="301899233164-s87ofoj53j35cjkelodhnuvkjkuid2il.apps.googleusercontent.com">
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </GoogleOAuthProvider>
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>
 );
 
 export default AppWithRouter;

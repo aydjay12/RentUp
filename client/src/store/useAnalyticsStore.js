@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const API_URL =
-  import.meta.env.MODE === "development"
+  import.meta.env.MODE === "production"
     ? "http://localhost:8000/api/analytics"
     : "https://rentupgold.onrender.com/api/analytics";
 

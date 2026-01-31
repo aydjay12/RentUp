@@ -1,19 +1,16 @@
-import React, { useEffect, useState } from "react";
-import "../signup/signup.scss";
-import { GoEye } from "react-icons/go";
-import { FaRegEyeSlash } from "react-icons/fa";
-import { FaAngleLeft } from "react-icons/fa";
-import Logo from "../../pics/logo.png";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useAuthStore } from "../../../store/authStore";
 import { toast } from "react-toastify";
-import { Loader } from "lucide-react"; // Import for loading spinner
-import { motion } from "framer-motion"; // Import Framer Motion
+import { Loader, Eye, EyeOff, ArrowLeft, CheckCircle } from "lucide-react";
+import Logo from "../../pics/logo.png";
+import "../../../styles/auth_modern.scss";
 
 const NewPassword = () => {
-  const { token } = useParams();
   const navigate = useNavigate();
-  const { resetPassword, isLoading, error } = useAuthStore();
+  const location = useLocation();
+  const { resetPassword, isLoading, error, clearError } = useAuthStore();
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -21,162 +18,153 @@ const NewPassword = () => {
     password: "",
     confirmPassword: "",
   });
-  const [showMsg, setShowMsg] = useState(false);
-  const [errors, setErrors] = useState({
-    password: "",
-    confirmPassword: "",
-  });
 
-  const handleShowPassword = () => setShowPassword(!showPassword);
-  const handleShowConfirmPassword = () =>
-    setShowConfirmPassword(!showConfirmPassword);
+  const [formErrors, setFormErrors] = useState({});
+  const [isSuccess, setIsSuccess] = useState(false);
 
-  // Validate input
-  const validate = () => {
-    const newErrors = { password: "", confirmPassword: "" };
-
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-    } else if (!/^(?=.*[A-Z])(?=.*[\W_]).{8,}$/.test(formData.password)) {
-      newErrors.password =
-        "Password must contain at least 8 characters, one uppercase letter, and one symbol";
-    }
-
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = "Confirm Password is required";
-    } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
-    }
-
-    setErrors(newErrors);
-    return !Object.values(newErrors).some((error) => error !== "");
-  };
+  // Get token from query string
+  const queryParams = new URLSearchParams(location.search);
+  const token = queryParams.get("token");
 
   useEffect(() => {
-    validate();
-  }, [formData]);
+    clearError();
+    if (!token) {
+      toast.error("Invalid or missing reset token");
+      navigate("/signin");
+    }
+  }, [clearError, token, navigate]);
+
+  const validate = () => {
+    const errors = {};
+    if (!formData.password) {
+      errors.password = "Password is required";
+    } else if (!/^(?=.*[A-Z])(?=.*[\W_]).{8,}$/.test(formData.password)) {
+      errors.password = "Must contain 8+ chars, 1 uppercase, and 1 symbol";
+    }
+    if (formData.password !== formData.confirmPassword) {
+      errors.confirmPassword = "Passwords do not match";
+    }
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (formErrors[name]) {
+      setFormErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setShowMsg(true);
-
-    if (!validate()) return;
-
-    try {
-      await resetPassword(token, formData.password);
-      setTimeout(() => navigate("/password-reset-successful"), 2000);
-    } catch (err) {
-      toast.error(err?.message || "Error resetting password");
+    if (validate()) {
+      try {
+        await resetPassword(token, formData.password);
+        setIsSuccess(true);
+        toast.success("Password reset successfully!");
+        setTimeout(() => navigate("/password-reset-successful"), 2000);
+      } catch (err) {
+        // Error handled by store
+      }
     }
   };
 
   return (
-    <motion.div
-      className="newPassword"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-    >
-      <div className="logo">
-        <img src={Logo} alt="Logo" />
-      </div>
-      <motion.form
-        className="form"
-        noValidate
-        onSubmit={handleSubmit}
-        initial={{ y: 50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
+    <div className="auth-page">
+      <Link to="/signin" className="back-link">
+        <ArrowLeft size={18} />
+        Back to Login
+      </Link>
+
+      <motion.div
+        className="auth-card"
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.4 }}
       >
-        <FaAngleLeft className="back-arrow" onClick={() => navigate(-1)} />
-        <h1>
-          <span>Enter Your New Password</span>
-        </h1>
-        <motion.div
-          className="password-input"
-          initial={{ x: -50, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
-          <label>Password</label>
-          <div className="input-container">
-            <input
-              type={showPassword ? "text" : "password"}
-              name="password"
-              value={formData.password}
-              onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
-              }
-            />
-            <motion.div
-              className="eye"
-              onClick={handleShowPassword}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              animate={{ rotate: showPassword ? 0 : 180 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              {showPassword ? <GoEye /> : <FaRegEyeSlash />}
-            </motion.div>
-          </div>
-          {showMsg && errors.password && (
-            <p className="error-message">{errors.password}</p>
-          )}
-        </motion.div>
+        <div className="auth-header">
+          <img src={Logo} alt="RentUp Logo" className="auth-logo" />
+          <h2>New Password</h2>
+          <p>Please enter your new strong password</p>
+        </div>
 
-        <motion.div
-          className="confirm-password-input"
-          initial={{ x: -50, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
-        >
-          <label>Confirm Password</label>
-          <div className="input-container">
-            <input
-              type={showConfirmPassword ? "text" : "password"}
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={(e) =>
-                setFormData({ ...formData, confirmPassword: e.target.value })
-              }
-            />
+        {!isSuccess ? (
+          <form className="auth-form" onSubmit={handleSubmit}>
+            <div className="input-group">
+              <label>New Password</label>
+              <div className="input-wrapper">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  placeholder="••••••••"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className={formErrors.password ? "error" : ""}
+                />
+                <div
+                  className="eye-icon"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </div>
+              </div>
+              {formErrors.password && (
+                <span className="error-hint">{formErrors.password}</span>
+              )}
+            </div>
+
+            <div className="input-group">
+              <label>Confirm New Password</label>
+              <div className="input-wrapper">
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  name="confirmPassword"
+                  placeholder="••••••••"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  className={formErrors.confirmPassword ? "error" : ""}
+                />
+                <div
+                  className="eye-icon"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                >
+                  {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </div>
+              </div>
+              {formErrors.confirmPassword && (
+                <span className="error-hint">{formErrors.confirmPassword}</span>
+              )}
+            </div>
+
+            {error && <div className="error-hint text-center">{error}</div>}
+
+            <button className="auth-btn" type="submit" disabled={isLoading}>
+              {isLoading ? (
+                <Loader className="animate-spin" size={20} />
+              ) : (
+                "Reset Password"
+              )}
+            </button>
+          </form>
+        ) : (
+          <div className="text-center" style={{ padding: '2rem 0' }}>
             <motion.div
-              className="eye"
-              onClick={handleShowConfirmPassword}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              animate={{ rotate: showConfirmPassword ? 0 : 180 }}
-              transition={{ type: "spring", stiffness: 300 }}
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 260, damping: 20 }}
+              style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'center' }}
             >
-              {showConfirmPassword ? <GoEye /> : <FaRegEyeSlash />}
+              <CheckCircle size={64} color="#10b981" />
             </motion.div>
-          </div>
-          {showMsg && errors.confirmPassword && (
-            <p className="error-message">{errors.confirmPassword}</p>
-          )}
-          {error && (
-            <p className="error-message text-red-500 font-semibold mt-2 err-p">
-              {error}
+            <h3 style={{ marginBottom: '1rem', color: '#0f172a' }}>Success!</h3>
+            <p style={{ color: '#64748b', marginBottom: '2rem' }}>
+              Your password has been reset successfully. Redirecting you to the login page...
             </p>
-          )}
-        </motion.div>
-
-        <motion.div
-          className="buttons"
-          initial={{ y: 50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.8 }}
-        >
-          <button type="submit" className="registerButton">
-            {isLoading ? (
-              <Loader className="w-6 h-6 animate-spin mx-auto" />
-            ) : (
-              "Submit"
-            )}
-          </button>
-        </motion.div>
-      </motion.form>
-    </motion.div>
+          </div>
+        )}
+      </motion.div>
+    </div>
   );
 };
 
