@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "nodemon server/index.js",
     "start": "node server/index.js",
-    "build": "yarn install && cd client && yarn install && yarn build"
+    "build:client": "yarn install && cd client && yarn install && yarn build",
+    "build": "echo 'Server-only deployment'"
   },
   "engines": {
     "node": "24.x"
