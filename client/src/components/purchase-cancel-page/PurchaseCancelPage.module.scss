@@ -1,3 +1,4 @@
+@use "sass:color";
 // Light Theme Colors
 $primary: #ef4444; // Red for cancellation
 $background: #f8f9fa;
@@ -87,7 +88,7 @@ $shadow: rgba(0, 0, 0, 0.1);
 	cursor: pointer;
 
 	&:hover {
-		background-color: darken(#e2e8f0, 5%);
+		background-color: color.adjust(#e2e8f0, $lightness: -5%);
 	}
 }
 

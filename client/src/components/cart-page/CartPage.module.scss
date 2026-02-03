@@ -7,7 +7,8 @@
   .container {
     padding: 0 60px;
     padding-bottom: 3em;
-    @media (max-width: 768px){
+
+    @media (max-width: 768px) {
       padding: 1em;
       padding-bottom: 3em;
     }
@@ -26,7 +27,7 @@
     display: flex;
     width: 100%;
     justify-content: space-between;
-    
+
     gap: 40px;
 
     @media (max-width: 1024px) {
@@ -45,30 +46,35 @@
     flex-direction: column;
     gap: 1em;
     max-height: 120vh;
-    overflow-y: auto; /* Enable vertical scrolling */
-    overflow-x: hidden; /* Hide horizontal scrollbar */
-    @media (max-width: 768px){
-      width: 100%;
-      padding: 15px;
-    }
-  
-    /* Scrollbar for Webkit browsers (Chrome, Safari) */
-    &::-webkit-scrollbar {
-      width: 1px; /* Make scrollbar very thin */
-    }
-  
-    &::-webkit-scrollbar-thumb {
-      background-color: #ececec; /* Emerald green color */
-      border-radius: 4px;
-    }
-  
-    &::-webkit-scrollbar-track {
-      background-color: none; /* Same as background */
-    }
-  
+    overflow-y: auto;
+    /* Enable vertical scrolling */
+    overflow-x: hidden;
+    /* Hide horizontal scrollbar */
     /* Scrollbar for Firefox */
     scrollbar-width: thin;
     scrollbar-color: #2d3954 white;
+
+    /* Scrollbar for Webkit browsers (Chrome, Safari) */
+    &::-webkit-scrollbar {
+      width: 1px;
+      /* Make scrollbar very thin */
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #ececec;
+      /* Emerald green color */
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: transparent;
+      /* Same as background */
+    }
+
+    @media (max-width: 768px) {
+      width: 100%;
+      padding: 15px;
+    }
   }
 
   .order-section {

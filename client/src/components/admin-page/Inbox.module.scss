@@ -1,3 +1,4 @@
+@use "sass:color";
 $primary-color: #27ae60; // Soft green for main accents
 $secondary-color: #ffeb3b; // Yellow for highlights
 $background-color: white; // Soft light background color
@@ -15,7 +16,8 @@ $transition-speed: 0.3s; // Smooth transition speed
   box-shadow: 0 4px 10px $shadow-color;
   margin: 0 auto;
   padding-bottom: 2em;
-  @media(max-width: 768px){
+
+  @media(max-width: 768px) {
     padding: .7em;
     padding-bottom: 2em;
   }
@@ -28,10 +30,12 @@ $transition-speed: 0.3s; // Smooth transition speed
     border: 1px solid $border-color;
     border-radius: 30px;
     padding: 0 1.2em;
-    svg{
+
+    svg {
       color: #aaa;
     }
-    @media(max-width: 768px){
+
+    @media(max-width: 768px) {
       width: 60%;
     }
 
@@ -41,7 +45,8 @@ $transition-speed: 0.3s; // Smooth transition speed
       font-size: 0.95rem;
       transition: all $transition-speed ease;
       outline: none;
-      @media(max-width: 768px){
+
+      @media(max-width: 768px) {
         width: 100%;
       }
 
@@ -70,9 +75,11 @@ $transition-speed: 0.3s; // Smooth transition speed
       padding: 12px;
       text-align: left;
       border-bottom: 1px solid $border-color;
-      @media(max-width: 768px){
+
+      @media(max-width: 768px) {
         font-size: 12px;
-        &:nth-child(2){
+
+        &:nth-child(2) {
           display: none;
         }
       }
@@ -88,7 +95,7 @@ $transition-speed: 0.3s; // Smooth transition speed
       transition: background-color $transition-speed ease;
 
       &:hover {
-        background-color: lighten($primary-color, 45%);
+        background-color: color.adjust($primary-color, $lightness: 45%);
         cursor: pointer;
       }
     }
@@ -104,21 +111,24 @@ $transition-speed: 0.3s; // Smooth transition speed
       padding: 10px;
       color: #967c79;
       margin-left: .5em;
+
       &:hover {
         color: #e74c3c;
       }
-      @media(max-width: 768px){
+
+      @media(max-width: 768px) {
         margin-left: .3em;
       }
-      svg{
+
+      svg {
         width: 20px;
         height: 20px;
-        @media(max-width: 768px){
-        }
+
+        @media(max-width: 768px) {}
       }
 
       &:hover {
-        color: darken($error-color, 10%);
+        color: color.adjust($error-color, $lightness: -10%);
       }
     }
   }
@@ -136,15 +146,17 @@ $transition-speed: 0.3s; // Smooth transition speed
     padding: 16px;
   }
 
-  .inboxHeader{
+  .inboxHeader {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 2em;
-    .backButton{
+
+    .backButton {
       padding: 0;
     }
-    p{
+
+    p {
       font-weight: 600;
       font-size: 18px;
     }
@@ -153,9 +165,9 @@ $transition-speed: 0.3s; // Smooth transition speed
   h2 {
     font-size: 22px;
     margin-bottom: 12px;
-    color: darken($primary-color, 10%);
+    color: color.adjust($primary-color, $lightness: -10%);
     font-weight: 600;
-    border-bottom: 2px solid lighten($primary-color, 40%);
+    border-bottom: 2px solid color.adjust($primary-color, $lightness: 40%);
     padding-bottom: 8px;
   }
 
@@ -181,11 +193,11 @@ $transition-speed: 0.3s; // Smooth transition speed
     font-size: 16px;
     font-weight: 500;
     margin-bottom: 12px;
-    color: darken($primary-color, 10%);
+    color: color.adjust($primary-color, $lightness: -10%);
     transition: all 0.3s ease;
 
     &:hover {
-      color: lighten($primary-color, 10%);
+      color: color.adjust($primary-color, $lightness: 10%);
       text-decoration: underline;
     }
   }
@@ -197,7 +209,7 @@ $transition-speed: 0.3s; // Smooth transition speed
     h3 {
       font-size: 18px;
       margin-bottom: 12px;
-      color: darken($primary-color, 10%);
+      color: color.adjust($primary-color, $lightness: -10%);
       font-weight: 600;
     }
 
@@ -229,7 +241,7 @@ $transition-speed: 0.3s; // Smooth transition speed
     transition: background 0.3s ease;
 
     &:hover {
-      background: darken(#e74c3c, 10%);
+      background: color.adjust(#e74c3c, $lightness: -10%);
     }
 
     svg {
@@ -238,6 +250,7 @@ $transition-speed: 0.3s; // Smooth transition speed
     }
   }
 }
+
 .pagination {
   display: flex;
   justify-content: center;
@@ -255,7 +268,7 @@ $transition-speed: 0.3s; // Smooth transition speed
     transition: background-color $transition-speed ease;
 
     &:hover {
-      background-color: darken($primary-color, 10%);
+      background-color: color.adjust($primary-color, $lightness: -10%);
     }
 
     &:disabled {
@@ -276,14 +289,15 @@ $transition-speed: 0.3s; // Smooth transition speed
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-.modalPopup{
-  header{
+.modalPopup {
+  header {
     box-shadow: none;
   }
 }
@@ -298,6 +312,7 @@ $transition-speed: 0.3s; // Smooth transition speed
 .confirmButton {
   background-color: #e63946;
   color: white;
+
   &:hover {
     background-color: #d62839;
   }
@@ -306,8 +321,8 @@ $transition-speed: 0.3s; // Smooth transition speed
 .cancelButton {
   border: 1px solid #ccc;
   color: #333;
+
   &:hover {
     background-color: #f1f1f1;
   }
 }
-

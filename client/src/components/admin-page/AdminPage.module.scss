@@ -1,3 +1,4 @@
+@use "sass:color";
 $primary-color: #27ae60;
 $secondary-color: #81C784;
 $background-color: #F5F5F5;
@@ -8,6 +9,7 @@ $transition-speed: 0.3s;
 .container {
   padding: 20px 5em;
   padding-bottom: 60px;
+
   @media(max-width: 768px) {
     padding: 1em;
     padding-bottom: 60px;
@@ -20,6 +22,7 @@ $transition-speed: 0.3s;
   justify-content: center;
   position: relative;
   margin-bottom: 30px;
+
   @media(max-width: 768px) {
     justify-content: space-between; // Space out h1 and toggle
   }
@@ -34,6 +37,7 @@ $transition-speed: 0.3s;
   opacity: 0;
   transform: translateY(20px);
   transition: transform $transition-speed, opacity $transition-speed;
+
   @media(max-width: 768px) {
     font-size: 1.5em;
     padding-left: .5em;
@@ -47,6 +51,7 @@ $transition-speed: 0.3s;
 
 .mobileToggle {
   display: none;
+
   @media(max-width: 768px) {
     display: block;
     position: absolute;
@@ -62,6 +67,7 @@ $transition-speed: 0.3s;
 
 .menuDropdown {
   display: none;
+
   @media(max-width: 768px) {
     display: block;
     background: white;
@@ -82,6 +88,7 @@ $transition-speed: 0.3s;
   background: white;
   border-radius: 30px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
   @media(max-width: 768px) {
     display: none;
   }
@@ -101,13 +108,14 @@ $transition-speed: 0.3s;
     z-index: 1;
 
     &:hover {
-      background-color: lighten($secondary-color, 10%);
+      background-color: color.adjust($secondary-color, $lightness: 10%);
     }
   }
 
   .active {
     color: white;
     background: $primary-color;
+
     &:hover {
       background: $primary-color;
     }
@@ -132,6 +140,13 @@ $transition-speed: 0.3s;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

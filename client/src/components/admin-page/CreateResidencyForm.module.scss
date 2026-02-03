@@ -1,3 +1,4 @@
+@use "sass:color";
 $primary-color: #27ae60; // Soft green for main accents
 $secondary-color: #ffeb3b; // Yellow for highlights
 $background-color: #f9f9f9; // Soft light background color
@@ -15,7 +16,8 @@ $transition-speed: 0.3s; // Smooth transition speed
   padding-bottom: 60px;
   box-shadow: 0 4px 10px $shadow-color;
   transition: transform $transition-speed ease, box-shadow $transition-speed ease;
-  @media(max-width: 768px){
+
+  @media(max-width: 768px) {
     padding: 25px 15px;
   }
 
@@ -28,7 +30,8 @@ $transition-speed: 0.3s; // Smooth transition speed
     font-size: 1.5rem;
     font-weight: bold;
     color: $primary-color;
-    @media(max-width: 768px){
+
+    @media(max-width: 768px) {
       font-size: 1.3rem;
       text-align: center;
     }
@@ -36,7 +39,8 @@ $transition-speed: 0.3s; // Smooth transition speed
 
   form {
     margin-top: 2em;
-    @media(max-width: 768px){
+
+    @media(max-width: 768px) {
       padding: 0;
     }
   }
@@ -46,14 +50,17 @@ $transition-speed: 0.3s; // Smooth transition speed
     grid-template-columns: 1fr 1fr 1fr;
     gap: 1em;
 
-    &:nth-child(1), &:nth-child(2), &:nth-child(5) {
+    &:nth-child(1),
+    &:nth-child(2),
+    &:nth-child(5) {
       grid-template-columns: 1fr 1fr;
     }
   }
 
   .formGroup {
     margin-bottom: 30px;
-    @media(max-width: 768px){
+
+    @media(max-width: 768px) {
       width: 100%;
     }
 
@@ -63,7 +70,8 @@ $transition-speed: 0.3s; // Smooth transition speed
       color: $primary-color;
       margin-bottom: 8px;
       font-weight: 600;
-      @media (max-width: 768px){
+
+      @media (max-width: 768px) {
         font-size: 0.9rem;
       }
     }
@@ -97,11 +105,12 @@ $transition-speed: 0.3s; // Smooth transition speed
   }
 
   .uploadSection {
-    div{
+    div {
       display: flex;
       align-items: center;
     }
-    .errorMessage{
+
+    .errorMessage {
       margin-top: .5em;
       color: red;
     }
@@ -121,9 +130,10 @@ $transition-speed: 0.3s; // Smooth transition speed
       gap: 0.5em;
 
       &:hover {
-        background-color: lighten($primary-color, 10%);
+        background-color: color.adjust($primary-color, $lightness: 10%);
       }
-      @media (max-width: 768px){
+
+      @media (max-width: 768px) {
         font-size: 0.9rem;
         padding: .7em;
       }
@@ -133,7 +143,8 @@ $transition-speed: 0.3s; // Smooth transition speed
       margin-left: 15px;
       font-size: 0.9rem;
       color: #888;
-      @media (max-width: 768px){
+
+      @media (max-width: 768px) {
         font-size: .8rem;
         margin-left: 8px;
       }
@@ -157,7 +168,7 @@ $transition-speed: 0.3s; // Smooth transition speed
     margin-top: 4em;
 
     &:hover {
-      background-color: lighten($primary-color, 10%);
+      background-color: color.adjust($primary-color, $lightness: 10%);
       transform: scale(1.05);
     }
 

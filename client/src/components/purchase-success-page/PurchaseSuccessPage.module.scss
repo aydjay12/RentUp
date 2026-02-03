@@ -1,3 +1,4 @@
+@use "sass:color";
 // Light Theme Colors
 $primary: #27ae60; // Emerald
 $background: #f8f9fa;
@@ -108,7 +109,7 @@ $shadow: rgba(0, 0, 0, 0.1);
   border: none;
 
   &:hover {
-    background-color: darken($primary, 10%);
+    background-color: color.adjust($primary, $lightness: -10%);
   }
 }
 
@@ -118,7 +119,7 @@ $shadow: rgba(0, 0, 0, 0.1);
   border: none;
 
   &:hover {
-    background-color: darken(#e2e8f0, 5%);
+    background-color: color.adjust(#e2e8f0, $lightness: -5%);
   }
 }
 
