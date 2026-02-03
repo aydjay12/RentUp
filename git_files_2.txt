@@ -1,0 +1,10 @@
+client/src/components/auth/ForgotPassword/ForgotPassword.jsx
+client/src/components/auth/NewPassword/NewPassword.jsx
+client/src/components/auth/OTPVerification/OTPVerification.jsx
+client/src/components/auth/PasswordSuccess/PasswordSuccess.jsx
+client/src/components/auth/layout.jsx
+client/src/components/auth/signin/signin.jsx
+client/src/components/auth/signup/Signup.jsx
+client/src/components/auth/signup/back.css
+client/src/components/auth/signup/back.js
+client/src/components/auth/verified/Verified.jsx
