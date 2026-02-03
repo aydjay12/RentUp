@@ -11,7 +11,7 @@ const stripePromise = loadStripe(
 const API_URL =
   import.meta.env.MODE === "development"
     ? "http://localhost:8000/api/payments"
-    : "https://rentupgold.onrender.com/api/payments";
+    : "https://rent-up-api.vercel.app/api/payments";
 
 export const usePaymentStore = create((set) => ({
   isProcessing: false,
@@ -24,19 +24,19 @@ export const usePaymentStore = create((set) => ({
     }
     try {
       const stripe = await stripePromise;
-  
+
       // ✅ Only send couponCode if isCouponApplied is true
       const { isCouponApplied } = useCartStore.getState();
       const couponCode = isCouponApplied && coupon ? coupon.code : null;
-  
+
       const response = await axios.post(`${API_URL}/create-checkout-session`, {
         residencies: cartItems,
         couponCode, // ✅ Only send if applied
       });
-  
+
       const session = response.data;
       const result = await stripe.redirectToCheckout({ sessionId: session.id });
-  
+
       if (result.error) {
         console.error("Error:", result.error);
         toast.error("Payment failed. Please try again.");
@@ -46,19 +46,19 @@ export const usePaymentStore = create((set) => ({
       toast.error("Error processing payment. Please try again.");
     }
   },
-  
+
 
   handleCheckoutSuccess: async (sessionId) => {
     const { isProcessing } = usePaymentStore.getState();
-  
+
     if (isProcessing) return; // ✅ Prevent duplicate calls
     set({ isProcessing: true });
-  
+
     try {
       const response = await axios.post(`${API_URL}/checkout-success`, {
         sessionId,
       });
-  
+
       if (response.data.success) {
       } else {
         throw new Error(response.data.message || "Server error");
@@ -71,5 +71,5 @@ export const usePaymentStore = create((set) => ({
     } finally {
       set({ isProcessing: false }); // ✅ Reset state after execution
     }
-  },  
+  },
 }));

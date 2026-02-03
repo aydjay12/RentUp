@@ -4,9 +4,9 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const API_URL =
-  import.meta.env.MODE === "production"
+  import.meta.env.MODE === "development"
     ? "http://localhost:8000/api/residency"
-    : "https://rentupgold.onrender.com/api/residency";
+    : "https://rent-up-api.vercel.app/api/residency";
 
 export const useResidencyStore = create((set, get) => ({
   residencies: [], // Always initialize as array

@@ -3,9 +3,9 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const API_URL =
-  import.meta.env.MODE === "production"
+  import.meta.env.MODE === "development"
     ? "http://localhost:8000/api/analytics"
-    : "https://rentupgold.onrender.com/api/analytics";
+    : "https://rent-up-api.vercel.app/api/analytics";
 
 export const useAnalyticsStore = create((set, get) => ({
   analyticsData: { users: 0, products: 0, totalSales: 0, totalRevenue: 0 },
