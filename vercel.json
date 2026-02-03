@@ -1,5 +1,6 @@
 {
     "version": 2,
+    "name": "rent-up-api",
     "builds": [
         {
             "src": "server/index.js",
