@@ -24,7 +24,7 @@ import Search from "./components/search/Search";
 import LayoutAuth from "./components/auth/layout";
 import Signup from "./components/auth/signup/Signup";
 import Signin from "./components/auth/signin/signin";
-import Verified from "./components/auth/verified/verified";
+import Verified from "./components/auth/verified/Verified";
 import ForgotPassword from "./components/auth/ForgotPassword/ForgotPassword";
 import NewPassword from "./components/auth/NewPassword/NewPassword";
 import PasswordSuccess from "./components/auth/PasswordSuccess/PasswordSuccess";
