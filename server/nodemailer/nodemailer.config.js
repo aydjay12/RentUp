@@ -10,6 +10,7 @@ export const transporter = nodemailer.createTransport({
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
+  family: 4, // Force IPv4 to avoid IPv6 connection issues on Render
 });
 
 console.log("Nodemailer Configured. User:", process.env.EMAIL_USER ? "Set" : "Not Set");
