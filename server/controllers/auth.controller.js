@@ -370,12 +370,11 @@ export const getProfile = asyncHandler(async (req, res) => {
 export const updateProfile = async (req, res) => {
   try {
     const { username, name, phone, address, gender, birthday, image } = req.body;
-
-
+    const finalName = name || username;
 
     const updatedUser = await User.findByIdAndUpdate(
       req.userId,
-      { username, name, phone, address, gender, birthday, image },
+      { username, name: finalName, phone, address, gender, birthday, image },
       { new: true }
     ).select("-password");
 

@@ -14,7 +14,6 @@ const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
-    name: "",
     email: "",
     phone: "",
     address: "",
@@ -38,7 +37,6 @@ const ProfilePage = () => {
     if (user) {
       const newFormData = {
         username: user.username || "",
-        name: user.name || "",
         email: user.email || "",
         phone: user.phone || "",
         address: user.address || "",
@@ -71,7 +69,7 @@ const ProfilePage = () => {
 
   const handleSave = async () => {
     try {
-      const updatedData = { ...formData };
+      const updatedData = { ...formData, name: formData.username };
       if (imageFile) {
         const imageUrl = await uploadProfileImage(imageFile);
         updatedData.image = imageUrl;
@@ -244,43 +242,6 @@ const ProfilePage = () => {
                     transition={{ duration: 0.2 }}
                   >
                     {formData.username || "Not set"}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-
-            <motion.div
-              className={styles.infoItem}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.42 }}
-            >
-              <label>Name</label>
-              <AnimatePresence mode="wait">
-                {isEditing ? (
-                  <motion.input
-                    key="name-input"
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    placeholder="Enter name"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.2 }}
-                    disabled={isLoading}
-                  />
-                ) : (
-                  <motion.div
-                    key="name-value"
-                    className={styles.infoValue}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    {formData.name || "Not set"}
                   </motion.div>
                 )}
               </AnimatePresence>
