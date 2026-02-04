@@ -81,6 +81,7 @@ const AdminProtectedRoute = ({ children }) => {
 
 const RedirectAuthenticatedUser = ({ children }) => {
   const { isAuthenticated, isCheckingAuth, user } = useAuthStore();
+  const location = useLocation();
 
   if (isCheckingAuth)
     return (
@@ -89,8 +90,16 @@ const RedirectAuthenticatedUser = ({ children }) => {
       </div>
     );
 
-  if (isAuthenticated && user?.isVerified)
-    return <Navigate to="/" replace />;
+  // If authenticated and verified, redirect away from auth pages
+  if (isAuthenticated && user?.isVerified) {
+    // If there is a 'from' state, it means the user is in the middle of a login/signup flow.
+    // We let the component handle its own navigation (usually with a delay for snackbars).
+    // If there is NO 'from' state, they manually visited the page while already logged in, so redirect them home.
+    if (!location.state?.from) {
+      return <Navigate to="/" replace />;
+    }
+  }
+
   return children;
 };
 
