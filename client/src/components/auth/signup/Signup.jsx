@@ -18,7 +18,7 @@ const Signup = () => {
   const { snackbar, showSnackbar, hideSnackbar } = useSnackbar();
 
   const from = location.state?.from?.pathname || "/";
-  const [role, setRole] = useState("User");
+  const [role, setRole] = useState("user");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);

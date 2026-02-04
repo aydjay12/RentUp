@@ -44,7 +44,7 @@ const ProfilePage = () => {
         birthday: user.birthday || "",
         lastLogin: user.lastLogin || "",
         image: user.image || ProfilePic,
-        role: user.role || "User", // Default to "User" if role is not set
+        role: user.role || "user", // Default to "user" if role is not set
       };
       setFormData(newFormData);
       setPreviewImage(user.image || ProfilePic);
