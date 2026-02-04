@@ -13,6 +13,7 @@ const ProfilePage = () => {
   const { user, fetchProfile, updateProfile, uploadProfileImage, logout, isLoading } = useAuthStore();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
+    username: "",
     name: "",
     email: "",
     phone: "",
@@ -36,6 +37,7 @@ const ProfilePage = () => {
   useEffect(() => {
     if (user) {
       const newFormData = {
+        username: user.username || "",
         name: user.name || "",
         email: user.email || "",
         phone: user.phone || "",
@@ -191,7 +193,7 @@ const ProfilePage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.4 }}
           >
-            {formData.name || "Unnamed User"}
+            {formData.username || "Unnamed User"}
           </motion.h2>
           <motion.div
             className={styles.userRole}
@@ -215,6 +217,80 @@ const ProfilePage = () => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.4 }}
+            >
+              <label>Username</label>
+              <AnimatePresence mode="wait">
+                {isEditing ? (
+                  <motion.input
+                    key="username-input"
+                    type="text"
+                    name="username"
+                    value={formData.username}
+                    onChange={handleChange}
+                    placeholder="Enter username"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    disabled={isLoading}
+                  />
+                ) : (
+                  <motion.div
+                    key="username-value"
+                    className={styles.infoValue}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    {formData.username || "Not set"}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+
+            <motion.div
+              className={styles.infoItem}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.42 }}
+            >
+              <label>Name</label>
+              <AnimatePresence mode="wait">
+                {isEditing ? (
+                  <motion.input
+                    key="name-input"
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="Enter name"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    disabled={isLoading}
+                  />
+                ) : (
+                  <motion.div
+                    key="name-value"
+                    className={styles.infoValue}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    {formData.name || "Not set"}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+
+            <motion.div
+              className={styles.infoItem}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.45 }}
             >
               <label>Email</label>
               <div className={styles.infoValue}>{formData.email}</div>

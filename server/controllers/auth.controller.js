@@ -56,6 +56,7 @@ export const register = async (req, res) => {
         username: user.username,
         email: user.email,
         role: user.role,
+        image: user.image,
       },
     });
   } catch (error) {
@@ -99,6 +100,7 @@ export const verifyEmail = async (req, res) => {
         email: user.email,
         role: user.role,
         isVerified: user.isVerified,
+        image: user.image,
       },
     });
   } catch (error) {
@@ -175,7 +177,6 @@ export const login = async (req, res) => {
         isVerified: user.isVerified,
         rememberMe: user.rememberMe,
         image: user.image,
-        name: user.name,
       },
     });
   } catch (error) {

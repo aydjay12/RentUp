@@ -13,8 +13,8 @@ const ProfileMenu = () => {
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  // Extract the first letter of the user's name (fallback if no image)
-  const avatarText = user?.name ? user.name.charAt(0).toUpperCase() : "?";
+  // Extract the first letter of the user's username (fallback if no image)
+  const avatarText = user?.username ? user.username.charAt(0).toUpperCase() : "?";
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
