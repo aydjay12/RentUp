@@ -13,7 +13,7 @@ export const useAuthStore = create((set, get) => ({
   user: null,
   isAuthenticated: false,
   isLoading: false,
-  isCheckingAuth: false,
+  isCheckingAuth: true,
   error: null,
   message: null,
   favorites: [],
@@ -76,6 +76,8 @@ export const useAuthStore = create((set, get) => ({
         isAuthenticated: true,
         isLoading: false,
         lastAuthCheck: Date.now(),
+        image: response.data.user.image,
+        name: response.data.user.name,
       });
       // Optionally fetch favorites/profile after login
       await get().getAllFav();

@@ -32,12 +32,12 @@ const ProfileMenu = () => {
       <Menu className="profile-menu">
         <Menu.Target>
           <Avatar
-            src={user.picture} // If user has a picture, use it
+            src={user.image} // If user has a picture, use it
             alt="User Image"
             radius="xl"
             color="#27ae60" // Background color for text avatar
           >
-            {!user.picture && avatarText} {/* Show first letter if no picture */}
+            {!user.image && avatarText} {/* Show first letter if no picture */}
           </Avatar>
         </Menu.Target>
         <Menu.Dropdown className="dropdown">

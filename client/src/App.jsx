@@ -89,7 +89,7 @@ const RedirectAuthenticatedUser = ({ children }) => {
     );
 
   if (isAuthenticated && user?.isVerified)
-    return <Navigate to="/home" replace />;
+    return <Navigate to="/" replace />;
   return children;
 };
 
@@ -126,14 +126,7 @@ const App = () => {
           <Routes>
             <Route element={<Layout />}>
               <Route path="/" element={<Home />} />
-              <Route
-                path="/home"
-                element={
-                  <ProtectedRoute>
-                    <Home />
-                  </ProtectedRoute>
-                }
-              />
+
               <Route path="/about" element={<About />} />
               <Route path="/search" element={<Search />} />
               <Route path="/pricing" element={<Pricing />} />

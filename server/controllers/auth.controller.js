@@ -174,6 +174,8 @@ export const login = async (req, res) => {
         role: user.role,
         isVerified: user.isVerified,
         rememberMe: user.rememberMe,
+        image: user.image,
+        name: user.name,
       },
     });
   } catch (error) {
@@ -358,7 +360,7 @@ export const allFav = asyncHandler(async (req, res) => {
 
 export const getProfile = asyncHandler(async (req, res) => {
   try {
-    res.json(req.user);
+    res.json({ success: true, user: req.user });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }

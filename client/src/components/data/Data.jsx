@@ -21,12 +21,12 @@ import team3 from "../images/customer/team-2.jpg";
 import team4 from "../images/customer/team-4.jpg";
 import team5 from "../images/customer/team-5.jpg";
 import team6 from "../images/customer/team-6.jpg";
-import {FaFacebook, FaInstagram, FaLinkedin, FaTrophy, FaTwitter} from "react-icons/fa"
+import { FaFacebook, FaInstagram, FaLinkedin, FaTrophy, FaTwitter } from "react-icons/fa"
 
 export const nav = [
   {
     text: "home",
-    path: "/home",
+    path: "/",
   },
   {
     text: "about",
