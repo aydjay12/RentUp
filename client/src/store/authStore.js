@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const API_URL =
-  import.meta.env.MODE === "production"
+  import.meta.env.MODE === "development"
     ? "http://localhost:8000/api/auth"
     : "https://rent-up-api.vercel.app/api/auth";
 
