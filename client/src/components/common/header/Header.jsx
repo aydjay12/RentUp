@@ -61,7 +61,7 @@ const Header = () => {
             <div className="auth-buttons">
               <motion.button
                 className="btn1 sign-in"
-                onClick={() => navigate("/signin")}
+                onClick={() => navigate("/signin", { state: { from: location } })}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >
@@ -69,7 +69,7 @@ const Header = () => {
               </motion.button>
               <motion.button
                 className="btn1 sign-in sign-up"
-                onClick={() => navigate("/signup")}
+                onClick={() => navigate("/signup", { state: { from: location } })}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >

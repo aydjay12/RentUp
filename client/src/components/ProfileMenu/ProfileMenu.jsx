@@ -21,7 +21,6 @@ const ProfileMenu = () => {
     try {
       await logout();
       setLogoutModalOpen(false);
-      navigate("/");
     } finally {
       setIsLoggingOut(false);
     }

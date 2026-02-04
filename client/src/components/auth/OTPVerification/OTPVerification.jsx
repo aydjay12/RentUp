@@ -102,8 +102,9 @@ const OTPVerification = () => {
     try {
       await verifyEmail(pendingUser.email, verificationCode);
       showSnackbar("Email verified successfully!", "success");
+      const redirectPath = pendingUser.redirectTo || "/";
       localStorage.removeItem("pendingUser");
-      setTimeout(() => navigate("/"), 1000);
+      setTimeout(() => navigate(redirectPath), 1000);
     } catch (err) {
       const errorMessage = err.response?.data?.message || (typeof error === 'string' ? error : "Verification failed. Please try again.");
       showSnackbar(errorMessage, "error");

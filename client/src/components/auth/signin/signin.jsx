@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useAuthStore } from "../../../store/authStore";
 import { Loader, Eye, EyeOff, ArrowLeft } from "lucide-react";
 import Logo from "../../pics/logo-light.png";
@@ -10,8 +10,11 @@ import "../../../styles/auth.css";
 
 const Signin = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login, isLoading, error, clearError } = useAuthStore();
   const { snackbar, showSnackbar, hideSnackbar } = useSnackbar();
+
+  const from = location.state?.from?.pathname || "/";
 
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -64,7 +67,7 @@ const Signin = () => {
 
 
         showSnackbar("Welcome back!", "success");
-        setTimeout(() => navigate("/"), 1000);
+        setTimeout(() => navigate(from), 1000);
       } catch (err) {
         const errorMessage = err.response?.data?.message || (typeof error === 'string' ? error : "Login failed. Please try again.");
         showSnackbar(errorMessage, "error");
@@ -201,7 +204,7 @@ const Signin = () => {
             </button>
 
             <p className="login-redirect">
-              Don't have an account? <Link to="/signup">Create Account</Link>
+              Don't have an account? <Link to="/signup" state={{ from: location.state?.from || location }}>Create Account</Link>
             </p>
           </form>
         </motion.div>

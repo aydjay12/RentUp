@@ -45,6 +45,7 @@ import NotFound from "./components/pages/NotFound";
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, isCheckingAuth, user } = useAuthStore();
+  const location = useLocation();
 
   if (isCheckingAuth)
     return (
@@ -53,7 +54,7 @@ const ProtectedRoute = ({ children }) => {
       </div>
     );
 
-  if (!isAuthenticated) return <Navigate to="/signin" replace />;
+  if (!isAuthenticated) return <Navigate to="/signin" replace state={{ from: location }} />;
   if (isAuthenticated && !user?.isVerified)
     return <Navigate to="/otp-verification" replace />;
 

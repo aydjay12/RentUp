@@ -13,10 +13,12 @@ import "../../../styles/auth.css";
 
 const Signup = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { register, isLoading, error, clearError } = useAuthStore();
   const { snackbar, showSnackbar, hideSnackbar } = useSnackbar();
 
-  const [role, setRole] = useState("user");
+  const from = location.state?.from?.pathname || "/";
+  const [role, setRole] = useState("User");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
@@ -92,7 +94,7 @@ const Signup = () => {
 
         localStorage.setItem(
           "pendingUser",
-          JSON.stringify({ email: formData.email, role: role })
+          JSON.stringify({ email: formData.email, role: role, redirectTo: from })
         );
 
         showSnackbar("Account created! Sending verification code...", "success");
@@ -295,7 +297,7 @@ const Signup = () => {
             </button>
 
             <p className="login-redirect">
-              Already have an account? <Link to="/signin">Sign in</Link>
+              Already have an account? <Link to="/signin" state={{ from: location.state?.from || location }}>Sign in</Link>
             </p>
           </form>
         </motion.div>
