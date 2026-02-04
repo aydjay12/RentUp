@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const API_URL =
-  import.meta.env.MODE === "development"
+  import.meta.env.MODE === "production"
     ? "http://localhost:8000/api/auth"
     : "https://rent-up-api.vercel.app/api/auth";
 
@@ -38,7 +38,7 @@ export const useAuthStore = create((set, get) => ({
   verifyEmail: async (email, token) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axios.post(`${API_URL}/verify-email`, { email, token });
+      const response = await axios.post(`${API_URL}/verify-email`, { email, code: token });
       set({
         user: response.data.user,
         isAuthenticated: true,

@@ -26,14 +26,9 @@ export const register = async (req, res) => {
       return res.status(400).json({ success: false, message: "All fields are required" });
     }
 
-    const userAlreadyExists = await User.findOne({ $or: [{ email }, { username }] });
-
+    const userAlreadyExists = await User.findOne({ email });
     if (userAlreadyExists) {
-      if (userAlreadyExists.email === email) {
-        return res.status(400).json({ success: false, message: "Email already registered" });
-      } else {
-        return res.status(400).json({ success: false, message: "Username already taken" });
-      }
+      return res.status(400).json({ success: false, message: "Email already registered" });
     }
 
     const hashedPassword = await bcryptjs.hash(password, 10);
@@ -373,13 +368,7 @@ export const updateProfile = async (req, res) => {
   try {
     const { username, name, phone, address, gender, birthday, image } = req.body;
 
-    // Check if username is taken if being updated
-    if (username) {
-      const existingUser = await User.findOne({ username, _id: { $ne: req.userId } });
-      if (existingUser) {
-        return res.status(400).json({ success: false, message: "Username already taken" });
-      }
-    }
+
 
     const updatedUser = await User.findByIdAndUpdate(
       req.userId,

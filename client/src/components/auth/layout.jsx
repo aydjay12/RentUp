@@ -7,13 +7,17 @@ const LayoutAuth = () => {
   return (
     <>
       <ToastContainer
-        position="bottom-right"
-        autoClose={3000}
+        position="top-center"
+        autoClose={4000}
         hideProgressBar={false}
+        newestOnTop={true}
         closeOnClick
-        pauseOnHover
+        rtl={false}
+        pauseOnFocusLoss
         draggable
-        style={{ fontFamily: "Poppins, sans-serif" }}
+        pauseOnHover
+        theme="dark"
+        stacked
       />
       <Outlet />
     </>

@@ -1,0 +1,91 @@
+.snackbar {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    min-width: 320px;
+    max-width: 480px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    z-index: 10000;
+    backdrop-filter: blur(10px);
+}
+
+.snackbar-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    position: relative;
+}
+
+.snackbar-icon {
+    flex-shrink: 0;
+}
+
+.snackbar-message {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: #1a1a1a;
+}
+
+.snackbar-close {
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+    color: #666;
+}
+
+.snackbar-close:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.snackbar-progress {
+    height: 3px;
+    background: currentColor;
+    opacity: 0.3;
+}
+
+/* Type-specific styles */
+.snackbar-success {
+    border-left: 4px solid #10b981;
+    color: #10b981;
+}
+
+.snackbar-error {
+    border-left: 4px solid #ef4444;
+    color: #ef4444;
+}
+
+.snackbar-warning {
+    border-left: 4px solid #f59e0b;
+    color: #f59e0b;
+}
+
+.snackbar-info {
+    border-left: 4px solid #3b82f6;
+    color: #3b82f6;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .snackbar {
+        top: auto;
+        bottom: 16px;
+        left: 16px;
+        right: 16px;
+        min-width: unset;
+        max-width: unset;
+        height: fit-content;
+    }
+}

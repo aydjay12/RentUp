@@ -40,6 +40,7 @@ import { useCartStore } from "./store/useCartStore";
 import LayoutAdmin from "./components/admin-page/LayoutAdmin";
 import LayoutPurchaseStatus from "./components/cart-page/LayoutPurchaseStatus";
 import ProfilePage from "./components/profile-page/ProfilePage";
+import NotFound from "./components/pages/NotFound";
 
 
 const ProtectedRoute = ({ children }) => {
@@ -226,6 +227,7 @@ const App = () => {
               />
               <Route path="/otp-verification" element={<OTPVerification />} />
             </Route>
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
         <ReactQueryDevtools initialIsOpen={false} />

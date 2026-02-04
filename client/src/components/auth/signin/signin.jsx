@@ -2,14 +2,16 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuthStore } from "../../../store/authStore";
-import { toast } from "react-toastify";
 import { Loader, Eye, EyeOff, ArrowLeft } from "lucide-react";
-import Logo from "../../pics/logo.png";
-import "../../../styles/auth_modern.scss";
+import Logo from "../../pics/logo-light.png";
+import Snackbar from "../../common/Snackbar/Snackbar";
+import { useSnackbar } from "../../../hooks/useSnackbar";
+import "../../../styles/auth.css";
 
 const Signin = () => {
   const navigate = useNavigate();
-  const { login, isLoading, error, clearError, isAuthenticated } = useAuthStore();
+  const { login, isLoading, error, clearError } = useAuthStore();
+  const { snackbar, showSnackbar, hideSnackbar } = useSnackbar();
 
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -22,10 +24,6 @@ const Signin = () => {
 
   useEffect(() => {
     clearError();
-    const savedEmail = localStorage.getItem("rememberedEmail");
-    if (savedEmail) {
-      setFormData((prev) => ({ ...prev, email: savedEmail, rememberMe: true }));
-    }
   }, [clearError]);
 
   const validate = () => {
@@ -63,111 +61,151 @@ const Signin = () => {
           rememberMe: formData.rememberMe,
         });
 
-        if (formData.rememberMe) {
-          localStorage.setItem("rememberedEmail", formData.email);
-        } else {
-          localStorage.removeItem("rememberedEmail");
-        }
 
-        toast.success("Welcome back!");
-        navigate("/");
+
+        showSnackbar("Welcome back!", "success");
+        setTimeout(() => navigate("/"), 1000);
       } catch (err) {
-        // Error handled in store
+        const errorMessage = err.response?.data?.message || (typeof error === 'string' ? error : "Login failed. Please try again.");
+        showSnackbar(errorMessage, "error");
       }
     }
   };
 
   return (
-    <div className="auth-page">
-      <Link to="/" className="back-link">
-        <ArrowLeft size={18} />
-        Back to Home
-      </Link>
+    <div className="signup-container">
+      <Snackbar
+        message={snackbar.message}
+        type={snackbar.type}
+        isOpen={snackbar.isOpen}
+        onClose={hideSnackbar}
+      />
 
-      <motion.div
-        className="auth-card"
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.4 }}
-      >
-        <div className="auth-header">
-          <img src={Logo} alt="RentUp Logo" className="auth-logo" />
-          <h2>Welcome Back</h2>
-          <p>Signin to your account to continue</p>
+      {/* LEFT SIDE - VISUAL */}
+      <div className="signup-visual" style={{ backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/images/pic01.jpeg')" }}>
+        <div className="visual-overlay"></div>
+        <div className="visual-content">
+          <Link to="/" className="back-link-visual">
+            <ArrowLeft size={20} /> Back to Home
+          </Link>
+
+          <div className="visual-text">
+            <motion.img
+              src={Logo}
+              alt="RentUp"
+              className="visual-logo"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            />
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              Welcome Back!
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+            >
+              Sign in to access your properties, manage listings, and stay connected with your real estate journey.
+            </motion.p>
+          </div>
+
+          <div className="visual-footer">
+            <p>© 2024 RentUp Real Estate. All rights reserved.</p>
+          </div>
         </div>
+      </div>
 
-        <form className="auth-form" onSubmit={handleSubmit}>
-          <div className="input-group">
-            <label>Email Address</label>
-            <div className="input-wrapper">
+      {/* RIGHT SIDE - FORM */}
+      <div className="signup-form-section">
+        <motion.div
+          className="form-wrapper"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="mobile-header">
+            <Link to="/" className="mobile-back"><ArrowLeft size={18} /></Link>
+            <img src={Logo} alt="Logo" className="mobile-logo" />
+          </div>
+
+          <div className="form-header">
+            <h2>Sign In</h2>
+            <p>Welcome back! Please enter your details.</p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="modern-form">
+            <div className="input-group">
+              <label>Email Address</label>
               <input
                 type="email"
                 name="email"
-                placeholder="your@email.com"
+                placeholder="Enter email"
                 value={formData.email}
                 onChange={handleChange}
-                className={formErrors.email ? "error" : ""}
+                className={formErrors.email ? "input-error" : ""}
               />
+              {formErrors.email && <span className="error-text">{formErrors.email}</span>}
             </div>
-            {formErrors.email && (
-              <span className="error-hint">{formErrors.email}</span>
-            )}
-          </div>
 
-          <div className="input-group">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <label>Password</label>
-              <Link to="/forgot-password" style={{ fontSize: '0.8rem', fontWeight: '600', color: '#2563eb' }}>
-                Forgot Password?
-              </Link>
+            <div className="input-group">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <label>Password</label>
+                <Link to="/forgot-password" className="forgot-password-link">
+                  Forgot Password?
+                </Link>
+              </div>
+              <div className="password-wrapper">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  placeholder="Enter password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className={formErrors.password ? "input-error" : ""}
+                />
+                <button
+                  type="button"
+                  className="eye-btn"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+              {formErrors.password && <span className="error-text">{formErrors.password}</span>}
             </div>
-            <div className="input-wrapper">
-              <input
-                type={showPassword ? "text" : "password"}
-                name="password"
-                placeholder="••••••••"
-                value={formData.password}
-                onChange={handleChange}
-                className={formErrors.password ? "error" : ""}
-              />
-              <div
-                className="eye-icon"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+
+            <div className="terms-group" style={{ marginTop: '0.5rem' }}>
+              <div className="remember-me">
+                <div>
+                  <input
+                    type="checkbox"
+                    id="rememberMe"
+                    name="rememberMe"
+                    checked={formData.rememberMe}
+                    onChange={handleChange}
+                  />
+                  <label htmlFor="rememberMe">Remember me</label>
+                </div>
               </div>
             </div>
-            {formErrors.password && (
-              <span className="error-hint">{formErrors.password}</span>
-            )}
-          </div>
 
-          <div className="terms-check">
-            <input
-              type="checkbox"
-              id="rememberMe"
-              name="rememberMe"
-              checked={formData.rememberMe}
-              onChange={handleChange}
-            />
-            <label htmlFor="rememberMe">Remember me on this device</label>
-          </div>
+            {error && <div className="server-error">{error}</div>}
 
-          {error && <div className="error-hint text-center">{error}</div>}
+            <button type="submit" className="submit-btn" disabled={isLoading}>
+              {isLoading ? <Loader className="animate-spin" size={20} /> : "Sign In"}
+            </button>
 
-          <button className="auth-btn" type="submit" disabled={isLoading}>
-            {isLoading ? (
-              <Loader className="animate-spin" size={20} />
-            ) : (
-              "Sign In to Account"
-            )}
-          </button>
-        </form>
-
-        <div className="auth-footer">
-          Don't have an account? <Link to="/signup">Create Account</Link>
-        </div>
-      </motion.div>
+            <p className="login-redirect">
+              Don't have an account? <Link to="/signup">Create Account</Link>
+            </p>
+          </form>
+        </motion.div>
+      </div>
     </div>
   );
 };

@@ -2,13 +2,15 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuthStore } from "../../../store/authStore";
-import { toast } from "react-toastify";
-import { Loader, Mail, ArrowLeft, CheckCircle } from "lucide-react";
-import Logo from "../../pics/logo.png";
-import "../../../styles/auth_modern.scss";
+import { Loader, ArrowLeft, CheckCircle } from "lucide-react";
+import Logo from "../../pics/logo-light.png";
+import Snackbar from "../../common/Snackbar/Snackbar";
+import { useSnackbar } from "../../../hooks/useSnackbar";
+import "../../../styles/auth.css";
 
 const ForgotPassword = () => {
   const { isLoading, error, forgotPassword, clearError } = useAuthStore();
+  const { snackbar, showSnackbar, hideSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -20,92 +22,136 @@ const ForgotPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email) {
-      toast.error("Please enter your email");
+      showSnackbar("Please enter your email", "error");
       return;
     }
     try {
       await forgotPassword(email);
       setIsSubmitted(true);
-      toast.success("Reset link sent!");
+      showSnackbar("Reset link sent!", "success");
     } catch (err) {
-      // Error handled by store
+      const errorMessage = err.response?.data?.message || (typeof error === 'string' ? error : "Failed to send reset email");
+      showSnackbar(errorMessage, "error");
     }
   };
 
   return (
-    <div className="auth-page">
-      <Link to="/signin" className="back-link">
-        <ArrowLeft size={18} />
-        Back to Signin
-      </Link>
+    <div className="signup-container">
+      <Snackbar
+        message={snackbar.message}
+        type={snackbar.type}
+        isOpen={snackbar.isOpen}
+        onClose={hideSnackbar}
+      />
 
-      <motion.div
-        className="auth-card"
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.4 }}
-      >
-        <div className="auth-header">
-          <img src={Logo} alt="RentUp Logo" className="auth-logo" />
-          <h2>Forgot Password</h2>
-          {!isSubmitted ? (
-            <p>Enter your email and we'll send you a link to reset your password.</p>
-          ) : (
-            <p>Success! We've sent a link to reset your password.</p>
-          )}
+      {/* LEFT SIDE - VISUAL */}
+      <div className="signup-visual" style={{ backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/images/pic02.jpeg')" }}>
+        <div className="visual-overlay"></div>
+        <div className="visual-content">
+          <Link to="/signin" className="back-link-visual">
+            <ArrowLeft size={20} /> Back to Sign In
+          </Link>
+
+          <div className="visual-text">
+            <motion.img
+              src={Logo}
+              alt="RentUp"
+              className="visual-logo"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            />
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              Recover your account
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+            >
+              Lost your password? It happens. Enter your email and we'll help gets you back on track.
+            </motion.p>
+          </div>
+
+          <div className="visual-footer">
+            <p>© 2024 RentUp Real Estate. All rights reserved.</p>
+          </div>
         </div>
+      </div>
 
-        {!isSubmitted ? (
-          <form className="auth-form" onSubmit={handleSubmit}>
-            <div className="input-group">
-              <label>Email Address</label>
-              <div className="input-wrapper">
+      {/* RIGHT SIDE - FORM */}
+      <div className="signup-form-section">
+        <motion.div
+          className="form-wrapper"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="mobile-header">
+            <Link to="/signin" className="mobile-back"><ArrowLeft size={18} /></Link>
+            <img src={Logo} alt="Logo" className="mobile-logo" />
+          </div>
+
+          <div className="form-header">
+            <h2>Forgot Password</h2>
+            {!isSubmitted ? (
+              <p>Enter your email and we'll send you a link to reset your password.</p>
+            ) : (
+              <p>Check your email for instructions.</p>
+            )}
+          </div>
+
+          {!isSubmitted ? (
+            <form onSubmit={handleSubmit} className="modern-form">
+              <div className="input-group">
+                <label>Email Address</label>
                 <input
                   type="email"
-                  placeholder="your@email.com"
+                  placeholder="Enter email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  className=""
                   required
                 />
               </div>
+
+              {error && <div className="server-error">{error}</div>}
+
+              <button type="submit" className="submit-btn" disabled={isLoading}>
+                {isLoading ? <Loader className="animate-spin" size={20} /> : "Send Reset Link"}
+              </button>
+
+              <p className="login-redirect">
+                Remembered your password? <Link to="/signin">Sign In</Link>
+              </p>
+            </form>
+          ) : (
+            <div style={{ marginTop: '1rem' }}>
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                style={{ marginBottom: '1.5rem', display: 'none', justifyContent: 'center' }}
+              >
+                <CheckCircle size={64} color="#27ae60" />
+              </motion.div>
+              <p style={{ color: '#6b7280', fontFamily: "'Outfit', sans-serif", fontSize: '0.95rem', marginBottom: '5rem', marginTop: '2rem' }}>
+                If an account exists for <strong style={{ color: '#1e293b' }}>{email}</strong>, you will receive a password reset link shortly. Use the reset link to reset your password.
+              </p>
+              <Link to="/signin" className="submit-btn" style={{ textDecoration: 'none' }}>
+                Return to Sign In
+              </Link>
             </div>
-
-            {error && <div className="error-hint text-center">{error}</div>}
-
-            <button className="auth-btn" type="submit" disabled={isLoading}>
-              {isLoading ? (
-                <Loader className="animate-spin" size={20} />
-              ) : (
-                "Send Reset Link"
-              )}
-            </button>
-          </form>
-        ) : (
-          <div className="text-center" style={{ padding: '1rem 0' }}>
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: "spring", stiffness: 260, damping: 20 }}
-              style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'center' }}
-            >
-              <CheckCircle size={64} color="#10b981" />
-            </motion.div>
-            <p style={{ color: '#64748b', fontSize: '0.95rem', marginBottom: '2rem' }}>
-              If an account exists for <strong>{email}</strong>, you will receive a password reset link shortly.
-              Please check your inbox and spam folder.
-            </p>
-            <Link to="/signin" className="auth-btn">
-              Return to Login
-            </Link>
-          </div>
-        )}
-
-        <div className="auth-footer">
-          Remembered your password? <Link to="/signin">Sign In</Link>
-        </div>
-      </motion.div>
+          )}
+        </motion.div>
+      </div>
     </div>
   );
 };
 
 export default ForgotPassword;
+
