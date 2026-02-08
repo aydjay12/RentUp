@@ -5,16 +5,8 @@ import Snackbar from "../common/Snackbar/Snackbar";
 import useSnackbarStore from "../../store/useSnackbarStore";
 
 const LayoutPurchaseStatus = () => {
-  const { isOpen, message, type, hideSnackbar } = useSnackbarStore();
-
   return (
     <>
-      <Snackbar
-        isOpen={isOpen}
-        message={message}
-        type={type}
-        onClose={hideSnackbar}
-      />
       <Header />
       <Outlet />
     </>

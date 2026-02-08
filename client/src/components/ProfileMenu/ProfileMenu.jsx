@@ -1,19 +1,17 @@
-import React from "react";
-import { Avatar, Menu } from "@mantine/core";
+import React, { useState } from "react";
+import { Avatar, Menu, Modal, Button, Text } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/authStore";
 import "@mantine/core/styles.css";
-import { useState } from "react";
-import { Modal, Button } from "@mantine/core";
-import "../profile-page/ProfilePage.module.scss";
+import styles from "./ProfileMenu.module.scss";
+import { User, Heart, LogOut } from "lucide-react";
 
 const ProfileMenu = () => {
   const navigate = useNavigate();
-  const { user = {}, logout } = useAuthStore(); // Ensure user is always an object
+  const { user = {}, logout } = useAuthStore();
   const [logoutModalOpen, setLogoutModalOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  // Extract the first letter of the user's username (fallback if no image)
   const avatarText = user?.username ? user.username.charAt(0).toUpperCase() : "?";
 
   const handleLogout = async () => {
@@ -28,42 +26,73 @@ const ProfileMenu = () => {
 
   return (
     <>
-      <Menu className="profile-menu">
+      <Menu shadow="md" width={200} transitionProps={{ transition: 'pop-top-right' }} position="bottom-end" zIndex={1001}>
         <Menu.Target>
-          <Avatar
-            src={user.image} // If user has a picture, use it
-            alt="User Image"
-            radius="xl"
-            color="#27ae60" // Background color for text avatar
-          >
-            {!user.image && avatarText} {/* Show first letter if no picture */}
-          </Avatar>
+          <div className="profile-menu">
+            <Avatar
+              src={user.image}
+              alt="User"
+              radius="xl"
+              color="#27ae60"
+              style={{ cursor: "pointer" }}
+            >
+              {!user.image && avatarText}
+            </Avatar>
+          </div>
         </Menu.Target>
-        <Menu.Dropdown className="dropdown">
-          <Menu.Item onClick={() => navigate("/favourites")}>My Favourites</Menu.Item>
-          <Menu.Item onClick={() => navigate("/profile-page")}>Profile</Menu.Item>
-          <Menu.Item onClick={() => setLogoutModalOpen(true)}>
+        <Menu.Dropdown className={styles.dropdownMobile}>
+          <Menu.Label>Account Settings</Menu.Label>
+          <Menu.Item
+            leftSection={<User size={16} />}
+            onClick={() => navigate("/profile-page")}
+          >
+            My Profile
+          </Menu.Item>
+          <Menu.Item
+            leftSection={<Heart size={16} />}
+            onClick={() => navigate("/favourites")}
+          >
+            My Favourites
+          </Menu.Item>
+          <Menu.Divider />
+          <Menu.Item
+            color="red"
+            leftSection={<LogOut size={16} />}
+            onClick={() => setLogoutModalOpen(true)}
+          >
             Logout
           </Menu.Item>
         </Menu.Dropdown>
       </Menu>
+
       <Modal
         opened={logoutModalOpen}
         onClose={() => setLogoutModalOpen(false)}
         title="Confirm Logout"
         centered
+        className={styles.modalPopup}
+        overlayProps={{
+          backgroundOpacity: 0.55,
+          blur: 3,
+        }}
       >
-        <p>Are you sure you want to log out?</p>
-        <div style={{ display: "flex", justifyContent: "flex-end", gap: "1em", marginTop: 15 }}>
+        <Text size="sm">
+          Are you sure you want to log out of your account?
+        </Text>
+        <div className={styles.modalActions}>
           <Button
-            color="red"
+            className={isLoggingOut ? styles.confirmButton + " " + styles["logout-btn-no-hover"] : styles.confirmButton}
             onClick={handleLogout}
             disabled={isLoggingOut}
-            className={isLoggingOut ? "logout-btn-no-hover" : ""}
           >
-            {isLoggingOut ? "Logging out" : "Yes, Logout"}
+            {isLoggingOut ? "Logging out..." : "Yes, Logout"}
           </Button>
-          <Button variant="outline" onClick={() => setLogoutModalOpen(false)} disabled={isLoggingOut} className={isLoggingOut ? "cancel-btn-no-hover" : ""}>
+          <Button
+            variant="outline"
+            onClick={() => setLogoutModalOpen(false)}
+            disabled={isLoggingOut}
+            className={isLoggingOut ? styles.cancelButton + " " + styles["cancel-btn-no-hover"] : styles.cancelButton}
+          >
             Cancel
           </Button>
         </div>

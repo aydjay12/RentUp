@@ -123,18 +123,27 @@ const ProfilePage = () => {
         onClose={() => setLogoutModalOpen(false)}
         title="Confirm Logout"
         centered
+        className={styles.modalPopup}
+        overlayProps={{
+          backgroundOpacity: 0.55,
+          blur: 3,
+        }}
       >
-        <p className={styles.confirmMessage}>Are you sure you want to log out?</p>
+        <p className={styles.confirmMessage}>Are you sure you want to log out of your account?</p>
         <div style={{ display: "flex", justifyContent: "flex-end", gap: "1em", marginTop: 15 }}>
           <Button
-            color="red"
+            className={isLoggingOut ? styles.confirmButton + " " + styles["logout-btn-no-hover"] : styles.confirmButton}
             onClick={handleLogout}
             disabled={isLoggingOut}
-            className={isLoggingOut ? "logout-btn-no-hover" : ""}
           >
-            {isLoggingOut ? "Logging out" : "Yes, Logout"}
+            {isLoggingOut ? "Logging out..." : "Yes, Logout"}
           </Button>
-          <Button variant="outline" onClick={() => setLogoutModalOpen(false)} disabled={isLoggingOut} className={isLoggingOut ? "cancel-btn-no-hover" : ""}>
+          <Button
+            variant="outline"
+            onClick={() => setLogoutModalOpen(false)}
+            disabled={isLoggingOut}
+            className={isLoggingOut ? styles.cancelButton + " " + styles["cancel-btn-no-hover"] : styles.cancelButton}
+          >
             Cancel
           </Button>
         </div>

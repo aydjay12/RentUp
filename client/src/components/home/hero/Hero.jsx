@@ -84,6 +84,7 @@ const Hero = () => {
               placeholder="Price Range"
               value={filters.priceRange}
               onChange={handleInputChange}
+              onWheel={(e) => e.target.blur()}
             />
           </motion.div>
           <motion.button

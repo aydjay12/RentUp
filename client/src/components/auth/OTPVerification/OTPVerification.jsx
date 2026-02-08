@@ -18,6 +18,7 @@ const OTPVerification = () => {
   const [isResending, setIsResending] = useState(false);
   const inputRefs = useRef([]);
   const [pendingUser, setPendingUser] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     clearError();
@@ -99,12 +100,14 @@ const OTPVerification = () => {
     }
 
     try {
+      setIsSubmitting(true);
       await verifyEmail(pendingUser.email, verificationCode);
       showSnackbar("Email verified successfully!", "success");
       const redirectPath = pendingUser.redirectTo || "/";
       localStorage.removeItem("pendingUser");
       setTimeout(() => navigate(redirectPath), 1000);
     } catch (err) {
+      setIsSubmitting(false);
       const errorMessage = err.response?.data?.message || (typeof error === 'string' ? error : "Verification failed. Please try again.");
       showSnackbar(errorMessage, "error");
     }
@@ -228,8 +231,8 @@ const OTPVerification = () => {
 
             {error && <div className="server-error">{error}</div>}
 
-            <button type="submit" className="submit-btn" disabled={isLoading || isResending || code.some(d => !d)}>
-              {isLoading && !isResending ? <Loader className="animate-spin" size={20} /> : "Verify Code"}
+            <button type="submit" className="submit-btn" disabled={isLoading || isResending || isSubmitting || code.some(d => !d)}>
+              {(isLoading || isSubmitting) && !isResending ? <Loader className="animate-spin" size={20} /> : "Verify Code"}
             </button>
 
             <div className="resend-section" style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.9rem', color: '#6b7280', fontFamily: "'Outfit', sans-serif" }}>

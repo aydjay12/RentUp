@@ -25,7 +25,7 @@ const Recent = () => {
 
   if (loading) {
     return (
-      <div className="wrapper flexCenter" style={{ height: "60vh" }}>
+      <div className="wrapper flexCenter" style={{ height: "80vh" }}>
         <PuffLoader color="#27ae60" aria-label="puff-loading" />
       </div>
     );

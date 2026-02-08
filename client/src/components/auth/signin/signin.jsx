@@ -23,6 +23,7 @@ const Signin = () => {
   });
 
   const [formErrors, setFormErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     clearError();
@@ -56,6 +57,7 @@ const Signin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
+      setIsSubmitting(true);
       try {
         await login({
           email: formData.email,
@@ -63,11 +65,10 @@ const Signin = () => {
           rememberMe: formData.rememberMe,
         });
 
-
-
         showSnackbar("Welcome back!", "success");
         setTimeout(() => navigate(from), 1000);
       } catch (err) {
+        setIsSubmitting(false);
         const errorMessage = err.response?.data?.message || (typeof error === 'string' ? error : "Login failed. Please try again.");
         showSnackbar(errorMessage, "error");
       }
@@ -193,8 +194,8 @@ const Signin = () => {
 
             {error && <div className="server-error">{error}</div>}
 
-            <button type="submit" className="submit-btn" disabled={isLoading}>
-              {isLoading ? <Loader className="animate-spin" size={20} /> : "Sign In"}
+            <button type="submit" className="submit-btn" disabled={isLoading || isSubmitting}>
+              {isLoading || isSubmitting ? <Loader className="animate-spin" size={20} /> : "Sign In"}
             </button>
 
             <p className="login-redirect">

@@ -4,7 +4,8 @@
   margin: 0 auto;
   padding: 2rem;
   padding-bottom: 4em;
-  @media (max-width: 768px){
+
+  @media (max-width: 768px) {
     padding: 1em;
     padding-bottom: 4em;
     padding-top: 2em;
@@ -16,13 +17,14 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
-  
+
   h1 {
     font-size: 1.5rem;
     color: #2c3e50;
     margin: 0;
     font-weight: 600;
-    @media (max-width: 768px){
+
+    @media (max-width: 768px) {
       font-size: 1.2rem;
     }
   }
@@ -73,7 +75,7 @@
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  
+
   &:hover {
     background: rgba(0, 0, 0, 0.9);
   }
@@ -97,7 +99,8 @@
 .infoSection {
   padding: 2rem;
   width: 70%;
-  @media (max-width: 768px){
+
+  @media (max-width: 768px) {
     padding: 1em;
     padding-bottom: 3em;
   }
@@ -113,7 +116,7 @@
 .infoItem {
   display: flex;
   flex-direction: column;
-  
+
   label {
     font-size: 0.9rem;
     color: #7f8c8d;
@@ -121,14 +124,15 @@
     font-weight: 500;
   }
 
-  input, select {
+  input,
+  select {
     padding: 0.75rem;
     border: 1px solid #ddd;
     border-radius: 6px;
     font-size: 1rem;
     transition: border-color 0.3s ease;
     width: 100%;
-    
+
     &:focus {
       outline: none;
       border-color: #27ae60;
@@ -150,7 +154,8 @@
   gap: 1rem;
 }
 
-.actionBtn, .logoutBtn {
+.actionBtn,
+.logoutBtn {
   padding: 0.6rem 1.2rem;
   border: none;
   border-radius: 6px;
@@ -160,10 +165,12 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  @media (max-width: 768px){
-    padding:  1em;
+
+  @media (max-width: 768px) {
+    padding: 1em;
   }
-  span{
+
+  span {
     display: flex;
     gap: .5em;
   }
@@ -181,10 +188,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  @media (max-width: 768px){
-       width: 55%; 
+
+  @media (max-width: 768px) {
+    width: 55%;
   }
-  
+
   &:hover {
     background: #35d377;
   }
@@ -193,7 +201,7 @@
 .logoutBtn {
   background: #e74c3c;
   color: white;
-  
+
   &:hover {
     background: #c0392b;
   }
@@ -203,6 +211,7 @@
   background-color: #e74c3c !important;
   color: white !important;
   pointer-events: none;
+
   &:hover,
   &:active,
   &:focus {
@@ -241,11 +250,13 @@
   position: relative; // Helps AnimatePresence positioning
 }
 
-.actionBtn, .logoutBtn {
+.actionBtn,
+.logoutBtn {
   display: inline-flex; // Centers content during scale
 }
 
-.profileImage, .uploadOverlay {
+.profileImage,
+.uploadOverlay {
   transition: transform 0.2s ease-out; // Smooths any residual transforms
 }
 
@@ -255,11 +266,55 @@
     flex-direction: column;
   }
 
-  .avatarSection, .infoSection {
+  .avatarSection,
+  .infoSection {
     width: 100%;
   }
 
   .infoGrid {
     grid-template-columns: 1fr;
   }
+}
+
+/* Standardized Modal Styles */
+.modalPopup {
+  :global(.mantine-Modal-header) {
+    box-shadow: none !important;
+    border-bottom: none !important;
+    min-height: 40px;
+  }
+
+  :global(.mantine-Modal-title) {
+    font-weight: 600;
+  }
+}
+
+.confirmButton {
+  background-color: #e63946 !important;
+  color: white !important;
+  border: none !important;
+  padding: 0.5rem 1.2rem !important;
+  height: auto !important;
+
+  &:hover {
+    background-color: #d62839 !important;
+  }
+}
+
+.cancelButton {
+  border: 1px solid #ccc !important;
+  color: #333 !important;
+  background: transparent !important;
+  padding: 0.5rem 1.2rem !important;
+  height: auto !important;
+
+  &:hover {
+    background-color: #f1f1f1 !important;
+  }
+}
+
+.confirmMessage {
+  font-size: 0.95rem;
+  color: #444;
+  margin-bottom: 1rem;
 }

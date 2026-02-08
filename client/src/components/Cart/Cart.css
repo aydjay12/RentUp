@@ -1,57 +1,124 @@
 .cart-icon-container {
   position: relative;
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  transition: all 0.2s ease-in-out;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 100;
 }
 
-.cart-icon-container:hover {
-  scale: 1.05;
+.cart-icon-inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cart-check-overlay {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background-color: #27ae60;
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border: 1.5px solid white;
+}
+
+.cart-ripple {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  background-color: #27ae60;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 0;
 }
 
 .cart-icon {
-  width: 18px;
-  height: 18px;
+  transition: all 0.3s ease;
+}
+
+.cart-icon.in-cart {
+  filter: drop-shadow(0 0 5px rgba(39, 174, 96, 0.3));
+}
+
+.cart-indicator-v2 {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: var(--accent);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 10px;
+  pointer-events: none;
+  z-index: 10;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
 }
 
 .cart-tooltip {
   display: none;
   position: absolute;
-  left: -180%;
-  /* Position to the right of the icon */
-  top: 150%;
-  margin-left: 8px;
-  /* Space between icon and text */
+  left: 50%;
+  bottom: 125%;
+  transform: translateX(-50%) translateY(10px);
+  background-color: #333;
   color: white;
-  /* Ensure text is readable on black/green */
-  padding: 4px 6px;
-  border-radius: 4px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 11px;
   white-space: nowrap;
   opacity: 0;
   visibility: hidden;
-  font-weight: 600 !important;
-  font-size: 11px !important;
-  transition: opacity 0.2s ease-in-out;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   pointer-events: none;
-  /* Prevents tooltip from interfering with clicks */
+  z-index: 1000;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .cart-icon-container:hover .cart-tooltip {
   opacity: 1;
   visibility: visible;
+  transform: translateX(-50%) translateY(0);
 }
 
-/* Mobile view: Move tooltip to the left */
+.cart-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: #333 transparent transparent transparent;
+}
+
 @media (max-width: 768px) {
   .cart-tooltip {
     left: auto;
-    top: auto;
-    /* Reset left positioning */
-    right: 100%;
-    /* Position to the left of the icon */
-    margin-left: 0;
-    /* Remove right-side spacing */
-    margin-right: 8px;
-    /* Add spacing between icon and tooltip on the left */
+    right: 120%;
+    bottom: 50%;
+    transform: translateY(50%) translateX(10px);
+  }
+
+  .cart-icon-container:hover .cart-tooltip {
+    transform: translateY(50%) translateX(0);
+  }
+
+  .cart-tooltip::after {
+    top: 50%;
+    left: 100%;
+    transform: translateY(-50%);
+    border-color: transparent transparent transparent #333;
   }
 }

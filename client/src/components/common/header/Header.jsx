@@ -55,7 +55,7 @@ const Header = () => {
           </ul>
         </div>
 
-        {/* Right Section: Cart & Profile */}
+        {/* Right Section: Auth or User Controls */}
         <div className="flex list">
           {!isAuthenticated ? (
             <div className="auth-buttons">
@@ -78,71 +78,90 @@ const Header = () => {
             </div>
           ) : (
             <div className="authenticated-header">
-              {isAdmin && (
-                <ul>
-                  <motion.li
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                  >
-                    <Link to="/admin-dashboard" className="admin-dashboard">
-                      Admin Dashboard
-                    </Link>
-                  </motion.li>
-                </ul>
-              )}
-              <Link to={"/cart"} className="cart-link">
-                <ShoppingCart className="cart-icon" size={24} />
-                <p className="cart-count">{cartItems.length}</p>
-              </Link>
+              <div className="toggle-v2">
+                <Menu
+                  shadow="md"
+                  width={200}
+                  opened={navList}
+                  onChange={handleMenuToggle}
+                  offset={15}
+                  zIndex={1001}
+                  position="bottom-end"
+                  transitionProps={{ transition: 'pop-top-right' }}
+                >
+                  <Menu.Target>
+                    <div style={{ cursor: "pointer", display: "flex", alignItems: "center" }}>
+                      {navList ? <FaTimes size={20} /> : <FaBars size={20} />}
+                    </div>
+                  </Menu.Target>
+
+                  <Menu.Dropdown className="dropdown-mobile">
+                    <Menu.Label>Menu</Menu.Label>
+                    {nav.map((list, index) => (
+                      <Menu.Item key={index} component={NavLink} to={list.path}>
+                        {list.text}
+                      </Menu.Item>
+                    ))}
+                    <Menu.Divider />
+                    <Menu.Label>Quick Actions</Menu.Label>
+                    <Menu.Item component={NavLink} to="/cart">
+                      Cart ({cartItems.length})
+                    </Menu.Item>
+                    {isAdmin && isAuthenticated && (
+                      <Menu.Item
+                        component={NavLink}
+                        to="/admin-dashboard"
+                        color="#27ae60"
+                      >
+                        Admin Dashboard
+                      </Menu.Item>
+                    )}
+                  </Menu.Dropdown>
+                </Menu>
+              </div>
               <ProfileMenu user={user} logout={logout} />
             </div>
           )}
         </div>
 
-        {/* Mobile Menu Toggle */}
-        <div className="toggle">
-          <Menu
-            shadow="md"
-            width={200}
-            opened={navList} // Sync with navList state
-            onChange={handleMenuToggle} // Update state on open/close
-          >
-            <Menu.Target>
-              {navList ? <FaTimes size={20} /> : <FaBars size={20} />}
-            </Menu.Target>
+        {/* Mobile-only toggle for guest users */}
+        {!isAuthenticated && (
+          <div className="toggle">
+            <Menu
+              shadow="md"
+              width={200}
+              opened={navList}
+              onChange={handleMenuToggle}
+              offset={20}
+              zIndex={1001}
+              position="bottom-end"
+              transitionProps={{ transition: 'pop-top-right' }}
+            >
+              <Menu.Target>
+                <div style={{ cursor: "pointer" }}>
+                  {navList ? <FaTimes size={20} /> : <FaBars size={20} />}
+                </div>
+              </Menu.Target>
 
-            <Menu.Dropdown className="dropdown-mobile">
-              {nav.map((list, index) => (
-                <Menu.Item key={index} component={NavLink} to={list.path}>
-                  {list.text}
-                </Menu.Item>
-              ))}
-              <Menu.Divider />
-              <Menu.Item component={NavLink} to="/cart">
-                Cart ({cartItems.length})
-              </Menu.Item>
-              {isAdmin && isAuthenticated && (
-                <Menu.Item
-                  component={NavLink}
-                  to="/admin-dashboard"
-                  color="#27ae60"
-                >
-                  Admin Dashboard
-                </Menu.Item>
-              )}
-              {!isAuthenticated && (
-                <>
-                  <Menu.Item component={NavLink} to="/signin">
-                    Log In
+              <Menu.Dropdown className="dropdown-mobile">
+                <Menu.Label>Menu</Menu.Label>
+                {nav.map((list, index) => (
+                  <Menu.Item key={index} component={NavLink} to={list.path}>
+                    {list.text}
                   </Menu.Item>
-                  <Menu.Item component={NavLink} to="/signup" color="#27ae60">
-                    Sign Up
-                  </Menu.Item>
-                </>
-              )}
-            </Menu.Dropdown>
-          </Menu>
-        </div>
+                ))}
+                <Menu.Divider />
+                <Menu.Label>Account</Menu.Label>
+                <Menu.Item component={NavLink} to="/signin">
+                  Log In
+                </Menu.Item>
+                <Menu.Item component={NavLink} to="/signup" color="#27ae60">
+                  Sign Up
+                </Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
+          </div>
+        )}
       </div>
     </motion.header>
   );

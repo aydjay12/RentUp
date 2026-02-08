@@ -111,7 +111,7 @@ const Search = () => {
             </div>
             <div className="box">
               <span>Max Price</span>
-              <input type="number" name="priceRange" placeholder="No limit" value={filters.priceRange} onChange={handleInputChange} />
+              <input type="number" name="priceRange" placeholder="No limit" value={filters.priceRange} onChange={handleInputChange} onWheel={(e) => e.target.blur()} />
             </div>
 
             <motion.button

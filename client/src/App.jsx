@@ -42,6 +42,8 @@ import LayoutAdmin from "./components/admin-page/LayoutAdmin";
 import LayoutPurchaseStatus from "./components/cart-page/LayoutPurchaseStatus";
 import ProfilePage from "./components/profile-page/ProfilePage";
 import NotFound from "./components/pages/NotFound";
+import Snackbar from "./components/common/Snackbar/Snackbar";
+import useSnackbarStore from "./store/useSnackbarStore";
 
 
 const ProtectedRoute = ({ children }) => {
@@ -108,6 +110,7 @@ const App = () => {
   const queryClient = new QueryClient();
   const { checkAuth } = useAuthStore();
   const { fetchCart, cartItems } = useCartStore();
+  const { isOpen, message, type, hideSnackbar } = useSnackbarStore();
   const location = useLocation(); // Track route changes
   const navigate = useNavigate();
 
@@ -127,6 +130,12 @@ const App = () => {
     <MantineProvider>
       <QueryClientProvider client={queryClient}>
         <ScrollToTop />
+        <Snackbar
+          isOpen={isOpen}
+          message={message}
+          type={type}
+          onClose={hideSnackbar}
+        />
         <Suspense
           fallback={
             <div className="wrapper flexCenter" style={{ minHeight: "100vh" }}>

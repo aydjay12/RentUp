@@ -3,7 +3,7 @@ import { AiFillHeart } from "react-icons/ai";
 import { useAuthStore } from "../../store/authStore";
 import useSnackbarStore from "../../store/useSnackbarStore";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import "./Heart.css";
 
 const Heart = ({ id }) => {
@@ -31,13 +31,13 @@ const Heart = ({ id }) => {
       return navigate("/otp-verification");
     }
 
-    // Trigger animation
+    const nextState = !isFavorited;
     setIsAnimating(true);
 
     try {
       await toFav(id);
-      // Reset animation state after completion
-      setTimeout(() => setIsAnimating(false), 600);
+      // Let animation play out
+      setTimeout(() => setIsAnimating(false), 800);
     } catch (error) {
       showSnackbar("Failed to update favorite", "error");
       setIsAnimating(false);
@@ -45,88 +45,74 @@ const Heart = ({ id }) => {
   };
 
   const heartVariants = {
-    initial: {
-      scale: 1,
-      rotate: 0
-    },
+    initial: { scale: 1 },
     liked: {
-      scale: [1, 1.4, 1.1, 1.3, 1],
-      rotate: [0, -10, 10, -5, 0],
+      scale: [1, 1.4, 1.2],
       transition: {
-        duration: 0.6,
-        ease: "easeInOut",
-        times: [0, 0.3, 0.5, 0.8, 1]
+        type: "spring",
+        stiffness: 400,
+        damping: 10
       }
     },
     unliked: {
-      scale: [1, 0.8, 1.1, 1],
+      scale: [1, 0.7, 1],
       transition: {
-        duration: 0.4,
-        ease: "easeInOut",
-        times: [0, 0.4, 0.7, 1]
+        duration: 0.3
       }
     }
-  };
-
-  const getAnimationState = () => {
-    if (!isAnimating) return "initial";
-    return isFavorited ? "unliked" : "liked";
   };
 
   return (
     <motion.div
       className="heart-icon-container"
-      initial="initial"
-      animate={getAnimationState()}
-      variants={heartVariants}
       onClick={handleLike}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.9 }}
     >
-      <AiFillHeart
-        className={`heart-icon ${isFavorited ? 'favorited' : ''}`}
-        size={24}
-        color={heartColor}
-        cursor="pointer"
-      />
+      <AnimatePresence>
+        {isAnimating && isFavorited && (
+          <motion.div
+            className="heart-splash"
+            initial={{ scale: 0, opacity: 0.5 }}
+            animate={{ scale: 2.5, opacity: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+          />
+        )}
+      </AnimatePresence>
+
+      <motion.div
+        animate={isAnimating ? (isFavorited ? "liked" : "unliked") : "initial"}
+        variants={heartVariants}
+      >
+        <AiFillHeart
+          className={`heart-icon ${isFavorited ? 'favorited' : ''}`}
+          size={24}
+          color={isFavorited ? "#ff4757" : "rgba(0,0,0,0.4)"}
+        />
+      </motion.div>
 
       {/* Particle effect for like animation */}
-      {isAnimating && !isFavorited && (
-        <motion.div
-          className="heart-particles"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: [0, 1, 0] }}
-          transition={{ duration: 0.6 }}
-        >
-          {[...Array(6)].map((_, i) => (
+      {isAnimating && isFavorited && (
+        <div className="heart-particles">
+          {[...Array(8)].map((_, i) => (
             <motion.div
               key={i}
-              className="particle"
-              initial={{
-                scale: 0,
-                x: 0,
-                y: 0,
-                opacity: 1
-              }}
+              className="particle-v2"
+              initial={{ scale: 0, x: 0, y: 0 }}
               animate={{
                 scale: [0, 1, 0],
-                x: [0, (i % 2 ? 1 : -1) * (20 + i * 5)],
-                y: [0, -20 - i * 3],
-                opacity: [1, 1, 0]
+                x: Math.cos(i * 45 * (Math.PI / 180)) * 35,
+                y: Math.sin(i * 45 * (Math.PI / 180)) * 35,
               }}
-              transition={{
-                duration: 0.6,
-                delay: i * 0.05,
-                ease: "easeOut"
-              }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
             />
           ))}
-        </motion.div>
+        </div>
       )}
 
       <span
         className="heart-tooltip"
-        style={{ backgroundColor: heartColor }}
       >
         {isFavorited ? "Remove from Favourites" : "Add to Favourites"}
       </span>

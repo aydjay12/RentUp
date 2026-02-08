@@ -105,7 +105,18 @@ header .container {
 .authenticated-header {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1.2rem;
+}
+
+.toggle-v2 {
+  display: flex;
+  align-items: center;
+  color: var(--text-main);
+  transition: color 0.3s ease;
+}
+
+.toggle-v2:hover {
+  color: var(--accent);
 }
 
 .cart-link {
@@ -132,15 +143,10 @@ header .container {
   text-align: center;
 }
 
-.admin-dashboard {
-  color: var(--accent);
-  font-weight: 600;
-  font-size: 0.9rem;
-  text-decoration: none;
-}
-
-.admin-dashboard:hover {
-  text-decoration: underline;
+.profile-menu {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 
 /* Mobile Toggle */
@@ -155,12 +161,11 @@ header .container {
   }
 
   .logo img {
-    height: 26px;
+    height: 30px;
   }
 
   .auth-buttons {
     display: none;
-    /* Hide desktop auth buttons on mobile */
   }
 
   .toggle {
@@ -169,15 +174,20 @@ header .container {
   }
 
   .dropdown-mobile {
-    margin-top: 1rem;
     border-radius: var(--radius);
     overflow: hidden;
     box-shadow: var(--shadow-lg);
     border: 1px solid var(--border);
   }
 
+  .dropdown-mobile .mantine-Menu-item:hover {
+    background-color: #f1f3f5 !important;
+  }
+
+
   /* Authenticated Header Mobile */
   .authenticated-header {
-    margin-right: 1rem;
+    margin-left: auto;
+    gap: 1rem;
   }
 }

@@ -31,6 +31,7 @@ const Signup = () => {
   });
 
   const [formErrors, setFormErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     clearError();
@@ -83,6 +84,7 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
+      setIsSubmitting(true);
       try {
         await register({
           username: formData.username,
@@ -99,6 +101,7 @@ const Signup = () => {
         showSnackbar("Account created! Sending verification code...", "success");
         setTimeout(() => navigate("/otp-verification"), 1500);
       } catch (err) {
+        setIsSubmitting(false);
         const errorMessage = err.response?.data?.message || "Registration failed. Please try again.";
         showSnackbar(errorMessage, "error");
       }
@@ -286,8 +289,8 @@ const Signup = () => {
 
             {error && <div className="server-error">{error}</div>}
 
-            <button type="submit" className="submit-btn" disabled={isLoading}>
-              {isLoading ? <Loader className="animate-spin" size={20} /> : "Create Account"}
+            <button type="submit" className="submit-btn" disabled={isLoading || isSubmitting}>
+              {isLoading || isSubmitting ? <Loader className="animate-spin" size={20} /> : "Create Account"}
             </button>
 
             <p className="login-redirect">

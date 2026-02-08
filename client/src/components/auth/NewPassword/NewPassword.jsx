@@ -24,6 +24,7 @@ const NewPassword = () => {
   });
 
   const [formErrors, setFormErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const queryParams = new URLSearchParams(location.search);
   const token = queryParams.get("token");
@@ -75,6 +76,7 @@ const NewPassword = () => {
     if (hasNavigated.current) return;
 
     if (validate()) {
+      setIsSubmitting(true);
       try {
         await resetPassword(token, formData.password);
         hasNavigated.current = true;
@@ -83,6 +85,7 @@ const NewPassword = () => {
           navigate("/signin");
         }, 1000);
       } catch (err) {
+        setIsSubmitting(false);
         const errorMessage = err.response?.data?.message || (typeof error === 'string' ? error : "Password reset failed");
         showSnackbar(errorMessage, "error");
       }
@@ -204,8 +207,8 @@ const NewPassword = () => {
 
             {error && <div className="server-error">{error}</div>}
 
-            <button type="submit" className="submit-btn" disabled={isLoading || hasNavigated.current}>
-              {isLoading ? <Loader className="animate-spin" size={20} /> : "Reset Password"}
+            <button type="submit" className="submit-btn" disabled={isLoading || isSubmitting || hasNavigated.current}>
+              {isLoading || isSubmitting ? <Loader className="animate-spin" size={20} /> : "Reset Password"}
             </button>
           </form>
         </motion.div>
