@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import "./Heart.css";
 
 const Heart = ({ id }) => {
-  const { user, isAuthenticated, toFav, favourites } = useAuthStore();
+  const { user, isAuthenticated, toFav, favorites } = useAuthStore();
   const [heartColor, setHeartColor] = useState("black");
   const [isFavorited, setIsFavorited] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -15,10 +15,14 @@ const Heart = ({ id }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const favorited = user && user.favResidenciesID?.includes(id);
-    setIsFavorited(favorited);
+    // Check if favorited using multiple fallback sources to ensure sync on refresh
+    const favorited =
+      (user?.favResidenciesID?.includes(id)) ||
+      (Array.isArray(favorites) && favorites.some(f => (f._id === id || f === id)));
+
+    setIsFavorited(!!favorited);
     setHeartColor(favorited ? "red" : "black");
-  }, [user, id]);
+  }, [user, favorites, id]);
 
   const handleLike = async (e) => {
     e.stopPropagation();

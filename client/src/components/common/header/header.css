@@ -149,6 +149,10 @@ header .container {
   align-items: center;
 }
 
+.mobile-only-link {
+  display: none !important;
+}
+
 /* Mobile Toggle */
 .toggle {
   display: none;
@@ -159,6 +163,11 @@ header .container {
   .nav {
     display: none;
   }
+
+  .mobile-only-link {
+    display: block !important;
+  }
+
 
   .logo img {
     height: 30px;

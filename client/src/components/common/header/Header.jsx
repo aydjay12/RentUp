@@ -96,13 +96,18 @@ const Header = () => {
                   </Menu.Target>
 
                   <Menu.Dropdown className="dropdown-mobile">
-                    <Menu.Label>Menu</Menu.Label>
+                    <Menu.Label className="mobile-only-link">Menu</Menu.Label>
                     {nav.map((list, index) => (
-                      <Menu.Item key={index} component={NavLink} to={list.path}>
+                      <Menu.Item
+                        key={index}
+                        component={NavLink}
+                        to={list.path}
+                        className="mobile-only-link"
+                      >
                         {list.text}
                       </Menu.Item>
                     ))}
-                    <Menu.Divider />
+                    <Menu.Divider className="mobile-only-link" />
                     <Menu.Label>Quick Actions</Menu.Label>
                     <Menu.Item component={NavLink} to="/cart">
                       Cart ({cartItems.length})

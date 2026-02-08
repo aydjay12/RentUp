@@ -140,6 +140,10 @@
         padding: 1.5rem;
     }
 
+    .search-results {
+        padding-top: 3.5rem;
+    }
+
     .search-filter-container .box {
         width: 100%;
         border-right: none;

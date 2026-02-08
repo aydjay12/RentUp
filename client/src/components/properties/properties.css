@@ -66,6 +66,10 @@
   box-shadow: 0 6px 20px rgba(39, 174, 96, 0.3);
 }
 
+.properties-main {
+  padding-top: 3.5rem;
+}
+
 
 /* Grid System */
 .properties-grid {
