@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import axios from "axios";
-import { toast } from "react-toastify";
+import useSnackbarStore from "./useSnackbarStore";
 
 const API_URL =
   import.meta.env.MODE === "development"
@@ -24,7 +24,7 @@ export const useContactStore = create((set, get) => ({
       set({ loading: false });
       // ✅ Show toast only if it hasn't been shown yet
       if (!get().hasShownError) {
-        toast.error("Failed to fetch messages.");
+        useSnackbarStore.getState().showSnackbar("Failed to fetch messages.", "error");
         set({ hasShownError: true }); // ✅ Mark error as shown
       }
       set({ error: error.message, loading: false });
@@ -37,10 +37,10 @@ export const useContactStore = create((set, get) => ({
     try {
       await axios.post(`${API_URL}/submit`, formData);
       set({ loading: false });
-      toast.success("Message sent successfully!");
+      useSnackbarStore.getState().showSnackbar("Message sent successfully!", "success");
     } catch (error) {
       set({ loading: false });
-      toast.error(error.response?.data?.message || "Failed to send message");
+      useSnackbarStore.getState().showSnackbar(error.response?.data?.message || "Failed to send message", "error");
       throw error;
     }
   },
@@ -53,10 +53,10 @@ export const useContactStore = create((set, get) => ({
         contacts: state.contacts.filter((contact) => contact._id !== id),
         loading: false,
       }));
-      toast.success("Message deleted successfully");
+      useSnackbarStore.getState().showSnackbar("Message deleted successfully", "success");
     } catch (error) {
       set({ loading: false });
-      toast.error(error.response?.data?.message || "Failed to delete message");
+      useSnackbarStore.getState().showSnackbar(error.response?.data?.message || "Failed to delete message", "error");
     }
   },
 }));

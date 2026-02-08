@@ -108,9 +108,7 @@ const Header = () => {
             onChange={handleMenuToggle} // Update state on open/close
           >
             <Menu.Target>
-              <Button variant="subtle">
-                {navList ? <FaTimes size={20} /> : <FaBars size={20} />}
-              </Button>
+              {navList ? <FaTimes size={20} /> : <FaBars size={20} />}
             </Menu.Target>
 
             <Menu.Dropdown className="dropdown-mobile">
@@ -119,6 +117,10 @@ const Header = () => {
                   {list.text}
                 </Menu.Item>
               ))}
+              <Menu.Divider />
+              <Menu.Item component={NavLink} to="/cart">
+                Cart ({cartItems.length})
+              </Menu.Item>
               {isAdmin && isAuthenticated && (
                 <Menu.Item
                   component={NavLink}
@@ -127,6 +129,16 @@ const Header = () => {
                 >
                   Admin Dashboard
                 </Menu.Item>
+              )}
+              {!isAuthenticated && (
+                <>
+                  <Menu.Item component={NavLink} to="/signin">
+                    Log In
+                  </Menu.Item>
+                  <Menu.Item component={NavLink} to="/signup" color="#27ae60">
+                    Sign Up
+                  </Menu.Item>
+                </>
               )}
             </Menu.Dropdown>
           </Menu>

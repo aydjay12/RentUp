@@ -1,50 +1,74 @@
+/* Location Section */
+.location {
+  padding: 5rem 0;
+  background-color: var(--white);
+}
+
+.location .content {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
 .location .box {
   position: relative;
-  border-radius: 5px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  height: 300px;
+  /* Fixed height for consistency */
+  border: 1px solid var(--border);
 }
+
 .location img {
-  border-radius: 5px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
 }
+
+.location .box:hover img {
+  transform: scale(1.1);
+}
+
 .location .overlay {
   position: absolute;
   top: 0;
   left: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
+  width: 100%;
   height: 100%;
-  width: 100%;
-  color: #fff;
-  z-index: 222;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 60%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 2rem;
+  z-index: 10;
+  transition: all 0.3s ease;
 }
-.location .overlay::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 94%;
-  background: rgb(15 28 47 / 30%);
-  z-index: -1;
-  margin: 20px;
-  border-radius: 5px;
+
+.location .box:hover .overlay {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.2) 60%);
 }
+
 .location h5 {
-  font-size: 18px;
-  font-weight: 500;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 0.5rem;
+  font-family: 'Merriweather', serif;
 }
-.location label {
-  color: #fff;
-  margin-right: 20px;
+
+.location h5 span {
+  font-weight: 300;
   opacity: 0.8;
+  font-size: 1.2rem;
 }
-.location .container .content{
-  cursor: pointer;
-}
-@media screen and (max-width: 800px) {
-  .location .overlay::after {
-    top: -.5em;
-    left: -.5em;
-  }
+
+.location label {
+  color: var(--white);
+  font-size: 0.9rem;
+  opacity: 0.9;
+  font-family: 'Outfit', sans-serif;
 }

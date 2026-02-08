@@ -4,15 +4,14 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useAuthStore } from "../../../store/authStore";
 import { Loader, Eye, EyeOff, ArrowLeft } from "lucide-react";
 import Logo from "../../pics/logo-light.png";
-import Snackbar from "../../common/Snackbar/Snackbar";
-import { useSnackbar } from "../../../hooks/useSnackbar";
+import useSnackbarStore from "../../../store/useSnackbarStore";
 import "../../../styles/auth.css";
 
 const Signin = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { login, isLoading, error, clearError } = useAuthStore();
-  const { snackbar, showSnackbar, hideSnackbar } = useSnackbar();
+  const { showSnackbar } = useSnackbarStore();
 
   const from = location.state?.from?.pathname || "/";
 
@@ -77,12 +76,7 @@ const Signin = () => {
 
   return (
     <div className="signup-container">
-      <Snackbar
-        message={snackbar.message}
-        type={snackbar.type}
-        isOpen={snackbar.isOpen}
-        onClose={hideSnackbar}
-      />
+
 
       {/* LEFT SIDE - VISUAL */}
       <div className="signup-visual" style={{ backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/images/pic01.jpeg')" }}>

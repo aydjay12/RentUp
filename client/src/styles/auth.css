@@ -125,6 +125,7 @@ body {
     font-weight: 600;
     margin-bottom: 1.5rem;
     max-width: 500px;
+    color: var(--white);
 }
 
 .visual-text p {

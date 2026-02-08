@@ -1,7 +1,7 @@
 // useCartStore.js
 import { create } from "zustand";
 import axios from "axios";
-import { toast } from "react-toastify";
+import useSnackbarStore from "./useSnackbarStore";
 
 const API_URL =
   import.meta.env.MODE === "development"
@@ -39,16 +39,16 @@ export const useCartStore = create((set, get) => ({
       const response = await axios.post(`${COUPON_URL}/validate`, { code });
       set({ coupon: response.data, isCouponApplied: true });
       get().calculateTotals();
-      toast.success("Coupon applied successfully");
+      useSnackbarStore.getState().showSnackbar("Coupon applied successfully", "success");
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to apply coupon");
+      useSnackbarStore.getState().showSnackbar(error.response?.data?.message || "Failed to apply coupon", "error");
     }
   },
 
   removeCoupon: () => {
     set({ isCouponApplied: false, coupon: null });
     get().calculateTotals();
-    toast.success("Coupon removed");
+    useSnackbarStore.getState().showSnackbar("Coupon removed", "success");
   },
 
   fetchCart: async (options = {}) => {
@@ -75,12 +75,12 @@ export const useCartStore = create((set, get) => ({
       await axios.delete(`${API_URL}/clear`);
       set({ cartItems: [], coupon: null, total: 0, subtotal: 0 });
       if (!get().hasShownError) {
-        // toast.success("Cart cleared successfully");
+        // useSnackbarStore.getState().showSnackbar("Cart cleared successfully", "success");
         set({ hasShownError: true });
       }
     } catch (error) {
       if (!get().hasShownError) {
-        toast.error("Failed to clear cart");
+        useSnackbarStore.getState().showSnackbar("Failed to clear cart", "error");
         set({ hasShownError: true });
       }
     }
@@ -93,9 +93,9 @@ export const useCartStore = create((set, get) => ({
         ? response.data.cartItems
         : [];
       set({ cartItems: cartData });
-      toast.success("Added to cart");
+      useSnackbarStore.getState().showSnackbar("Added to cart", "success");
     } catch (error) {
-      toast.error(error.response?.data?.message || "Error adding to cart");
+      useSnackbarStore.getState().showSnackbar(error.response?.data?.message || "Error adding to cart", "error");
     }
   },
 
@@ -108,20 +108,20 @@ export const useCartStore = create((set, get) => ({
       }));
       await axios.delete(`${API_URL}/remove/${rid}`);
       get().calculateTotals();
-      toast.success("Removed from cart");
+      useSnackbarStore.getState().showSnackbar("Removed from cart", "success");
     } catch (error) {
       await get().fetchCart();
-      toast.error(error.response?.data?.message || "Error removing from cart");
+      useSnackbarStore.getState().showSnackbar(error.response?.data?.message || "Error removing from cart", "error");
     }
   },
 
   toggleCart: async (rid, options = {}) => {
     try {
       const response = await axios.post(`${API_URL}/toggle/${rid}`);
-      toast.success(response.data.message);
+      useSnackbarStore.getState().showSnackbar(response.data.message, "success");
       await get().fetchCart(options);
     } catch (error) {
-      toast.error(error.response?.data?.message || "Error updating cart");
+      useSnackbarStore.getState().showSnackbar(error.response?.data?.message || "Error updating cart", "error");
     }
   },
 
@@ -142,7 +142,7 @@ export const useCartStore = create((set, get) => ({
       }));
       get().calculateTotals();
     } catch (error) {
-      toast.error(error.response?.data?.message || "Error updating quantity");
+      useSnackbarStore.getState().showSnackbar(error.response?.data?.message || "Error updating quantity", "error");
     }
   },
 

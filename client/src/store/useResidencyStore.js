@@ -1,7 +1,7 @@
 // useResidencyStore.js
 import { create } from "zustand";
 import axios from "axios";
-import { toast } from "react-toastify";
+import useSnackbarStore from "./useSnackbarStore";
 
 const API_URL =
   import.meta.env.MODE === "development"
@@ -28,7 +28,7 @@ export const useResidencyStore = create((set, get) => ({
       console.error("Error fetching residencies:", error);
       set({ residencies: [], loading: false, isError: true }); // Reset to empty array on error
       if (!get().hasShownError) {
-        toast.error("Failed to fetch residencies.");
+        useSnackbarStore.getState().showSnackbar("Failed to fetch residencies.", "error");
         set({ hasShownError: true });
       }
     }
@@ -37,7 +37,7 @@ export const useResidencyStore = create((set, get) => ({
   fetchResidencyById: async (id) => {
     if (!id) {
       console.error("fetchResidencyById: ID is undefined!");
-      toast.error("Invalid residency ID");
+      useSnackbarStore.getState().showSnackbar("Invalid residency ID", "error");
       return null;
     }
 
@@ -49,7 +49,7 @@ export const useResidencyStore = create((set, get) => ({
     } catch (error) {
       console.error("Error fetching residency:", error);
       set({ loading: false });
-      toast.error("Error fetching residency details");
+      useSnackbarStore.getState().showSnackbar("Error fetching residency details", "error");
       return null;
     }
   },
@@ -62,11 +62,11 @@ export const useResidencyStore = create((set, get) => ({
         residencies: [...state.residencies, response.data.residency],
         loading: false,
       }));
-      toast.success("Residency created successfully");
+      useSnackbarStore.getState().showSnackbar("Residency created successfully", "success");
     } catch (error) {
       set({ loading: false });
-      toast.error(
-        error.response?.data?.message || "Failed to create residency"
+      useSnackbarStore.getState().showSnackbar(
+        error.response?.data?.message || "Failed to create residency", "error"
       );
       throw error;
     }
@@ -82,11 +82,11 @@ export const useResidencyStore = create((set, get) => ({
         ),
         loading: false,
       }));
-      toast.success("Residency removed successfully");
+      useSnackbarStore.getState().showSnackbar("Residency removed successfully", "success");
     } catch (error) {
       set({ loading: false });
-      toast.error(
-        error.response?.data?.message || "Failed to remove residency"
+      useSnackbarStore.getState().showSnackbar(
+        error.response?.data?.message || "Failed to remove residency", "error"
       );
       throw error;
     }
@@ -105,7 +105,7 @@ export const useResidencyStore = create((set, get) => ({
     } catch (error) {
       console.error("Error fetching recommendations:", error);
       set({ recommendedResidencies: [], loading: false });
-      toast.error("Failed to fetch recommendations");
+      useSnackbarStore.getState().showSnackbar("Failed to fetch recommendations", "error");
     }
   },
 
@@ -119,11 +119,11 @@ export const useResidencyStore = create((set, get) => ({
         ),
         loading: false,
       }));
-      toast.success("Residency updated successfully");
+      useSnackbarStore.getState().showSnackbar("Residency updated successfully", "success");
     } catch (error) {
       set({ loading: false });
-      toast.error(
-        error.response?.data?.message || "Failed to update residency"
+      useSnackbarStore.getState().showSnackbar(
+        error.response?.data?.message || "Failed to update residency", "error"
       );
       throw error;
     }

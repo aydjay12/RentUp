@@ -55,12 +55,11 @@ const RecentCard = ({ card }) => {
         </p>
       </div>
 
-      <div className="flex padd">
-        <motion.div whileHover={{ scale: 1 }}>
-          <button className="btn2 price-btn">${card.price}</button>{" "}
-          <span>/sqft</span>
-        </motion.div>
-        <span>{card.type}</span>
+      <div className="footer">
+        <div className="price">
+          <button>${card.price}</button> <span>/sqft</span>
+        </div>
+        <span className="property-type">{card.type}</span>
       </div>
     </motion.div>
   );

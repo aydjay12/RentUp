@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import axios from "axios";
-import { toast } from "react-toastify";
+import useSnackbarStore from "./useSnackbarStore";
 import { loadStripe } from "@stripe/stripe-js";
 import { useCartStore } from "./useCartStore";
 
@@ -19,7 +19,7 @@ export const usePaymentStore = create((set) => ({
   handlePayment: async (cartItems, coupon) => {
     // Cart limit check
     if (useCartStore.getState().isCartOverLimit()) {
-      toast.error("You can only checkout a maximum of 8 properties at a time.");
+      useSnackbarStore.getState().showSnackbar("You can only checkout a maximum of 8 properties at a time.", "error");
       return;
     }
     try {
@@ -39,11 +39,11 @@ export const usePaymentStore = create((set) => ({
 
       if (result.error) {
         console.error("Error:", result.error);
-        toast.error("Payment failed. Please try again.");
+        useSnackbarStore.getState().showSnackbar("Payment failed. Please try again.", "error");
       }
     } catch (error) {
       console.error("Error processing payment:", error);
-      toast.error("Error processing payment. Please try again.");
+      useSnackbarStore.getState().showSnackbar("Error processing payment. Please try again.", "error");
     }
   },
 
@@ -65,8 +65,8 @@ export const usePaymentStore = create((set) => ({
       }
     } catch (error) {
       console.error("Checkout Success Error:", error);
-      toast.error(
-        error.response?.data?.message || "Error processing order. Try again."
+      useSnackbarStore.getState().showSnackbar(
+        error.response?.data?.message || "Error processing order. Try again.", "error"
       );
     } finally {
       set({ isProcessing: false }); // ✅ Reset state after execution

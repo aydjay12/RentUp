@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { FaShoppingCart } from "react-icons/fa";
 import { useCartStore } from "../../store/useCartStore";
 import { useAuthStore } from "../../store/authStore";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import useSnackbarStore from "../../store/useSnackbarStore";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import "./Cart.css";
@@ -14,6 +13,7 @@ const Cart = ({ id }) => {
   const [cartColor, setCartColor] = useState("black");
   const [isInCart, setIsInCart] = useState(false);
   const navigate = useNavigate();
+  const { showSnackbar } = useSnackbarStore();
 
   useEffect(() => {
     const inCart = user && cartItems?.some((item) => item.residency?._id === id || item._id === id);
@@ -24,27 +24,18 @@ const Cart = ({ id }) => {
   const handleCartToggle = async (e) => {
     e.stopPropagation();
     if (!isAuthenticated) {
-      toast.error("You must be logged in to add items to the cart", {
-        position: "bottom-right",
-        autoClose: 3000,
-      });
+      showSnackbar("You must be logged in to add items to the cart", "error");
       return;
     }
     if (!user?.isVerified) {
-      toast.error("You must be verified to add items to the cart", {
-        position: "bottom-right",
-        autoClose: 3000,
-      });
+      showSnackbar("You must be verified to add items to the cart", "error");
       return navigate("/otp-verification");
     }
 
     try {
       await toggleCart(id);
     } catch (error) {
-      toast.error("Failed to update cart", {
-        position: "bottom-right",
-        autoClose: 3000,
-      });
+      showSnackbar("Failed to update cart", "error");
     }
   };
 

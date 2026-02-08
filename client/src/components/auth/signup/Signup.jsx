@@ -7,15 +7,14 @@ import {
   User, ShieldCheck, CheckCircle
 } from "lucide-react";
 import Logo from "../../pics/logo-light.png";
-import Snackbar from "../../common/Snackbar/Snackbar";
-import { useSnackbar } from "../../../hooks/useSnackbar";
+import useSnackbarStore from "../../../store/useSnackbarStore";
 import "../../../styles/auth.css";
 
 const Signup = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { register, isLoading, error, clearError } = useAuthStore();
-  const { snackbar, showSnackbar, hideSnackbar } = useSnackbar();
+  const { showSnackbar } = useSnackbarStore();
 
   const from = location.state?.from?.pathname || "/";
   const [role, setRole] = useState("user");
@@ -108,12 +107,7 @@ const Signup = () => {
 
   return (
     <div className="signup-container">
-      <Snackbar
-        message={snackbar.message}
-        type={snackbar.type}
-        isOpen={snackbar.isOpen}
-        onClose={hideSnackbar}
-      />
+
 
       {/* LEFT SIDE - VISUAL */}
       <div className="signup-visual">

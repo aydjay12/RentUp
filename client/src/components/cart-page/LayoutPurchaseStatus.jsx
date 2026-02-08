@@ -1,20 +1,19 @@
 import { Outlet } from "react-router-dom";
 import React from "react";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import Header from "../common/header/Header";
+import Snackbar from "../common/Snackbar/Snackbar";
+import useSnackbarStore from "../../store/useSnackbarStore";
 
 const LayoutPurchaseStatus = () => {
+  const { isOpen, message, type, hideSnackbar } = useSnackbarStore();
+
   return (
     <>
-      <ToastContainer
-        position="bottom-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        closeOnClick
-        pauseOnHover
-        draggable
-        style={{ fontFamily: "Poppins, sans-serif" }}
+      <Snackbar
+        isOpen={isOpen}
+        message={message}
+        type={type}
+        onClose={hideSnackbar}
       />
       <Header />
       <Outlet />

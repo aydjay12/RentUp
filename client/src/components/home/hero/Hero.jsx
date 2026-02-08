@@ -86,9 +86,6 @@ const Hero = () => {
               onChange={handleInputChange}
             />
           </motion.div>
-          <motion.div className="box" whileHover={{ y: 0 }}>
-            <h4>Advance Filter</h4>
-          </motion.div>
           <motion.button
             type="submit"
             className="btn1 search"
@@ -96,7 +93,7 @@ const Hero = () => {
             whileHover="hover"
             whileTap="tap"
           >
-            <FaSearch />
+            Advance Filter
           </motion.button>
         </motion.form>
       </div>

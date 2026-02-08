@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import axios from "axios";
-import { toast } from "react-toastify";
+import useSnackbarStore from "./useSnackbarStore";
 
 const API_URL =
   import.meta.env.MODE === "development"
@@ -170,9 +170,9 @@ export const useAuthStore = create((set, get) => ({
         },
         favorites: response.data.user.favResidenciesID,
       }));
-      toast.success(response.data.message);
+      useSnackbarStore.getState().showSnackbar(response.data.message, "success");
     } catch (error) {
-      toast.error(error.response?.data?.message || "Error updating favorites");
+      useSnackbarStore.getState().showSnackbar(error.response?.data?.message || "Error updating favorites", "error");
     }
   },
 
@@ -184,7 +184,7 @@ export const useAuthStore = create((set, get) => ({
       set({ favorites: response.data, favoritesLoading: false });
     } catch (error) {
       set({ favoritesLoading: false });
-      toast.error(error.response?.data?.message || "Error fetching favorites");
+      useSnackbarStore.getState().showSnackbar(error.response?.data?.message || "Error fetching favorites", "error");
     }
   },
 
@@ -202,10 +202,10 @@ export const useAuthStore = create((set, get) => ({
     try {
       const response = await axios.put(`${API_URL}/profile`, updatedData);
       set({ user: response.data.user, isLoading: false });
-      toast.success(response.data.message || "Profile updated");
+      useSnackbarStore.getState().showSnackbar(response.data.message || "Profile updated", "success");
     } catch (error) {
       set({ isLoading: false });
-      toast.error(error.response?.data?.message || "Failed to update profile");
+      useSnackbarStore.getState().showSnackbar(error.response?.data?.message || "Failed to update profile", "error");
     }
   },
 
@@ -224,7 +224,7 @@ export const useAuthStore = create((set, get) => ({
       return response.data.secure_url;
     } catch (error) {
       set({ isLoading: false });
-      toast.error(error.response?.data?.message || "Failed to upload image");
+      useSnackbarStore.getState().showSnackbar(error.response?.data?.message || "Failed to upload image", "error");
       throw error;
     }
   },

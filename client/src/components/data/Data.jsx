@@ -373,36 +373,22 @@ export const price = [
 ];
 export const footer = [
   {
-    title: "LAYOUTS",
-    text: [
-      { list: "Home Page" },
-      { list: "About Page" },
-      { list: "Service Page" },
-      { list: "Property Page" },
-      { list: "Contact Page" },
-      { list: "Single Blog" },
+    title: "EXPLORE",
+    links: [
+      { name: "Home", path: "/" },
+      { name: "About Us", path: "/about" },
+      { name: "Properties", path: "/properties" },
+      { name: "Pricing", path: "/pricing" },
+      { name: "Contact", path: "/contact" },
     ],
   },
   {
-    title: "ALL SECTIONS",
-    text: [
-      { list: "Headers" },
-      { list: "Features" },
-      { list: "Attractive" },
-      { list: "Testimonials" },
-      { list: "Videos" },
-      { list: "Footers" },
-    ],
-  },
-  {
-    title: "COMPANY",
-    text: [
-      { list: "About" },
-      { list: "Blog" },
-      { list: "Pricing" },
-      { list: "Affiliate" },
-      { list: "Login" },
-      { list: "Changelog" },
+    title: "QUICK LINKS",
+    links: [
+      { name: "Search Property", path: "/search" },
+      { name: "My Profile", path: "/profile-page" },
+      { name: "Favorites", path: "/favourites" },
+      { name: "My Cart", path: "/cart" },
     ],
   },
 ];
