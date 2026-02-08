@@ -4,7 +4,7 @@ import axios from "axios";
 import useSnackbarStore from "./useSnackbarStore";
 
 const API_URL =
-  import.meta.env.MODE === "production"
+  import.meta.env.MODE === "development"
     ? "http://localhost:8000/api/residency"
     : "https://rent-up-api.vercel.app/api/residency";
 
