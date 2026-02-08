@@ -1,102 +1,118 @@
-.properties-container {
-  display: flex;
-  justify-content: center;
+/* Properties Search Bar Restyling */
+.properties-search-wrapper {
+  max-width: 800px;
+  /* Wider for better sleek look */
+  margin: 0 auto 3rem;
+}
+
+.search-bar-wrapper {
+  background: var(--white);
+  padding: 0.6rem 0.6rem 0.6rem 1.5rem;
+  border-radius: 50px;
+  border: 1px solid var(--border);
+  display: flex !important;
   align-items: center;
-  width: 100%;
-}
-.properties-container .search-bar {
-  width: clamp(12rem, 100%, 35rem);
-  padding: 0.5em 0;
-  border-radius: 30px;
-  border: 1px solid rgba(120, 120, 120, 0.374);
-  flex-wrap: nowrap;
-  margin-bottom: 1em;
-  @media (max-width: 768px){
-    padding-left: .8em;
-    padding-right: 1em;
-  }
+  gap: 1rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.properties-container .search-bar .button {
-  border-radius: 30px;
-  font-size: 12px;
-  padding: 10px 15px;
-  background: #27ae60;
-}
-.properties-container .search-bar svg {
-  color: #27ae60 !important;
-  margin-right: 0.5em;
+.search-bar-wrapper:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 10px 25px -5px rgba(39, 174, 96, 0.15);
+  transform: translateY(-2px);
 }
 
-.properties-container .search-bar input {
-  width: 75%;
+.search-icon {
+  color: var(--accent);
+  flex-shrink: 0;
 }
 
-.properties {
+.search-bar-wrapper input {
+  flex: 1;
+  border: none;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.05rem;
+  color: var(--primary);
+  background: transparent;
+}
+
+.search-bar-wrapper input::placeholder {
+  color: var(--text-light);
+  opacity: 0.7;
+}
+
+.search-btn-v2 {
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 0.8rem 2rem;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(39, 174, 96, 0.2);
+}
+
+.search-btn-v2:hover {
+  background: var(--accent-hover);
+  box-shadow: 0 6px 20px rgba(39, 174, 96, 0.3);
+}
+
+/* Grid System */
+.properties-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 3em;
-  max-width: 90%;
-  @media (max-width: 768px) {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3rem;
+}
+
+.no-results-box {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 5rem 2rem;
+  background: var(--bg-section);
+  border-radius: var(--radius);
+  border: 2px dashed var(--border);
+}
+
+.no-results-box p {
+  color: var(--text-light);
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+/* Responsiveness */
+@media screen and (max-width: 1024px) {
+  .properties-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .properties-hero .back {
+    height: 35vh;
+  }
+
+  .properties-grid {
     grid-template-columns: 1fr;
-    max-width: 100%;
+    gap: 2rem;
   }
-}
 
-.favourites-con{
-  @media (max-width: 768px){
-    .paddings{
-      padding-left: .45em !important;
-      padding-right: .45em !important;
-    }
+  .properties-search-wrapper {
+    margin-bottom: 3rem;
   }
-}
 
-.filter-container {
-  margin-top: 0;
-  margin-bottom: 2em;
-  border: 2px solid rgba(128, 128, 128, 0.2);
-}
-
-.search-box {
-  .box:nth-child(4) {
-    border-left: none;
-    @media (max-width: 768px) {
-      width: 100%;
-    }
+  .properties-search-wrapper .search-bar {
+    padding-left: 1rem;
   }
-  .box:nth-child(5) {
-    padding: 1.95em 25px;
-    @media (max-width: 768px) {
-      width: 50%;
-      padding: 15px;
-      padding-left: 0;
-      padding-top: 2em;
-      h4{
-        margin-top: 0;
-      }
-    }
-  }
-}
 
-.nothing {
-  font-weight: 600;
-  @media (max-width: 768px){
-    margin-left: -1.3em;
+  .properties-search-wrapper .search-bar input {
+    font-size: 0.95rem;
   }
-}
 
-.no-properties{
-  padding: 2em 4.5em;
-  font-weight: 600;
-  @media (max-width: 768px){
-    padding: 0;
-    margin-left: -1em;
-  }
-}
-
-.no-favourites{
-  @media (max-width: 768px){
-    text-align: center;
+  .properties-search-wrapper .search-bar .button {
+    padding: 0.6rem 1.25rem;
+    font-size: 0.85rem;
   }
 }

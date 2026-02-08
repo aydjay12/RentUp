@@ -239,6 +239,10 @@
     gap: 2rem;
   }
 
+  .footerContact .send .text {
+    align-self: start;
+  }
+
   .footerContact p {
     text-align: start;
   }

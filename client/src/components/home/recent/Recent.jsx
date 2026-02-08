@@ -41,8 +41,8 @@ const Recent = () => {
           viewport={{ once: true, amount: 0.5 }}
         >
           <Heading
-            title="Featured Properties"
-            subtitle="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam."
+            title="Recent Properties"
+            subtitle="Browse our latest listings and find your dream home today. We offer a wide range of properties from modern apartments to luxury villas."
           />
         </motion.div>
 

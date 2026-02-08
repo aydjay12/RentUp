@@ -11,6 +11,8 @@
 .heart-icon {
   transition: all 0.2s ease;
   filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.1));
+  width: 20px;
+  height: 20px;
 }
 
 .heart-icon.favorited {
@@ -18,6 +20,7 @@
 }
 
 .heart-tooltip {
+  display: none;
   position: absolute;
   left: -60%;
   top: 110%;

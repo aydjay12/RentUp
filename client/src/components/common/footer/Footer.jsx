@@ -3,11 +3,12 @@ import { footer } from "../../data/Data";
 import Logo from "../../images/logo-light.png";
 import "./footer.css";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Phone, Mail, MapPin, Facebook, Twitter, Instagram, Linkedin, Send } from "lucide-react";
 
 const Footer = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [email, setEmail] = useState("");
 
   const handleSubscribe = (e) => {
@@ -17,32 +18,39 @@ const Footer = () => {
     }
   };
 
+  const isContactPage = location.pathname === "/contact";
+
   return (
     <>
-      <motion.section
-        className="footerContact"
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        viewport={{ once: true }}
-      >
-        <div className="container">
-          <div className="send">
-            <div className="text">
-              <h1>Do You Have Questions?</h1>
-              <p>We'll help you to find your perfect home and grow your future.</p>
+      {!isContactPage && (
+        <motion.section
+          className="footerContact"
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+        >
+          <div className="container">
+            <div className="send">
+              <div className="text">
+                <h1>Do You Have Questions?</h1>
+                <p>We'll help you to find your perfect home and grow your future.</p>
+              </div>
+              <motion.button
+                className="contact-button"
+                onClick={() => {
+                  navigate("/contact");
+                  window.scrollTo(0, 0);
+                }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Contact Us Today
+              </motion.button>
             </div>
-            <motion.button
-              className="contact-button"
-              onClick={() => navigate("/contact")}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Contact Us Today
-            </motion.button>
           </div>
-        </div>
-      </motion.section>
+        </motion.section>
+      )}
 
       <footer className="footer-main">
         <div className="container footer-grid">

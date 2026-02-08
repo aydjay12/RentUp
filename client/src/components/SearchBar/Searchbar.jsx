@@ -1,17 +1,17 @@
 import React from "react";
-import { HiLocationMarker } from "react-icons/hi";
+import { Search } from "lucide-react";
 
 const Searchbar = ({ filter, setFilter }) => {
   return (
-    <div className="flexCenter search-bar">
-      <HiLocationMarker color="var(--blue)" size={25} />
+    <div className="search-bar-wrapper shadow">
+      <Search className="search-icon" size={20} />
       <input
-        placeholder="Search by title/city/country..."
+        placeholder="Search properties by title, city, or address..."
         type="text"
         value={filter}
         onChange={(e) => setFilter(e.target.value)}
       />
-      <button className="button">Search</button>
+      <button className="search-btn-v2">Search</button>
     </div>
   );
 };
