@@ -1,5 +1,5 @@
 import "./App.css";
-import "./styles/home.css";
+import "./styles/Home.css";
 import { useEffect, Suspense } from "react";
 import Layout from "./components/pages/Layout";
 import {
