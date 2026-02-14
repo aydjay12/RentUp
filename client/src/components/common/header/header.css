@@ -139,10 +139,8 @@ header .container {
 }
 
 .admin-link {
-  color: var(--accent);
+  color: var(--text-main);
 }
-
-
 
 .authenticated-header {
   display: flex;
