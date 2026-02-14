@@ -68,6 +68,10 @@ const ResidenciesList = () => {
         title="Confirm Deletion"
         centered
         className={styles.modalPopup}
+        overlayProps={{
+          backgroundOpacity: 0.55,
+          blur: 3,
+        }}
       >
         <Text size="sm">
           Are you sure you want to delete{" "}
@@ -100,6 +104,10 @@ const ResidenciesList = () => {
         size="lg"
         centered
         className={styles.editPopup}
+        overlayProps={{
+          backgroundOpacity: 0.55,
+          blur: 3,
+        }}
       >
         <CreateResidencyForm
           residency={selectedResidency}

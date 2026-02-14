@@ -19,7 +19,7 @@ const listVariants = {
 };
 
 const Favourites = () => {
-  const { favourites, getAllFav } = useAuthStore();
+  const { favorites, getAllFav } = useAuthStore();
   const { residencies, fetchAllResidencies, loading } = useResidencyStore();
   const [filter, setFilter] = useState("");
 
@@ -37,7 +37,7 @@ const Favourites = () => {
   }
 
   const favoriteResidencies = residencies.filter((property) =>
-    (favourites || []).includes(property._id)
+    (favorites || []).includes(property._id)
   );
 
   return (
@@ -53,7 +53,7 @@ const Favourites = () => {
           cover={img}
         />
       </section>
-      <div className="flexColCenter paddings innerWidth properties-container favourites-con">
+      <div className="flexColCenter paddings innerWidth properties-container favorites-con">
         <SearchBar filter={filter} setFilter={setFilter} />
         <motion.div className="paddings flexCenter properties">
           {favoriteResidencies.length > 0 ? (
@@ -81,7 +81,7 @@ const Favourites = () => {
               ))
           ) : (
             <motion.div
-              className="no-favourites"
+              className="no-favorites"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}

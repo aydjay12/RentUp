@@ -17,9 +17,13 @@ const Recent = () => {
 
   if (isError) {
     return (
-      <div className="wrapper">
-        <span>Error while fetching data</span>
-      </div>
+      <section className="recent section">
+        <div className="container">
+          <div className="no-results-box" style={{ marginTop: "2rem" }}>
+            <p style={{ color: "#e74c3c" }}>Error while fetching property data. Please try again later.</p>
+          </div>
+        </div>
+      </section>
     );
   }
 

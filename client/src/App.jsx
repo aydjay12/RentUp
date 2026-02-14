@@ -9,7 +9,10 @@ import {
   useNavigate,
   Navigate,
   useLocation,
+  Outlet,
 } from "react-router-dom";
+import Header from "./components/common/header/Header";
+import Footer from "./components/common/footer/Footer";
 import Home from "./components/home/Home";
 import About from "./components/about/About";
 import Pricing from "./components/pricing/Pricing";
@@ -106,6 +109,15 @@ const RedirectAuthenticatedUser = ({ children }) => {
   return children;
 };
 
+const SharedLayout = () => {
+  return (
+    <>
+      <Header />
+      <Outlet />
+    </>
+  );
+};
+
 const App = () => {
   const queryClient = new QueryClient();
   const { checkAuth } = useAuthStore();
@@ -144,66 +156,69 @@ const App = () => {
           }
         >
           <Routes>
-            <Route element={<Layout />}>
-              <Route path="/" element={<Home />} />
+            <Route element={<SharedLayout />}>
+              <Route element={<Layout />}>
+                <Route path="/" element={<Home />} />
 
-              <Route path="/about" element={<About />} />
-              <Route path="/search" element={<Search />} />
-              <Route path="/pricing" element={<Pricing />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route
-                path="/profile-page"
-                element={
-                  <ProtectedRoute>
-                    <ProfilePage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/cart"
-                element={
-                  <ProtectedRoute>
-                    <CartPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route path="/properties">
-                <Route index element={<Properties />} />
-                <Route path=":propertyId" element={<Property />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/search" element={<Search />} />
+                <Route path="/pricing" element={<Pricing />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route
+                  path="/profile-page"
+                  element={
+                    <ProtectedRoute>
+                      <ProfilePage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/cart"
+                  element={
+                    <ProtectedRoute>
+                      <CartPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route path="/properties">
+                  <Route index element={<Properties />} />
+                  <Route path=":propertyId" element={<Property />} />
+                </Route>
+                <Route
+                  path="/favourites"
+                  element={
+                    <ProtectedRoute>
+                      <Favourites />
+                    </ProtectedRoute>
+                  }
+                />
               </Route>
-              <Route
-                path="/favourites"
-                element={
-                  <ProtectedRoute>
-                    <Favourites />
-                  </ProtectedRoute>
-                }
-              />
+              <Route element={<LayoutPurchaseStatus />}>
+                <Route
+                  path="/purchase-success"
+                  element={<PurchaseSuccessPage />}
+                />
+                <Route
+                  path="/purchase-cancel"
+                  element={
+                    <ProtectedRoute>
+                      <PurchaseCancelPage />
+                    </ProtectedRoute>
+                  }
+                />
+              </Route>
+              <Route element={<LayoutAdmin />}>
+                <Route
+                  path="/admin-dashboard"
+                  element={
+                    <AdminProtectedRoute>
+                      <AdminPage />
+                    </AdminProtectedRoute>
+                  }
+                />
+              </Route>
             </Route>
-            <Route element={<LayoutPurchaseStatus />}>
-              <Route
-                path="/purchase-success"
-                element={<PurchaseSuccessPage />}
-              />
-              <Route
-                path="/purchase-cancel"
-                element={
-                  <ProtectedRoute>
-                    <PurchaseCancelPage />
-                  </ProtectedRoute>
-                }
-              />
-            </Route>
-            <Route element={<LayoutAdmin />}>
-              <Route
-                path="/admin-dashboard"
-                element={
-                  <AdminProtectedRoute>
-                    <AdminPage />
-                  </AdminProtectedRoute>
-                }
-              />
-            </Route>
+
             <Route element={<LayoutAuth />}>
               <Route
                 path="/signup"

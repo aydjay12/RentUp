@@ -7,7 +7,7 @@ header {
   position: sticky;
   top: 0;
   width: 100%;
-  z-index: 999;
+  z-index: 100;
   transition: all 0.3s ease;
   padding: 1rem 0;
 }
@@ -35,24 +35,38 @@ header .container {
 
 .nav ul {
   display: flex;
+  justify-content: center;
+  align-items: center;
   gap: 2rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
+.nav li {
+  position: relative;
+}
+
 .nav li a {
   font-family: 'Outfit', sans-serif;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 1rem;
   color: var(--text-main);
   text-decoration: none;
-  transition: color 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0.5rem 0;
 }
 
 .nav li a:hover,
 .nav li a.active {
   color: var(--accent);
+}
+
+
+
+.nav li a:active {
+  transform: scale(0.95);
+  transition: transform 0.1s;
 }
 
 /* Auth Buttons */
@@ -101,7 +115,35 @@ header .container {
   box-shadow: var(--shadow-lg);
 }
 
-/* Authenticated Header */
+.desktop-quick-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-right: 0.5rem;
+}
+
+.quick-link {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-main);
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  padding: 0.4rem 0;
+}
+
+.quick-link:hover,
+.quick-link.active {
+  color: var(--accent);
+}
+
+.admin-link {
+  color: var(--accent);
+}
+
+
+
 .authenticated-header {
   display: flex;
   align-items: center;
@@ -109,11 +151,13 @@ header .container {
 }
 
 .toggle-v2 {
-  display: flex;
+  display: none;
+  /* Hide on desktop */
   align-items: center;
   color: var(--text-main);
   transition: color 0.3s ease;
 }
+
 
 .toggle-v2:hover {
   color: var(--accent);
@@ -160,7 +204,9 @@ header .container {
 
 /* Responsive - Mobile */
 @media (max-width: 1000px) {
-  .nav {
+
+  .nav,
+  .desktop-quick-links {
     display: none;
   }
 
@@ -180,6 +226,10 @@ header .container {
   .toggle {
     display: block;
     margin-left: auto;
+  }
+
+  .toggle-v2 {
+    display: flex !important;
   }
 
   .dropdown-mobile {

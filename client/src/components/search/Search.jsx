@@ -11,7 +11,7 @@ import { Search as SearchIcon } from "lucide-react";
 import { useResidencyStore } from "../../store/useResidencyStore";
 
 const Search = () => {
-  const { residencies, fetchAllResidencies, loading } = useResidencyStore();
+  const { residencies, fetchAllResidencies, loading, isError } = useResidencyStore();
   const [searchParams] = useSearchParams();
 
   const initialFilters = {
@@ -140,7 +140,11 @@ const Search = () => {
               },
             }}
           >
-            {filteredProperties.length > 0 ? (
+            {isError ? (
+              <div className="no-results-box">
+                <p style={{ color: "#e74c3c" }}>Error while fetching property data. Please try again later.</p>
+              </div>
+            ) : filteredProperties.length > 0 ? (
               filteredProperties.map((card, i) => (
                 <motion.div
                   key={i}

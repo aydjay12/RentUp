@@ -10,7 +10,7 @@ import { useResidencyStore } from "../../store/useResidencyStore";
 import { motion } from "framer-motion";
 
 const Properties = () => {
-  const { residencies, fetchAllResidencies, loading } = useResidencyStore();
+  const { residencies, fetchAllResidencies, loading, isError } = useResidencyStore();
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
@@ -65,7 +65,11 @@ const Properties = () => {
               }
             }}
           >
-            {filteredResidencies.length > 0 ? (
+            {isError ? (
+              <div className="no-results-box">
+                <p style={{ color: "#e74c3c" }}>Error while fetching property data. Please try again later.</p>
+              </div>
+            ) : filteredResidencies.length > 0 ? (
               filteredResidencies.map((card, i) => (
                 <motion.div
                   key={i}

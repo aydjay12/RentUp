@@ -66,6 +66,10 @@ const CartItem = ({ item }) => {
         title="Confirm Delete"
         centered
         className={styles.modalPopup}
+        overlayProps={{
+          backgroundOpacity: 0.55,
+          blur: 3,
+        }}
       >
         <Text size="sm">Are you sure you want to delete this item?</Text>
         <div className={styles.modalActions}>

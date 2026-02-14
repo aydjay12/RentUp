@@ -8,7 +8,6 @@ import useSnackbarStore from "../../store/useSnackbarStore";
 const Layout = () => {
   return (
     <>
-      <Header />
       <Outlet />
       <Footer />
     </>

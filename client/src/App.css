@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800;900&display=swap");
 
 * {
   padding: 0;
@@ -9,13 +9,13 @@
 }
 
 body {
-  font-family: "Kumbh Sans", sans-serif;
+  font-family: "Outfit", sans-serif;
   background-color: #fff;
 }
 
 /* In your global CSS file (e.g., index.css, App.css) */
 .Toastify__toast {
-  font-family: "Poppins", sans-serif !important;
+  font-family: "Outfit", sans-serif !important;
 }
 
 .container {
@@ -47,7 +47,7 @@ button {
   color: #fff;
   cursor: pointer;
   font-weight: bold;
-  font-family: "Poppins", sans-serif;
+  font-family: "Outfit", sans-serif;
 }
 
 button:hover {

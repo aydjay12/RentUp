@@ -46,10 +46,13 @@ const Header = () => {
             {nav.map((list, index) => (
               <motion.li
                 key={index}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
               >
-                <NavLink to={list.path}>{list.text}</NavLink>
+                <NavLink to={list.path} className={({ isActive }) => isActive ? "active" : ""}>
+                  {list.text}
+                </NavLink>
               </motion.li>
             ))}
           </ul>
@@ -78,6 +81,22 @@ const Header = () => {
             </div>
           ) : (
             <div className="authenticated-header">
+              <div className="desktop-quick-links">
+                <motion.div
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <NavLink to="/cart" className="quick-link">Cart ({cartItems.length})</NavLink>
+                </motion.div>
+                {isAdmin && (
+                  <motion.div
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <NavLink to="/admin-dashboard" className="quick-link admin-link">Admin</NavLink>
+                  </motion.div>
+                )}
+              </div>
               <div className="toggle-v2">
                 <Menu
                   shadow="md"
@@ -96,23 +115,22 @@ const Header = () => {
                   </Menu.Target>
 
                   <Menu.Dropdown className="dropdown-mobile">
-                    <Menu.Label className="mobile-only-link">Menu</Menu.Label>
+                    <Menu.Label>Menu</Menu.Label>
                     {nav.map((list, index) => (
                       <Menu.Item
                         key={index}
                         component={NavLink}
                         to={list.path}
-                        className="mobile-only-link"
                       >
                         {list.text}
                       </Menu.Item>
                     ))}
-                    <Menu.Divider className="mobile-only-link" />
+                    <Menu.Divider />
                     <Menu.Label>Quick Actions</Menu.Label>
                     <Menu.Item component={NavLink} to="/cart">
                       Cart ({cartItems.length})
                     </Menu.Item>
-                    {isAdmin && isAuthenticated && (
+                    {isAdmin && (
                       <Menu.Item
                         component={NavLink}
                         to="/admin-dashboard"
@@ -157,10 +175,10 @@ const Header = () => {
                 ))}
                 <Menu.Divider />
                 <Menu.Label>Account</Menu.Label>
-                <Menu.Item component={NavLink} to="/signin">
+                <Menu.Item component={NavLink} to="/signin" state={{ from: location }}>
                   Log In
                 </Menu.Item>
-                <Menu.Item component={NavLink} to="/signup" color="#27ae60">
+                <Menu.Item component={NavLink} to="/signup" state={{ from: location }} color="#27ae60">
                   Sign Up
                 </Menu.Item>
               </Menu.Dropdown>

@@ -7,7 +7,6 @@ import useSnackbarStore from "../../store/useSnackbarStore";
 const LayoutPurchaseStatus = () => {
   return (
     <>
-      <Header />
       <Outlet />
     </>
   );
