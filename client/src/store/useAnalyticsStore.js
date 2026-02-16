@@ -1,11 +1,6 @@
 import { create } from "zustand";
-import axios from "axios";
+import axiosInstance from "../lib/axios";
 import { toast } from "react-toastify";
-
-const API_URL =
-  import.meta.env.MODE === "development"
-    ? "http://localhost:8000/api/analytics"
-    : "https://rent-up-api.vercel.app/api/analytics";
 
 export const useAnalyticsStore = create((set, get) => ({
   analyticsData: { users: 0, products: 0, totalSales: 0, totalRevenue: 0 },
@@ -18,7 +13,7 @@ export const useAnalyticsStore = create((set, get) => ({
     set({ loading: true, error: null });
 
     try {
-      const response = await axios.get(API_URL);
+      const response = await axiosInstance.get("/dashboard-stats");
       const { analyticsData, dailySalesData } = response.data;
 
       set({
@@ -30,18 +25,19 @@ export const useAnalyticsStore = create((set, get) => ({
         },
         dailySalesData: dailySalesData || [],
         loading: false,
-        hasShownError: false, // ✅ Reset error flag on success
+        hasShownError: false,
       });
     } catch (error) {
       console.error("Error fetching analytics data:", error);
+      const errorMessage = error.response?.data?.message || error.message || "Failed to fetch analytics data.";
 
       // ✅ Show toast only if it hasn't been shown yet
       if (!get().hasShownError) {
-        toast.error("Failed to fetch analytics data.");
-        set({ hasShownError: true }); // ✅ Mark error as shown
+        toast.error(errorMessage);
+        set({ hasShownError: true });
       }
 
-      set({ error: error.message, loading: false });
+      set({ error: errorMessage, loading: false });
     }
   },
 }));

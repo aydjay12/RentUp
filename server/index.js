@@ -52,7 +52,7 @@ app.use("/api/contact", contactRoute);
 app.use("/api/cart", cartRoute);
 app.use("/api/coupons", couponRoute);
 app.use("/api/payments", paymentRoute);
-app.use("/api/analytics", analyticsRoute);
+app.use("/api/dashboard-stats", analyticsRoute);
 
 // No static files served from here, client is hosted separately on Vercel
 
