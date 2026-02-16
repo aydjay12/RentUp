@@ -378,7 +378,6 @@ export const footer = [
       { name: "Home", path: "/" },
       { name: "About Us", path: "/about" },
       { name: "Properties", path: "/properties" },
-      { name: "Pricing", path: "/pricing" },
       { name: "Contact", path: "/contact" },
     ],
   },

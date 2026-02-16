@@ -8,7 +8,7 @@ import useSnackbarStore from "../../store/useSnackbarStore";
 import { Loader, Phone, Mail, MapPin, Send } from "lucide-react";
 
 const Contact = () => {
-  const { submitContactForm, loading } = useContactStore();
+  const { submitContactForm, mutationLoading: loading } = useContactStore();
   const { showSnackbar } = useSnackbarStore();
 
   useEffect(() => {
