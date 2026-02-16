@@ -90,6 +90,7 @@
     width: 120px;
     object-fit: contain;
     align-self: flex-start;
+    cursor: unset;
 }
 
 .admin-sidebar-subtitle {

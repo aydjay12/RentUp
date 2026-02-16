@@ -426,9 +426,9 @@
 
 .modalPopup {
     :global(.mantine-Modal-header) {
-        border-bottom: 1px solid #f1f5f9;
-        padding-bottom: 1rem;
-        margin-bottom: 1.5rem;
+        border-bottom: none !important;
+        padding-bottom: 0;
+        margin-bottom: .8rem;
     }
 }
 
@@ -449,6 +449,20 @@
     border: 1px solid #e2e8f0 !important;
     color: #475569 !important;
     border-radius: 10px !important;
+}
+
+.remove-btn-no-hover {
+    background-color: #ef4444 !important;
+    color: white !important;
+    pointer-events: none !important;
+    opacity: 0.7;
+}
+
+.cancel-btn-no-hover {
+    background-color: #fafafa !important;
+    color: #bbb !important;
+    border: 1px solid #eee !important;
+    pointer-events: none !important;
 }
 
 @media (max-width: 1024px) {

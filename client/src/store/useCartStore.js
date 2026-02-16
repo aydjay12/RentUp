@@ -21,6 +21,7 @@ export const useCartStore = create((set, get) => ({
   subtotal: 0,
   isCouponApplied: false,
   loading: false, // Initial loading state is false, set to true during fetch
+  isError: false,
   hasShownError: false,
 
   getMyCoupon: async () => {
@@ -61,11 +62,12 @@ export const useCartStore = create((set, get) => ({
       set({
         cartItems: cartData,
         loading: false,
+        isError: false,
         hasShownError: false,
       });
       get().calculateTotals();
     } catch (error) {
-      set({ cartItems: [], loading: false });
+      set({ cartItems: [], loading: false, isError: true });
       // Error handling moved to CartPage.jsx
     }
   },

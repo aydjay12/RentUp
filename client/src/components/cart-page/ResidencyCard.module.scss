@@ -125,3 +125,42 @@
   }
 
 }
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.confirmButton {
+  background-color: #e63946;
+  color: white;
+
+  &:hover {
+    background-color: #d62839;
+  }
+}
+
+.cancelButton {
+  border: 1px solid #ccc;
+  color: #333;
+
+  &:hover {
+    background-color: #f1f1f1;
+  }
+}
+
+.remove-btn-no-hover {
+  background-color: #ef4444 !important;
+  color: white !important;
+  pointer-events: none !important;
+  opacity: 0.7;
+}
+
+.cancel-btn-no-hover {
+  background-color: #fafafa !important;
+  color: #bbb !important;
+  border: 1px solid #eee !important;
+  pointer-events: none !important;
+}

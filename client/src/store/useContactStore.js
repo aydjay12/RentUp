@@ -10,6 +10,7 @@ const API_URL =
 export const useContactStore = create((set, get) => ({
   contacts: [],
   loading: false,
+  mutationLoading: false,
   hasShownError: false,
 
   setContacts: (contacts) => set({ contacts }),
@@ -33,29 +34,29 @@ export const useContactStore = create((set, get) => ({
 
   // ✅ Submit a contact form
   submitContactForm: async (formData) => {
-    set({ loading: true });
+    set({ mutationLoading: true });
     try {
       await axios.post(`${API_URL}/submit`, formData);
-      set({ loading: false });
+      set({ mutationLoading: false });
       useSnackbarStore.getState().showSnackbar("Message sent successfully!", "success");
     } catch (error) {
-      set({ loading: false });
+      set({ mutationLoading: false });
       useSnackbarStore.getState().showSnackbar(error.response?.data?.message || "Failed to send message", "error");
       throw error;
     }
   },
 
   deleteContact: async (id) => {
-    set({ loading: true });
+    set({ mutationLoading: true });
     try {
       await axios.delete(`${API_URL}/delete/${id}`);
       set((state) => ({
         contacts: state.contacts.filter((contact) => contact._id !== id),
-        loading: false,
+        mutationLoading: false,
       }));
       useSnackbarStore.getState().showSnackbar("Message deleted successfully", "success");
     } catch (error) {
-      set({ loading: false });
+      set({ mutationLoading: false });
       useSnackbarStore.getState().showSnackbar(error.response?.data?.message || "Failed to delete message", "error");
     }
   },

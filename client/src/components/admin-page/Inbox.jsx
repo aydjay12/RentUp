@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Search, Trash, User, Mail as MailIcon, Calendar, Clock } from "lucide-react";
 import { useContactStore } from "../../store/useContactStore";
 import { Modal, Button, Text } from "@mantine/core";
@@ -8,7 +8,7 @@ import styles from "./Inbox.module.scss";
 import { PuffLoader } from "react-spinners";
 
 const Inbox = () => {
-  const { contacts, getAllContacts, deleteContact, loading, error } = useContactStore();
+  const { contacts, getAllContacts, deleteContact, loading, mutationLoading, error } = useContactStore();
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -70,8 +70,8 @@ const Inbox = () => {
     setSearchParams({ messageId: message._id });
   };
 
-  const confirmDeleteMessage = (messageId) => {
-    setMessageToDelete(messageId);
+  const confirmDeleteMessage = (mid) => {
+    setMessageToDelete(mid);
     setOpened(true);
   };
 
@@ -107,10 +107,19 @@ const Inbox = () => {
           Are you sure you want to delete this message? This action cannot be undone.
         </Text>
         <div className={styles.modalActions}>
-          <Button className={styles.confirmButton} onClick={handleDeleteMessage}>
-            Yes, Delete
+          <Button
+            className={`${styles.confirmButton} ${mutationLoading ? styles["remove-btn-no-hover"] : ""}`}
+            onClick={handleDeleteMessage}
+            disabled={mutationLoading}
+          >
+            {mutationLoading ? "Deleting..." : "Yes, Delete"}
           </Button>
-          <Button className={styles.cancelButton} variant="white" onClick={() => setOpened(false)}>
+          <Button
+            className={`${styles.cancelButton} ${mutationLoading ? styles["cancel-btn-no-hover"] : ""}`}
+            variant="white"
+            onClick={() => setOpened(false)}
+            disabled={mutationLoading}
+          >
             No, Cancel
           </Button>
         </div>
@@ -233,33 +242,42 @@ const Inbox = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {currentMessages.map((message) => (
-                      <tr key={message._id} onClick={() => handleSelectMessage(message)}>
-                        <td>
-                          <div className={styles.senderCell}>
-                            <div className={styles.tinyAvatar}>
-                              {message.name.charAt(0).toUpperCase()}
+                    <AnimatePresence mode="popLayout">
+                      {currentMessages.map((message) => (
+                        <motion.tr
+                          key={message._id}
+                          layout
+                          onClick={() => handleSelectMessage(message)}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0, x: -20, transition: { duration: 0.2 } }}
+                        >
+                          <td>
+                            <div className={styles.senderCell}>
+                              <div className={styles.tinyAvatar}>
+                                {message.name.charAt(0).toUpperCase()}
+                              </div>
+                              <span>{message.name}</span>
                             </div>
-                            <span>{message.name}</span>
-                          </div>
-                        </td>
-                        <td className={styles.subjectCell}>{message.subject}</td>
-                        <td className={styles.dateCell}>
-                          {new Date(message.createdAt).toLocaleDateString()}
-                        </td>
-                        <td style={{ textAlign: 'right' }}>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              confirmDeleteMessage(message._id);
-                            }}
-                            className={styles.rowDeleteBtn}
-                          >
-                            <Trash size={16} />
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
+                          </td>
+                          <td className={styles.subjectCell}>{message.subject}</td>
+                          <td className={styles.dateCell}>
+                            {new Date(message.createdAt).toLocaleDateString()}
+                          </td>
+                          <td style={{ textAlign: 'right' }}>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                confirmDeleteMessage(message._id);
+                              }}
+                              className={styles.rowDeleteBtn}
+                            >
+                              <Trash size={16} />
+                            </button>
+                          </td>
+                        </motion.tr>
+                      ))}
+                    </AnimatePresence>
                   </tbody>
                 </table>
 

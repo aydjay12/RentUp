@@ -5,7 +5,7 @@ import "../properties/properties.css";
 import { useAuthStore } from "../../store/authStore";
 import { useResidencyStore } from "../../store/useResidencyStore";
 import RecentCard from "../home/recent/RecentCard";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Back from "../common/Back";
 import img from "../images/favourites.jpg";
 import { Heart, AlertCircle } from "lucide-react";
@@ -104,17 +104,19 @@ const Favourites = () => {
                 </p>
               </motion.div>
             ) : filteredFavorites.length > 0 ? (
-              filteredFavorites.map((card, i) => (
-                <motion.div
-                  key={card._id}
-                  variants={{
-                    hidden: { opacity: 0, y: 20 },
-                    visible: { opacity: 1, y: 0 }
-                  }}
-                >
-                  <RecentCard card={card} />
-                </motion.div>
-              ))
+              <AnimatePresence mode='popLayout'>
+                {filteredFavorites.map((card, i) => (
+                  <motion.div
+                    key={card._id}
+                    layout
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8, transition: { duration: 0.2 } }}
+                  >
+                    <RecentCard card={card} />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
             ) : favoriteResidencies.length === 0 ? (
               <motion.div
                 className="no-results-box"

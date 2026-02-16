@@ -166,7 +166,7 @@ const ErrorCartUI = () => (
       className="shop-button" // Using same button class
       style={{ border: 'none', cursor: 'pointer' }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <div className="shop-button-svg" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
         <RefreshCw size={20} />
         Retry
       </div>

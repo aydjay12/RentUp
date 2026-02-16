@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Edit, Trash } from "lucide-react";
 import { useResidencyStore } from "../../store/useResidencyStore";
 import { PuffLoader } from "react-spinners";
@@ -15,6 +15,7 @@ const ResidenciesList = () => {
     loading,
     isError,
     error,
+    mutationLoading,
     updateResidency,
   } = useResidencyStore();
 
@@ -37,11 +38,15 @@ const ResidenciesList = () => {
     setOpened(true);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (selectedResidency) {
-      removeResidency(selectedResidency._id);
-      setOpened(false);
-      setSelectedResidency(null);
+      try {
+        await removeResidency(selectedResidency._id);
+        setOpened(false);
+        setSelectedResidency(null);
+      } catch (error) {
+        console.error("Error deleting residency:", error);
+      }
     }
   };
 
@@ -108,14 +113,16 @@ const ResidenciesList = () => {
           <Button
             color="red"
             onClick={confirmDelete}
-            className={styles.confirmButton}
+            className={`${styles.confirmButton} ${mutationLoading ? styles["remove-btn-no-hover"] : ""}`}
+            disabled={mutationLoading}
           >
-            Yes, Delete
+            {mutationLoading ? "Deleting..." : "Yes, Delete"}
           </Button>
           <Button
             variant="outline"
             onClick={() => setOpened(false)}
             className={styles.cancelButton}
+            disabled={mutationLoading}
           >
             No, Cancel
           </Button>
@@ -162,55 +169,63 @@ const ResidenciesList = () => {
               </tr>
             </thead>
             <tbody>
-              {residencies.map((residency) => (
-                <tr key={residency._id}>
-                  <td>
-                    <div className={styles.residencyCell}>
-                      <img
-                        className={styles.residencyImage}
-                        src={residency.image}
-                        alt={residency.title}
-                      />
-                      <div>
-                        <span>{residency.title}</span>
-                        <small>{residency.type}</small>
+              <AnimatePresence mode="popLayout">
+                {residencies.map((residency) => (
+                  <motion.tr
+                    key={residency._id}
+                    layout
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0, x: -30, transition: { duration: 0.2 } }}
+                  >
+                    <td>
+                      <div className={styles.residencyCell}>
+                        <img
+                          className={styles.residencyImage}
+                          src={residency.image}
+                          alt={residency.title}
+                        />
+                        <div>
+                          <span>{residency.title}</span>
+                          <small>{residency.type}</small>
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                  <td data-label="Location">
-                    {residency.city}, {residency.country}
-                  </td>
-                  <td data-label="Price" className={styles.price}>
-                    ${residency.price?.toLocaleString()}
-                  </td>
-                  <td data-label="Type">
-                    {residency.type}
-                  </td>
-                  <td data-label="Status">
-                    <span className={`${styles.statusBadge} ${styles[residency.status?.toLowerCase() || 'available']}`}>
-                      {residency.status || 'Available'}
-                    </span>
-                  </td>
-                  <td>
-                    <div className={styles.actions}>
-                      <button
-                        onClick={() => handleEditClick(residency)}
-                        className={`${styles.actionButton} ${styles.edit}`}
-                        title="Edit Residency"
-                      >
-                        <Edit size={18} />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteClick(residency)}
-                        className={`${styles.actionButton} ${styles.delete}`}
-                        title="Delete Residency"
-                      >
-                        <Trash size={18} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td data-label="Location">
+                      {residency.city}, {residency.country}
+                    </td>
+                    <td data-label="Price" className={styles.price}>
+                      ${residency.price?.toLocaleString()}
+                    </td>
+                    <td data-label="Type">
+                      {residency.type}
+                    </td>
+                    <td data-label="Status">
+                      <span className={`${styles.statusBadge} ${styles[residency.status?.toLowerCase() || 'available']}`}>
+                        {residency.status || 'Available'}
+                      </span>
+                    </td>
+                    <td>
+                      <div className={styles.actions}>
+                        <button
+                          onClick={() => handleEditClick(residency)}
+                          className={`${styles.actionButton} ${styles.edit}`}
+                          title="Edit Residency"
+                        >
+                          <Edit size={18} />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteClick(residency)}
+                          className={`${styles.actionButton} ${styles.delete}`}
+                          title="Delete Residency"
+                        >
+                          <Trash size={18} />
+                        </button>
+                      </div>
+                    </td>
+                  </motion.tr>
+                ))}
+              </AnimatePresence>
             </tbody>
           </table>
         </div>
