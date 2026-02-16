@@ -14,6 +14,7 @@ const PurchaseSuccessPage = () => {
   const { handleCheckoutSuccess } = usePaymentStore();
   const { clearCart, cartItems } = useCartStore(); // ✅ Get clearCart function
   const { isAuthenticated, checkAuth } = useAuthStore();
+  const processedRef = useRef(false);
 
   const API_URL =
     import.meta.env.MODE === "development"
@@ -30,6 +31,10 @@ const PurchaseSuccessPage = () => {
     const authToken = authTokenRaw ? decodeURIComponent(authTokenRaw) : null;
 
     async function restoreAndProceed() {
+      // Guard to prevent multiple executions (e.g. when isAuthenticated changes)
+      if (processedRef.current) return;
+      processedRef.current = true;
+
       if (!isAuthenticated && authToken) {
         try {
           console.log("Attempting to restore session with token length:", authToken.length);
@@ -55,6 +60,7 @@ const PurchaseSuccessPage = () => {
           return;
         }
       }
+
       if (sessionId) {
         handleCheckoutSuccess(sessionId)
           .then(() => clearCart())
