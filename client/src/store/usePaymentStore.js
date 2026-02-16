@@ -61,7 +61,7 @@ export const usePaymentStore = create((set) => ({
 
       if (response.data.success) {
         if (response.data.message === "Order already processed") {
-          useSnackbarStore.getState().showSnackbar("This order has already been processed.", "info");
+          useSnackbarStore.getState().showSnackbar("This order has already been processed.", "error");
         } else {
           useSnackbarStore.getState().showSnackbar("Payment processed successfully!", "success");
         }

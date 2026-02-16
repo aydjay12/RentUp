@@ -69,6 +69,7 @@ export const createCheckoutSession = async (req, res) => {
       metadata: {
         userId: req.userId.toString(),
         couponCode: couponCode || "",
+        subtotal: (totalAmount / 100).toString(), // Store subtotal before discounts
         residencies: JSON.stringify(
           residencies.map((r) => ({
             id: r._id,
@@ -124,14 +125,15 @@ export const checkoutSuccess = async (req, res) => {
 
       await newOrder.save();
 
-      // ✅ Grant coupons based on total amount
-      if (totalAmount >= 50000) {
-        // Grant BIG50K if not already granted
-        await createSpecificCoupon(session.metadata.userId, "BIG50K", 20, 50000);
-        // Also grant MID20K if not already granted
-        await createSpecificCoupon(session.metadata.userId, "MID20K", 10, 20000);
-      } else if (totalAmount >= 20000) {
-        await createSpecificCoupon(session.metadata.userId, "MID20K", 10, 20000);
+      // ✅ Grant coupons based on subtotal (before discounts)
+      const subtotal = parseFloat(session.metadata.subtotal);
+      if (subtotal >= 50000) {
+        // Grant BIG50K if not already granted/active
+        await createSpecificCoupon(session.metadata.userId, "BIG50K", 20);
+        // Also grant MID20K if not already granted/active
+        await createSpecificCoupon(session.metadata.userId, "MID20K", 10);
+      } else if (subtotal >= 20000) {
+        await createSpecificCoupon(session.metadata.userId, "MID20K", 10);
       }
 
       res.status(200).json({
@@ -151,19 +153,26 @@ export const checkoutSuccess = async (req, res) => {
   }
 };
 
-// ✅ Function to create a unique coupon per user and amount
-async function createSpecificCoupon(userId, couponCode, discountPercentage, minAmount) {
-  // Check if the user already has this coupon
+// ✅ Function to create or refresh a unique coupon per user
+async function createSpecificCoupon(userId, couponCode, discountPercentage) {
+  // Try to find an existing coupon (active or inactive)
   const existingCoupon = await Coupon.findOne({ userId, code: couponCode });
 
-  if (!existingCoupon) {
+  if (existingCoupon) {
+    // If it exists, refresh it: new expiration and make it active
+    existingCoupon.discountPercentage = discountPercentage;
+    existingCoupon.expirationDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+    existingCoupon.isActive = true;
+    await existingCoupon.save();
+  } else {
+    // If it doesn't exist, create a new one
     const newCoupon = new Coupon({
       code: couponCode,
       discountPercentage,
       expirationDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
       userId: userId,
+      isActive: true,
     });
-
     await newCoupon.save();
   }
 }
