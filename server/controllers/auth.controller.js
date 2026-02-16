@@ -306,7 +306,7 @@ export const restoreSession = async (req, res) => {
 
     console.log("User found, setting cookie...");
     // Set the cookie as in login
-    generateTokenAndSetCookie(res, user._id);
+    generateTokenAndSetCookie(res, user._id, user.rememberMe);
     res.status(200).json({ success: true, user });
   } catch (error) {
     console.error("Restore session error:", error.message);

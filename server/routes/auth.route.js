@@ -10,6 +10,7 @@ import {
   resendVerification,
   resetPassword,
   register,
+  restoreSession,
   toFav,
   updateProfile,
   uploadProfileImage,
@@ -22,6 +23,7 @@ const router = express.Router();
 // Export as a function that accepts upload
 export const authRoute = (upload) => {
   router.get("/check-auth", verifyToken, checkAuth);
+  router.post("/restore-session", restoreSession);
   router.post("/register", register);
   router.post("/login", login);
   router.post("/logout", logout);
