@@ -1,5 +1,5 @@
 import { ArrowRight, CheckCircle, HandHeart, OctagonX } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import Confetti from "react-confetti";
 import styles from "./PurchaseSuccessPage.module.scss";
@@ -14,30 +14,25 @@ const PurchaseSuccessPage = () => {
   const { handleCheckoutSuccess } = usePaymentStore();
   const { clearCart, cartItems } = useCartStore(); // ✅ Get clearCart function
   const { isAuthenticated, checkAuth } = useAuthStore();
-  const processedRef = useRef(false);
 
   const API_URL =
     import.meta.env.MODE === "development"
       ? "http://localhost:8000/api/auth"
       : "https://rent-up-api.vercel.app/api/auth";
 
+  const hasRun = useRef(false);
+
   useEffect(() => {
-    const sessionId = new URLSearchParams(window.location.search).get(
-      "session_id"
-    );
-    const authTokenRaw = new URLSearchParams(window.location.search).get(
-      "auth_token"
-    );
+    if (hasRun.current) return;
+
+    const sessionId = new URLSearchParams(window.location.search).get("session_id");
+    const authTokenRaw = new URLSearchParams(window.location.search).get("auth_token");
     const authToken = authTokenRaw ? decodeURIComponent(authTokenRaw) : null;
 
     async function restoreAndProceed() {
-      // Guard to prevent multiple executions (e.g. when isAuthenticated changes)
-      if (processedRef.current) return;
-      processedRef.current = true;
-
       if (!isAuthenticated && authToken) {
         try {
-          console.log("Attempting to restore session with token length:", authToken.length);
+          console.log("Attempting to restore session...");
           const response = await fetch(`${API_URL}/restore-session`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -45,34 +40,32 @@ const PurchaseSuccessPage = () => {
             body: JSON.stringify({ auth_token: authToken }),
           });
 
-          if (!response.ok) {
-            const errorData = await response.json();
-            console.error("Restore session failed:", errorData);
-            throw new Error(errorData.message || "Failed to restore session");
+          if (response.ok) {
+            await checkAuth();
           }
-
-          const data = await response.json();
-          console.log("Session restored successfully:", data);
-          await checkAuth();
         } catch (e) {
-          setError("Could not restore session after payment. Please sign in again.");
-          setIsProcessing(false);
-          return;
+          console.error("Session restoration failed:", e);
         }
       }
 
       if (sessionId) {
-        handleCheckoutSuccess(sessionId)
-          .then(() => clearCart())
-          .catch((err) => setError(err.message))
-          .finally(() => setIsProcessing(false));
+        hasRun.current = true; // Mark as started to prevent double calls
+        try {
+          await handleCheckoutSuccess(sessionId);
+          await clearCart();
+        } catch (err) {
+          setError(err.message);
+        } finally {
+          setIsProcessing(false);
+        }
       } else {
         setError("No session ID found in the URL");
         setIsProcessing(false);
       }
     }
+
     restoreAndProceed();
-  }, [handleCheckoutSuccess, clearCart, isAuthenticated, checkAuth]);
+  }, [handleCheckoutSuccess, clearCart, checkAuth]);
 
   if (isProcessing) {
     return (

@@ -61,10 +61,10 @@ export const createCheckoutSession = async (req, res) => {
       cancel_url: `${process.env.CLIENT_URL}/purchase-cancel`,
       discounts: coupon
         ? [
-            {
-              coupon: await createStripeCoupon(coupon.discountPercentage),
-            },
-          ]
+          {
+            coupon: await createStripeCoupon(coupon.discountPercentage),
+          },
+        ]
         : [],
       metadata: {
         userId: req.userId.toString(),
@@ -95,7 +95,7 @@ export const checkoutSuccess = async (req, res) => {
     // Check if an order with this sessionId already exists
     const existingOrder = await Order.findOne({ stripeSessionId: sessionId });
     if (existingOrder) {
-      return res.status(400).json({ message: "Order already processed" });
+      return res.status(200).json({ success: true, message: "Order already processed" });
     }
 
     if (session.payment_status === "paid") {
