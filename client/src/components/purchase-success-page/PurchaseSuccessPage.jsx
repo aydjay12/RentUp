@@ -51,11 +51,17 @@ const PurchaseSuccessPage = () => {
       if (sessionId) {
         hasRun.current = true; // Mark as started to prevent double calls
         try {
-          await handleCheckoutSuccess(sessionId);
-          await clearCart();
+          const result = await handleCheckoutSuccess(sessionId);
+          if (result.message === "Order already processed") {
+            setError("This order has already been completed. Your cart will not be cleared again.");
+            setIsProcessing(false);
+          } else {
+            // New success
+            await clearCart();
+            setIsProcessing(false);
+          }
         } catch (err) {
           setError(err.message);
-        } finally {
           setIsProcessing(false);
         }
       } else {

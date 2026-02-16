@@ -60,6 +60,12 @@ export const usePaymentStore = create((set) => ({
       });
 
       if (response.data.success) {
+        if (response.data.message === "Order already processed") {
+          useSnackbarStore.getState().showSnackbar("This order has already been processed.", "info");
+        } else {
+          useSnackbarStore.getState().showSnackbar("Payment processed successfully!", "success");
+        }
+        return response.data; // Return full response including potentially "already processed" message
       } else {
         throw new Error(response.data.message || "Server error");
       }
@@ -68,6 +74,7 @@ export const usePaymentStore = create((set) => ({
       useSnackbarStore.getState().showSnackbar(
         error.response?.data?.message || "Error processing order. Try again.", "error"
       );
+      throw error;
     } finally {
       set({ isProcessing: false }); // ✅ Reset state after execution
     }
