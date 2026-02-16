@@ -9,6 +9,29 @@ const API_URL =
 
 axios.defaults.withCredentials = true;
 
+// Token management for iOS/cross-origin compatibility
+const TOKEN_KEY = "auth_token";
+
+const getStoredToken = () => {
+  try {
+    return localStorage.getItem(TOKEN_KEY);
+  } catch (error) {
+    return null;
+  }
+};
+
+const setStoredToken = (token) => {
+  try {
+    if (token) {
+      localStorage.setItem(TOKEN_KEY, token);
+    } else {
+      localStorage.removeItem(TOKEN_KEY);
+    }
+  } catch (error) {
+    console.error("Failed to store token:", error);
+  }
+};
+
 export const useAuthStore = create((set, get) => ({
   user: null,
   isAuthenticated: false,
@@ -39,6 +62,10 @@ export const useAuthStore = create((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await axios.post(`${API_URL}/verify-email`, { email, code: token });
+      // Store token for iOS/cross-origin compatibility
+      if (response.data.token) {
+        setStoredToken(response.data.token);
+      }
       set({
         user: response.data.user,
         isAuthenticated: true,
@@ -71,6 +98,10 @@ export const useAuthStore = create((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await axios.post(`${API_URL}/login`, credentials);
+      // Store token for iOS/cross-origin compatibility
+      if (response.data.token) {
+        setStoredToken(response.data.token);
+      }
       set({
         user: response.data.user,
         isAuthenticated: true,
@@ -119,6 +150,8 @@ export const useAuthStore = create((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       await axios.post(`${API_URL}/logout`);
+      // Clear stored token
+      setStoredToken(null);
       set({
         user: null,
         isAuthenticated: false,

@@ -2,7 +2,16 @@ import jwt from "jsonwebtoken";
 import { User } from "../models/user.model.js"; // Import User model
 
 export const verifyToken = async (req, res, next) => {
-  const token = req.cookies.token;
+  // Check for token in cookie first, then Authorization header
+  let token = req.cookies.token;
+
+  // If no cookie token, check Authorization header (for iOS/cross-origin issues)
+  if (!token) {
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      token = authHeader.substring(7); // Remove "Bearer " prefix
+    }
+  }
 
   if (!token) {
     return res
