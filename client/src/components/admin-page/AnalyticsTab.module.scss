@@ -1,136 +1,132 @@
-$primary-color: #27ae60;
-$secondary-color: #ffeb3b;
-$background-color: #f9f9f9;
-$card-background: #ffffff;
-$highlight-background: #e8f5e9;
-$chart-background: rgba(0, 0, 0, 0.05);
-$card-shadow: rgba(0, 0, 0, 0.1);
-$transition-speed: 0.3s;
-
 .container {
-  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 2.5rem;
+  width: 100%;
+}
 
-  @media (max-width: 768px) {
-    padding: 30px 15px;
-    overflow: hidden;
-  }
-
-  .grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 20px;
-
-    @media (max-width: 768px) {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-    }
-  }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
 }
 
 .analyticsCard {
-  background: linear-gradient(135deg, $highlight-background, $card-background);
-  border-radius: 15px;
-  box-shadow: 0 4px 10px $card-shadow;
-  padding: 20px;
-  transition: transform $transition-speed ease, box-shadow $transition-speed ease;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
 
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+    border-color: #cbd5e1;
   }
 
-  &-header {
+  &Header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
   }
 
-  &-title {
-    font-size: 1rem;
-    color: $primary-color;
+  &Title {
+    font-size: 0.9rem;
     font-weight: 600;
-    margin-bottom: 5px;
+    color: #64748b;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
 
-  &-value {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #333;
+  &Value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
   }
 
-  &-icon {
-    font-size: 3rem;
-    color: rgba(0, 0, 0, 0.3);
-  }
-
-  .analyticsCardHeader {
+  &Icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
     display: flex;
-    justify-content: space-between;
+    align-items: center;
+    justify-content: center;
+    background: #f8fafc;
+    color: #27ae60;
+    transition: all 0.3s ease;
 
-    @media (max-width: 768px) {
-      align-items: center;
+    svg {
+      width: 24px;
+      height: 24px;
     }
+  }
 
-    p {
-      @media (max-width: 768px) {
-        font-size: 14px;
-      }
-    }
-
-    h3 {
-      font-size: 25px;
-      @media (max-width: 768px) {
-        font-size: 20px;
-      }
-    }
-
-    .analyticsCardIcon {
-      display: flex;
-      align-items: center;
-      height: 55px;
-      width: 55px;
-
-      @media (max-width: 768px) {
-        width: 50px;
-        height: 50px;
-      }
-
-      svg {
-        width: 100%;
-        height: 100%;
-      }
-    }
+  &:hover .analyticsCardIcon {
+    background: #27ae60;
+    color: #ffffff;
+    transform: rotate(-10deg);
   }
 }
 
 .chartContainer {
-  background: linear-gradient(135deg, $highlight-background, $card-background);
-  padding: 30px;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px $card-shadow;
-  transition: opacity $transition-speed ease-in-out;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 2rem;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   width: 100%;
-  overflow-x: auto; // Enable horizontal scrolling
-  -webkit-overflow-scrolling: touch; // Smooth scrolling on iOS
+}
+
+.chartTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 2rem;
+  font-family: 'Merriweather', serif;
+}
+
+.responsiveWrapper {
+  width: 100%;
+  height: 400px;
 
   @media (max-width: 768px) {
-    padding: 1em; // Reduced padding for mobile
-    overflow-x: scroll; // Ensure horizontal scrolling
-    white-space: nowrap; // Prevent wrapping
+    height: 300px;
+  }
+}
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
   }
 
-  // Ensure ResponsiveContainer takes full available width
-  .recharts-responsive-container {
-    min-width: 800px; // Match minWidth in JSX
-    width: 100% !important; // Override any inline styles
-    height: 400px !important;
-
-    @media (max-width: 768px) {
-      min-width: 800px; // Ensure wide enough for scrolling
-    }
+  .analyticsCard {
+    padding: 1.25rem;
   }
+
+  .chartContainer {
+    padding: 1.25rem 0;
+  }
+
+  .chartTitle {
+    margin-left: 1.25rem;
+  }
+}
+
+/* Custom Tooltip Styling */
+:global(.recharts-tooltip-cursor) {
+  stroke: #e2e8f0;
+}
+
+:global(.recharts-default-tooltip) {
+  border: none !important;
+  border-radius: 8px !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+  padding: 12px !important;
 }

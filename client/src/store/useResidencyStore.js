@@ -9,26 +9,29 @@ const API_URL =
     : "https://rent-up-api.vercel.app/api/residency";
 
 export const useResidencyStore = create((set, get) => ({
-  residencies: [], // Always initialize as array
+  residencies: [],
   recommendedResidencies: [],
   loading: false,
+  mutationLoading: false,
   hasShownError: false,
-  isError: false, // Add isError to track fetch failures
+  isError: false,
+  error: null,
 
   setResidencies: (residencies) =>
     set({ residencies: Array.isArray(residencies) ? residencies : [] }),
 
   fetchAllResidencies: async () => {
-    set({ loading: true, isError: false });
+    set({ loading: true, isError: false, error: null });
     try {
       const response = await axios.get(`${API_URL}/allresd`);
       const data = Array.isArray(response.data) ? response.data : [];
       set({ residencies: data, loading: false });
     } catch (error) {
       console.error("Error fetching residencies:", error);
-      set({ residencies: [], loading: false, isError: true }); // Reset to empty array on error
+      const errorMsg = error.response?.data?.message || "Failed to fetch residencies.";
+      set({ residencies: [], loading: false, isError: true, error: errorMsg });
       if (!get().hasShownError) {
-        useSnackbarStore.getState().showSnackbar("Failed to fetch residencies.", "error");
+        useSnackbarStore.getState().showSnackbar(errorMsg, "error");
         set({ hasShownError: true });
       }
     }
@@ -55,16 +58,16 @@ export const useResidencyStore = create((set, get) => ({
   },
 
   createResidency: async (data) => {
-    set({ loading: true });
+    set({ mutationLoading: true });
     try {
       const response = await axios.post(`${API_URL}/create`, data);
       set((state) => ({
         residencies: [...state.residencies, response.data.residency],
-        loading: false,
+        mutationLoading: false,
       }));
       useSnackbarStore.getState().showSnackbar("Residency created successfully", "success");
     } catch (error) {
-      set({ loading: false });
+      set({ mutationLoading: false });
       useSnackbarStore.getState().showSnackbar(
         error.response?.data?.message || "Failed to create residency", "error"
       );
@@ -73,18 +76,18 @@ export const useResidencyStore = create((set, get) => ({
   },
 
   removeResidency: async (id) => {
-    set({ loading: true });
+    set({ mutationLoading: true });
     try {
       await axios.delete(`${API_URL}/remove/${id}`);
       set((state) => ({
         residencies: state.residencies.filter(
           (residency) => residency._id !== id
         ),
-        loading: false,
+        mutationLoading: false,
       }));
       useSnackbarStore.getState().showSnackbar("Residency removed successfully", "success");
     } catch (error) {
-      set({ loading: false });
+      set({ mutationLoading: false });
       useSnackbarStore.getState().showSnackbar(
         error.response?.data?.message || "Failed to remove residency", "error"
       );
@@ -110,18 +113,18 @@ export const useResidencyStore = create((set, get) => ({
   },
 
   updateResidency: async (id, data) => {
-    set({ loading: true });
+    set({ mutationLoading: true });
     try {
       const response = await axios.put(`${API_URL}/update/${id}`, data);
       set((state) => ({
         residencies: state.residencies.map((residency) =>
           residency._id === id ? response.data.residency : residency
         ),
-        loading: false,
+        mutationLoading: false,
       }));
       useSnackbarStore.getState().showSnackbar("Residency updated successfully", "success");
     } catch (error) {
-      set({ loading: false });
+      set({ mutationLoading: false });
       useSnackbarStore.getState().showSnackbar(
         error.response?.data?.message || "Failed to update residency", "error"
       );

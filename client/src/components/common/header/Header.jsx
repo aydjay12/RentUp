@@ -50,7 +50,12 @@ const Header = () => {
                 whileTap={{ scale: 0.98 }}
                 transition={{ type: "spring", stiffness: 400, damping: 17 }}
               >
-                <NavLink to={list.path} className={({ isActive }) => isActive ? "active" : ""}>
+                <NavLink
+                  to={list.path}
+                  className={({ isActive }) =>
+                    isActive && !location.pathname.match(/^\/properties\/[a-zA-Z0-9]+$/) ? "active" : ""
+                  }
+                >
                   {list.text}
                 </NavLink>
               </motion.li>

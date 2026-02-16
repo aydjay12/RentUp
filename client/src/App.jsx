@@ -41,7 +41,6 @@ import PurchaseSuccessPage from "./components/purchase-success-page/PurchaseSucc
 import PurchaseCancelPage from "./components/purchase-cancel-page/PurchaseCancelPage";
 import AdminPage from "./components/admin-page/AdminPage";
 import { useCartStore } from "./store/useCartStore";
-import LayoutAdmin from "./components/admin-page/LayoutAdmin";
 import LayoutPurchaseStatus from "./components/cart-page/LayoutPurchaseStatus";
 import ProfilePage from "./components/profile-page/ProfilePage";
 import NotFound from "./components/pages/NotFound";
@@ -207,17 +206,16 @@ const App = () => {
                   }
                 />
               </Route>
-              <Route element={<LayoutAdmin />}>
-                <Route
-                  path="/admin-dashboard"
-                  element={
-                    <AdminProtectedRoute>
-                      <AdminPage />
-                    </AdminProtectedRoute>
-                  }
-                />
-              </Route>
             </Route>
+
+            <Route
+              path="/admin-dashboard/:tab?"
+              element={
+                <AdminProtectedRoute>
+                  <AdminPage />
+                </AdminProtectedRoute>
+              }
+            />
 
             <Route element={<LayoutAuth />}>
               <Route

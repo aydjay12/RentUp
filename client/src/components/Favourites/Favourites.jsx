@@ -8,6 +8,7 @@ import RecentCard from "../home/recent/RecentCard";
 import { motion } from "framer-motion";
 import Back from "../common/Back";
 import img from "../images/favourites.jpg";
+import { Heart, AlertCircle } from "lucide-react";
 
 const listVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -20,18 +21,24 @@ const listVariants = {
 
 const Favourites = () => {
   const { favorites, getAllFav } = useAuthStore();
-  const { residencies, fetchAllResidencies, loading } = useResidencyStore();
+  const { residencies, fetchAllResidencies, loading, isError } = useResidencyStore();
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
-    getAllFav(); // Fetch user's favorites
-    fetchAllResidencies(); // Fetch all residencies
+    getAllFav();
+    fetchAllResidencies();
   }, []);
+
+  useEffect(() => {
+    if (!loading) {
+      window.scrollTo(0, 0);
+    }
+  }, [loading]);
 
   if (loading) {
     return (
-      <div className="wrapper flexCenter" style={{ height: "60vh" }}>
-        <PuffLoader color="#27ae60" aria-label="puff-loading" />
+      <div className="wrapper flex-center" style={{ height: "85vh" }}>
+        <PuffLoader color="#27ae60" size={80} aria-label="puff-loading" />
       </div>
     );
   }
@@ -40,63 +47,101 @@ const Favourites = () => {
     (favorites || []).includes(property._id)
   );
 
+  const filteredFavorites = favoriteResidencies.filter((property) =>
+    [
+      property.title,
+      property.city,
+      property.country,
+      property.address,
+    ].some((field) =>
+      field?.toLowerCase().includes(filter.toLowerCase())
+    )
+  );
+
   return (
     <motion.div
+      className="properties-page"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 1 }}
     >
-      <section className="blog-out mb">
+      <section className="properties-hero">
         <Back
           name="Favourite Properties"
-          title="Your Favourite Properties"
+          title="Your Saved Properties"
           cover={img}
         />
       </section>
-      <div className="flexColCenter paddings innerWidth properties-container favorites-con">
-        <SearchBar filter={filter} setFilter={setFilter} />
-        <motion.div className="paddings flexCenter properties">
-          {favoriteResidencies.length > 0 ? (
-            favoriteResidencies
-              .filter((property) =>
-                [
-                  property.title,
-                  property.city,
-                  property.country,
-                  property.address,
-                ].some((field) =>
-                  field.toLowerCase().includes(filter.toLowerCase())
-                )
-              )
-              .map((card, i) => (
+
+      <section className="properties-main section">
+        <div className="container">
+          <div className="properties-search-wrapper">
+            <SearchBar filter={filter} setFilter={setFilter} />
+          </div>
+
+          <motion.div
+            className="properties-grid"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: { opacity: 0 },
+              visible: {
+                opacity: 1,
+                transition: { staggerChildren: 0.1 }
+              }
+            }}
+          >
+            {isError ? (
+              <motion.div
+                className="no-results-box"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <AlertCircle size={48} style={{ color: "#e74c3c", marginBottom: "1rem" }} />
+                <p style={{ color: "#e74c3c" }}>
+                  Error while fetching property data. Please try again later.
+                </p>
+              </motion.div>
+            ) : filteredFavorites.length > 0 ? (
+              filteredFavorites.map((card, i) => (
                 <motion.div
                   key={card._id}
-                  variants={listVariants}
-                  custom={i}
-                  initial="hidden"
-                  animate="visible"
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    visible: { opacity: 1, y: 0 }
+                  }}
                 >
                   <RecentCard card={card} />
                 </motion.div>
               ))
-          ) : (
-            <motion.div
-              className="no-favorites"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              style={{
-                fontSize: "1rem",
-                color: "#2d3954",
-                marginBottom: "4rem",
-                fontWeight: "600",
-              }}
-            >
-              No residency has been added to Favourites
-            </motion.div>
-          )}
-        </motion.div>
-      </div>
+            ) : favoriteResidencies.length === 0 ? (
+              <motion.div
+                className="no-results-box"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <Heart size={48} className="nothing-icon" />
+                <p>No properties have been added to your favourites yet.</p>
+                <p style={{ fontSize: "0.95rem", marginTop: "0.5rem", opacity: 0.8 }}>
+                  Start exploring and save properties you love!
+                </p>
+              </motion.div>
+            ) : (
+              <motion.div
+                className="no-results-box"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <Heart size={48} className="nothing-icon" />
+                <p>No favourite properties match your search criteria.</p>
+              </motion.div>
+            )}
+          </motion.div>
+        </div>
+      </section>
     </motion.div>
   );
 };

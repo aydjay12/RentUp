@@ -23,7 +23,7 @@ const PeopleAlsoBought = () => {
     <div className={styles["people-also-bought"]}>
       <h3>People also bought</h3>
       <div className={styles["grid-container"]}>
-        {recommendedResidencies.map((residency) => (
+        {recommendedResidencies.slice(0, 3).map((residency) => (
           <ResidencyCard key={residency._id} residency={residency} />
         ))}
       </div>

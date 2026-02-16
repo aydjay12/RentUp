@@ -1,6 +1,8 @@
 .cart-item {
-  border: 1px solid #e0e0e0; /* Light gray border */
-  background-color: #ffffff; /* White background */
+  border: 1px solid #e0e0e0;
+  /* Light gray border */
+  background-color: #ffffff;
+  /* White background */
   border-radius: 10px;
   padding: 16px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
@@ -10,7 +12,8 @@
   justify-content: space-between;
   gap: 16px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  @media (max-width: 768px){
+
+  @media (max-width: 768px) {
     flex-direction: column;
   }
 
@@ -36,7 +39,8 @@
   .cart-info {
     flex: 1;
     max-width: 50%;
-    @media (max-width: 768px){
+
+    @media (max-width: 768px) {
       max-width: 100%;
       text-align: center;
     }
@@ -44,19 +48,23 @@
     .cart-title {
       font-size: 16px;
       font-weight: 600;
-      color: #2d3954; /* Dark gray-blue */
+      color: #2d3954;
+      /* Dark gray-blue */
       transition: color 0.2s ease-in-out;
 
       &:hover {
-        color: #27ae60; /* Emerald Green */
+        color: #27ae60;
+        /* Emerald Green */
         text-decoration: underline;
       }
     }
 
     .cart-description {
       font-size: 13px;
-      color: black; /* Soft gray */
-      @media (max-width: 768px){
+      color: black;
+
+      /* Soft gray */
+      @media (max-width: 768px) {
         font-size: 12px;
       }
     }
@@ -80,6 +88,7 @@
       transition: background 0.2s;
       color: black;
       padding: 0 !important;
+
       &:hover {
         background-color: #4a5568;
       }
@@ -94,7 +103,8 @@
   .cart-price {
     font-size: 18px;
     font-weight: bold;
-    color: rgb(54, 54, 54); /* Emerald Green */
+    color: rgb(54, 54, 54);
+    /* Emerald Green */
     text-align: right;
   }
 
@@ -104,7 +114,8 @@
     gap: 12px;
 
     .remove-btn {
-      color: #ff6b6b; /* Soft red */
+      color: #ff6b6b;
+      /* Soft red */
       font-size: 14px;
       cursor: pointer;
       display: flex;
@@ -120,8 +131,8 @@
   }
 }
 
-.modalPopup{
-  header{
+.modalPopup {
+  header {
     box-shadow: none;
   }
 }
@@ -136,6 +147,7 @@
 .confirmButton {
   background-color: #e63946;
   color: white;
+
   &:hover {
     background-color: #d62839;
   }
@@ -144,7 +156,15 @@
 .cancelButton {
   border: 1px solid #ccc;
   color: #333;
+
   &:hover {
     background-color: #f1f1f1;
   }
+}
+
+.remove-btn-no-hover {
+  background-color: #ef4444 !important;
+  color: white !important;
+  pointer-events: none;
+  opacity: 0.7;
 }

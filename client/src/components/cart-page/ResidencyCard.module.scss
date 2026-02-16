@@ -3,8 +3,10 @@
   flex-direction: column;
   overflow: hidden;
   border-radius: 10px;
-  border: 1px solid #e0e0e0; /* Light gray border */
-  background-color: #ffffff; /* White background */
+  border: 1px solid #e0e0e0;
+  /* Light gray border */
+  background-color: #ffffff;
+  /* White background */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 
@@ -16,10 +18,12 @@
   .image-container {
     position: relative;
     margin: 16px;
-    height: 240px; /* Equivalent to h-60 */
+    height: 240px;
+    /* Equivalent to h-60 */
     border-radius: 10px;
     overflow: hidden;
-    @media (max-width: 768px){
+
+    @media (max-width: 768px) {
       height: 200px;
     }
 
@@ -40,18 +44,22 @@
   .content {
     padding: 20px;
     padding-top: 0;
-    color: #2d3954; /* Dark gray-blue text */
+    color: #2d3954;
+    /* Dark gray-blue text */
 
     h5 {
-      font-size: 1.25rem; /* text-xl */
+      font-size: 1.25rem;
+      /* text-xl */
       font-weight: 600;
       margin-bottom: 10px;
     }
 
     .price {
-      font-size: 1.75rem; /* text-3xl */
+      font-size: 1.75rem;
+      /* text-3xl */
       font-weight: bold;
-      color: #27ae60; /* Emerald green */
+      color: #27ae60;
+      /* Emerald green */
     }
   }
 
@@ -59,9 +67,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #27ae60; /* Emerald */
+    background-color: #27ae60;
+    /* Emerald */
     color: white;
-    font-size: 0.875rem; /* text-sm */
+    font-size: 0.875rem;
+    /* text-sm */
     font-weight: 500;
     padding: 10px 20px;
     border: none;
@@ -95,19 +105,23 @@
     border-radius: 4px;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
-    border: 2px solid transparent; /* Default border */
-    background: #27ae60; /* Default green */
+    border: 2px solid transparent;
+    /* Default border */
+    background: #27ae60;
+    /* Default green */
     color: white;
-  
+
     &:hover {
       opacity: 0.8;
     }
   }
-  
+
   .in-cart {
     background: white !important;
-    color: #27ae60 !important; /* Reddish text color */
-    border: 2px solid #27ae60 !important; /* Reddish border */
+    color: #27ae60 !important;
+    /* Reddish text color */
+    border: 2px solid #27ae60 !important;
+    /* Reddish border */
   }
-  
+
 }

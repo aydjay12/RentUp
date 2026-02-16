@@ -101,12 +101,12 @@ export const useCartStore = create((set, get) => ({
 
   removeFromCart: async (rid) => {
     try {
+      await axios.delete(`${API_URL}/remove/${rid}`);
       set((state) => ({
         cartItems: Array.isArray(state.cartItems)
           ? state.cartItems.filter((item) => item._id !== rid)
           : [],
       }));
-      await axios.delete(`${API_URL}/remove/${rid}`);
       get().calculateTotals();
       useSnackbarStore.getState().showSnackbar("Removed from cart", "success");
     } catch (error) {

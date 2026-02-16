@@ -78,8 +78,8 @@
 
 .card-actions {
   position: absolute;
-  top: 0.8rem;
-  right: 0.8rem;
+  top: 0.8rem !important;
+  right: 0.8rem !important;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;

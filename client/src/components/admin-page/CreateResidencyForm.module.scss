@@ -1,118 +1,102 @@
-@use "sass:color";
-$primary-color: #27ae60; // Soft green for main accents
-$secondary-color: #ffeb3b; // Yellow for highlights
-$background-color: #f9f9f9; // Soft light background color
-$form-background: #ffffff; // Form background color
-$highlight-background: #e8f5e9; // Light gradient for background of cards
-$input-background: #f3f4f6; // Soft input background color
-$shadow-color: rgba(0, 0, 0, 0.1); // Light shadow effect
-
-$transition-speed: 0.3s; // Smooth transition speed
-
 .createResidencyForm {
-  background: $form-background;
-  border-radius: 20px;
-  padding: 35px;
-  padding-bottom: 60px;
-  box-shadow: 0 4px 10px $shadow-color;
-  transition: transform $transition-speed ease, box-shadow $transition-speed ease;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 2.5rem;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 
-  @media(max-width: 768px) {
-    padding: 25px 15px;
-  }
-
-  &:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 10px 30px $shadow-color;
+  &.inModal {
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    padding-top: 0;
+    padding-bottom: 1rem;
+    background: transparent;
   }
 
   h2 {
+    font-family: 'Merriweather', serif;
     font-size: 1.5rem;
-    font-weight: bold;
-    color: $primary-color;
-
-    @media(max-width: 768px) {
-      font-size: 1.3rem;
-      text-align: center;
-    }
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 1rem;
   }
 
   form {
-    margin-top: 2em;
-
-    @media(max-width: 768px) {
-      padding: 0;
-    }
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
   }
 
   .inputContainer {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 1em;
-
-    &:nth-child(1),
-    &:nth-child(2),
-    &:nth-child(5) {
-      grid-template-columns: 1fr 1fr;
-    }
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
   }
 
   .formGroup {
-    margin-bottom: 30px;
-
-    @media(max-width: 768px) {
-      width: 100%;
-    }
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 
     label {
-      display: block;
-      font-size: 1rem;
-      color: $primary-color;
-      margin-bottom: 8px;
+      font-size: 0.85rem;
       font-weight: 600;
-
-      @media (max-width: 768px) {
-        font-size: 0.9rem;
-      }
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
     input,
     textarea,
     select {
-      width: 100%;
-      padding: 12px;
-      background-color: $input-background;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      color: #333;
+      padding: 0.875rem 1rem;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
       font-size: 1rem;
-      transition: all $transition-speed ease;
-      margin-top: 5px;
+      color: #1e293b;
+      font-family: 'Outfit', sans-serif;
+      transition: all 0.2s;
 
       &:focus {
-        border-color: $primary-color;
+        background: #ffffff;
+        border-color: #27ae60;
+        box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
         outline: none;
+      }
+
+      &::placeholder {
+        color: #94a3b8;
       }
     }
 
-    select {
-      padding: 12px;
-    }
-
     textarea {
+      min-height: 120px;
       resize: vertical;
     }
   }
 
   .uploadSection {
-    div {
-      display: flex;
-      align-items: center;
+    background: #f8fafc;
+    border: 2px dashed #e2e8f0;
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.2s;
+
+    &:hover {
+      border-color: #27ae60;
+      background: #effaf3;
     }
 
-    .errorMessage {
-      margin-top: .5em;
-      color: red;
+    div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
     }
 
     input {
@@ -120,61 +104,87 @@ $transition-speed: 0.3s; // Smooth transition speed
     }
 
     label {
-      background-color: $primary-color;
-      color: #fff;
-      padding: 10px 20px;
-      border-radius: 8px;
+      background: #ffffff;
+      color: #1e293b;
+      padding: 0.75rem 1.5rem;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      font-weight: 600;
       cursor: pointer;
-      transition: background-color $transition-speed ease;
       display: flex;
-      gap: 0.5em;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 
       &:hover {
-        background-color: color.adjust($primary-color, $lightness: 10%);
+        background: #f8fafc;
+        border-color: #cbd5e1;
       }
 
-      @media (max-width: 768px) {
-        font-size: 0.9rem;
-        padding: .7em;
+      svg {
+        color: #27ae60;
       }
     }
 
     .uploadedImage {
-      margin-left: 15px;
+      color: #27ae60;
+      font-weight: 600;
       font-size: 0.9rem;
-      color: #888;
+    }
 
-      @media (max-width: 768px) {
-        font-size: .8rem;
-        margin-left: 8px;
-      }
+    .errorMessage {
+      color: #ef4444;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-top: 0.5rem;
     }
   }
 
   .submitButton {
-    width: 100%;
-    background-color: $primary-color;
-    color: #fff;
-    padding: 14px;
-    border-radius: 8px;
+    background: #27ae60;
+    color: #ffffff;
+    padding: 1rem;
+    border-radius: 10px;
+    border: none;
     font-size: 1rem;
-    font-weight: bold;
+    font-weight: 700;
     cursor: pointer;
-    transition: background-color $transition-speed ease, transform $transition-speed ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5em;
-    margin-top: 4em;
+    gap: 0.75rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px -1px rgba(39, 174, 96, 0.2);
 
-    &:hover {
-      background-color: color.adjust($primary-color, $lightness: 10%);
-      transform: scale(1.05);
+    &:hover:not(:disabled) {
+      background: #219150;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px -3px rgba(39, 174, 96, 0.3);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
     }
 
     &:disabled {
-      background-color: #ddd;
+      background: #94a3b8;
       cursor: not-allowed;
+      box-shadow: none;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .createResidencyForm {
+    padding: 1.5rem;
+
+    .inputContainer {
+      grid-template-columns: 1fr;
+    }
+
+    h2 {
+      font-size: 1.25rem;
     }
   }
 }

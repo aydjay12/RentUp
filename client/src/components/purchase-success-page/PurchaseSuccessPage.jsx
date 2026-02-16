@@ -18,7 +18,7 @@ const PurchaseSuccessPage = () => {
   const API_URL =
     import.meta.env.MODE === "development"
       ? "http://localhost:8000/api/auth"
-      : "https://rentupgold.onrender.com/api/auth";
+      : "https://rent-up-api.vercel.app/api/auth";
 
   useEffect(() => {
     const sessionId = new URLSearchParams(window.location.search).get(
@@ -39,13 +39,13 @@ const PurchaseSuccessPage = () => {
             credentials: "include",
             body: JSON.stringify({ auth_token: authToken }),
           });
-          
+
           if (!response.ok) {
             const errorData = await response.json();
             console.error("Restore session failed:", errorData);
             throw new Error(errorData.message || "Failed to restore session");
           }
-          
+
           const data = await response.json();
           console.log("Session restored successfully:", data);
           await checkAuth();
@@ -70,7 +70,7 @@ const PurchaseSuccessPage = () => {
 
   if (isProcessing) {
     return (
-      <div className="wrapper flexCenter" style={{ height: "60vh" }}>
+      <div className="wrapper flexCenter" style={{ height: "85vh" }}>
         <PuffLoader color="#27ae60" aria-label="puff-loading" />
       </div>
     );

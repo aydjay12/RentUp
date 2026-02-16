@@ -20,7 +20,7 @@ const cityToCountryMap = {
   Jersey: "US",
 };
 
-const CreateResidencyForm = ({ residency, onSave, isEditMode }) => {
+const CreateResidencyForm = ({ residency, onSave, isEditMode, inModal }) => {
   const [newResidency, setNewResidency] = useState({
     title: "",
     status: "",
@@ -37,6 +37,7 @@ const CreateResidencyForm = ({ residency, onSave, isEditMode }) => {
   });
 
   const [imageError, setImageError] = useState(false); // New state for image validation
+  const [imageChanged, setImageChanged] = useState(false); // Track if image was changed during edit
 
   useEffect(() => {
     if (isEditMode && residency) {
@@ -57,7 +58,7 @@ const CreateResidencyForm = ({ residency, onSave, isEditMode }) => {
     }
   }, [residency, isEditMode]);
 
-  const { createResidency, loading } = useResidencyStore();
+  const { createResidency, mutationLoading } = useResidencyStore();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -99,6 +100,7 @@ const CreateResidencyForm = ({ residency, onSave, isEditMode }) => {
         type: "",
         image: "",
       });
+      setImageChanged(false);
     } catch (error) {
       console.error("Error processing residency:", error);
     }
@@ -120,6 +122,7 @@ const CreateResidencyForm = ({ residency, onSave, isEditMode }) => {
       reader.onloadend = () => {
         setNewResidency((prev) => ({ ...prev, image: reader.result }));
         setImageError(false); // Clear error when an image is selected
+        setImageChanged(true); // Mark as changed
       };
       reader.readAsDataURL(file);
     }
@@ -127,29 +130,30 @@ const CreateResidencyForm = ({ residency, onSave, isEditMode }) => {
 
   return (
     <motion.div
-      className={styles.createResidencyForm}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8 }}
+      className={`${styles.createResidencyForm} ${inModal ? styles.inModal : ""}`}
+      initial={{ opacity: 0, scale: 0.98 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.4 }}
     >
-      <h2>{isEditMode ? "" : "Create New Residency"}</h2>
+      {!isEditMode && <h2>Property Details</h2>}
 
       <form onSubmit={handleSubmit}>
-        {/* Residency Details */}
+        {/* Core Information */}
         <div className={styles.inputContainer}>
           <div className={styles.formGroup}>
-            <label htmlFor="title">Name</label>
+            <label htmlFor="title">Property Title</label>
             <input
               type="text"
               id="title"
               name="title"
+              placeholder="e.g. Modern Villa with Pool"
               value={newResidency.title}
               onChange={handleInputChange}
               required
             />
           </div>
           <div className={styles.formGroup}>
-            <label htmlFor="status">Status</label>
+            <label htmlFor="status">Listing Status</label>
             <select
               id="status"
               name="status"
@@ -164,14 +168,15 @@ const CreateResidencyForm = ({ residency, onSave, isEditMode }) => {
           </div>
         </div>
 
-        {/* Address Section */}
+        {/* Location Information */}
         <div className={styles.inputContainer}>
           <div className={styles.formGroup}>
-            <label htmlFor="address">Address</label>
+            <label htmlFor="address">Full Address</label>
             <input
               type="text"
               id="address"
               name="address"
+              placeholder="123 Real Estate St."
               value={newResidency.address}
               onChange={handleInputChange}
               required
@@ -196,20 +201,20 @@ const CreateResidencyForm = ({ residency, onSave, isEditMode }) => {
           </div>
         </div>
 
-        {/* Description */}
+        {/* Property Description */}
         <div className={styles.formGroup}>
-          <label htmlFor="description">Description</label>
+          <label htmlFor="description">Detailed Description</label>
           <textarea
             id="description"
             name="description"
+            placeholder="Tell us about the property features, neighborhood, etc."
             value={newResidency.description}
             onChange={handleInputChange}
-            rows="6"
             required
           />
         </div>
 
-        {/* Features */}
+        {/* Facilities Section */}
         <div className={styles.inputContainer}>
           <div className={styles.formGroup}>
             <label htmlFor="bathrooms">Bathrooms</label>
@@ -217,17 +222,19 @@ const CreateResidencyForm = ({ residency, onSave, isEditMode }) => {
               type="number"
               id="bathrooms"
               name="bathrooms"
+              min="0"
               value={newResidency.bathrooms}
               onChange={handleInputChange}
               required
             />
           </div>
           <div className={styles.formGroup}>
-            <label htmlFor="parkings">Parkings</label>
+            <label htmlFor="parkings">Parking Spaces</label>
             <input
               type="number"
               id="parkings"
               name="parkings"
+              min="0"
               value={newResidency.parkings}
               onChange={handleInputChange}
               required
@@ -239,6 +246,7 @@ const CreateResidencyForm = ({ residency, onSave, isEditMode }) => {
               type="number"
               id="bedrooms"
               name="bedrooms"
+              min="0"
               value={newResidency.bedrooms}
               onChange={handleInputChange}
               required
@@ -246,10 +254,10 @@ const CreateResidencyForm = ({ residency, onSave, isEditMode }) => {
           </div>
         </div>
 
-        {/* Price & Type */}
+        {/* Pricing & Category */}
         <div className={styles.inputContainer}>
           <div className={styles.formGroup}>
-            <label htmlFor="type">Type</label>
+            <label htmlFor="type">Property Type</label>
             <select
               id="type"
               name="type"
@@ -257,7 +265,7 @@ const CreateResidencyForm = ({ residency, onSave, isEditMode }) => {
               onChange={handleInputChange}
               required
             >
-              <option value="">Select a Type</option>
+              <option value="">Select Category</option>
               {residencyTypes.map((type) => (
                 <option key={type} value={type}>
                   {type}
@@ -266,11 +274,12 @@ const CreateResidencyForm = ({ residency, onSave, isEditMode }) => {
             </select>
           </div>
           <div className={styles.formGroup}>
-            <label htmlFor="price">Price</label>
+            <label htmlFor="price">Price ($)</label>
             <input
               type="number"
               id="price"
               name="price"
+              placeholder="0.00"
               value={newResidency.price}
               onChange={handleInputChange}
               step="0.01"
@@ -279,7 +288,7 @@ const CreateResidencyForm = ({ residency, onSave, isEditMode }) => {
           </div>
         </div>
 
-        {/* Image Upload */}
+        {/* Media Upload */}
         <div className={styles.uploadSection}>
           <div>
             <input
@@ -289,29 +298,28 @@ const CreateResidencyForm = ({ residency, onSave, isEditMode }) => {
               onChange={handleImageChange}
             />
             <label htmlFor="image">
-              <Upload className="h-5 w-5 inline-block mr-2" />
-              Upload Image
+              <Upload size={20} />
+              {newResidency.image ? "Change Property Image" : "Upload Property Image"}
             </label>
             {newResidency.image && (
-              <span className={styles.uploadedImage}>Image uploaded</span>
+              <span className={styles.uploadedImage}>
+                <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                  ✓ {isEditMode && imageChanged ? "Image changed successfully" : "Image selected successfully"}
+                </motion.span>
+              </span>
             )}
+            {!newResidency.image && <p style={{ color: '#94a3b8', fontSize: '0.85rem' }}>PNG, JPG or JPEG (Max. 5MB)</p>}
           </div>
-          {imageError && <p className={styles.errorMessage}>Image Required</p>}
+          {imageError && <p className={styles.errorMessage}>Please upload a property image to continue</p>}
         </div>
 
-        {/* Submit Button */}
-        <button type="submit" className={styles.submitButton}>
-          {loading ? (
-            <>
-              <Loader
-                className="mr-2 h-5 w-5 animate-spin"
-                aria-hidden="true"
-              />
-            </>
+        {/* Form Actions */}
+        <button type="submit" className={styles.submitButton} disabled={mutationLoading}>
+          {mutationLoading ? (
+            <Loader className="animate-spin" size={20} />
           ) : (
             <>
-              <PlusCircle />
-              {isEditMode ? "Save Changes" : "Create Residency"}
+              {isEditMode ? "Save Changes" : <><PlusCircle size={20} /> Create Residency</>}
             </>
           )}
         </button>
