@@ -67,19 +67,19 @@ export const useCartStore = create((set, get) => ({
       });
       get().calculateTotals();
     } catch (error) {
-      set({ cartItems: [], loading: false, isError: true });
-      // Error handling moved to CartPage.jsx
+      // If unauthorized, just clear cart and don't show error UI
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        set({ cartItems: [], loading: false, isError: false });
+      } else {
+        set({ cartItems: [], loading: false, isError: true });
+      }
     }
   },
 
   clearCart: async () => {
     try {
       await axios.delete(`${API_URL}/clear`);
-      set({ cartItems: [], coupon: null, total: 0, subtotal: 0 });
-      if (!get().hasShownError) {
-        // useSnackbarStore.getState().showSnackbar("Cart cleared successfully", "success");
-        set({ hasShownError: true });
-      }
+      set({ cartItems: [], coupon: null, total: 0, subtotal: 0, isError: false });
     } catch (error) {
       if (!get().hasShownError) {
         useSnackbarStore.getState().showSnackbar("Failed to clear cart", "error");
@@ -90,12 +90,9 @@ export const useCartStore = create((set, get) => ({
 
   addToCart: async (rid) => {
     try {
-      const response = await axios.post(`${API_URL}/add/${rid}`);
-      const cartData = Array.isArray(response.data.cartItems)
-        ? response.data.cartItems
-        : [];
-      set({ cartItems: cartData });
+      await axios.post(`${API_URL}/add/${rid}`);
       useSnackbarStore.getState().showSnackbar("Added to cart", "success");
+      await get().fetchCart({ skipGlobalLoading: true });
     } catch (error) {
       useSnackbarStore.getState().showSnackbar(error.response?.data?.message || "Error adding to cart", "error");
     }
@@ -104,15 +101,9 @@ export const useCartStore = create((set, get) => ({
   removeFromCart: async (rid) => {
     try {
       await axios.delete(`${API_URL}/remove/${rid}`);
-      set((state) => ({
-        cartItems: Array.isArray(state.cartItems)
-          ? state.cartItems.filter((item) => item._id !== rid)
-          : [],
-      }));
-      get().calculateTotals();
       useSnackbarStore.getState().showSnackbar("Removed from cart", "success");
+      await get().fetchCart({ skipGlobalLoading: true });
     } catch (error) {
-      await get().fetchCart();
       useSnackbarStore.getState().showSnackbar(error.response?.data?.message || "Error removing from cart", "error");
     }
   },
@@ -134,11 +125,11 @@ export const useCartStore = create((set, get) => ({
     }
 
     try {
-      const response = await axios.put(`${API_URL}/${rid}`, { quantity });
+      await axios.put(`${API_URL}/${rid}`, { quantity });
       set((state) => ({
         cartItems: Array.isArray(state.cartItems)
           ? state.cartItems.map((item) =>
-            item._id === rid ? { ...item, quantity } : item
+            (item && item._id === rid) ? { ...item, quantity } : item
           )
           : [],
       }));
@@ -152,7 +143,10 @@ export const useCartStore = create((set, get) => ({
     const { cartItems, coupon, isCouponApplied } = get();
     const itemsArray = Array.isArray(cartItems) ? cartItems : [];
     const subtotal = itemsArray.reduce(
-      (sum, item) => sum + (item.price || 0) * (item.quantity || 1),
+      (sum, item) => {
+        if (!item) return sum;
+        return sum + (item.price || 0) * (item.quantity || 1);
+      },
       0
     );
     let total = subtotal;

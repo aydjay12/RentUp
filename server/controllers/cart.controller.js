@@ -81,7 +81,16 @@ export const getCartResidencies = asyncHandler(async (req, res) => {
     const user = await User.findById(userId).populate("cartItems.residency");
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    res.json(user.cartItems.map(item => item.residency));
+    // Filter out items where residency is null (e.g. residency was deleted)
+    // and map to include quantity if needed (though currently frontend mostly uses residency props)
+    const cartItems = user.cartItems
+      .filter(item => item.residency !== null)
+      .map(item => ({
+        ...item.residency.toObject(),
+        quantity: item.quantity
+      }));
+
+    res.json(cartItems);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
