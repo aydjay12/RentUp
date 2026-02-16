@@ -13,7 +13,7 @@ export const useAnalyticsStore = create((set, get) => ({
     set({ loading: true, error: null });
 
     try {
-      const response = await axiosInstance.get("/dashboard-stats");
+      const response = await axiosInstance.get("/analytics");
       const { analyticsData, dailySalesData } = response.data;
 
       set({
@@ -25,19 +25,18 @@ export const useAnalyticsStore = create((set, get) => ({
         },
         dailySalesData: dailySalesData || [],
         loading: false,
-        hasShownError: false,
+        hasShownError: false, // ✅ Reset error flag on success
       });
     } catch (error) {
       console.error("Error fetching analytics data:", error);
-      const errorMessage = error.response?.data?.message || error.message || "Failed to fetch analytics data.";
 
       // ✅ Show toast only if it hasn't been shown yet
       if (!get().hasShownError) {
-        toast.error(errorMessage);
-        set({ hasShownError: true });
+        toast.error("Failed to fetch analytics data.");
+        set({ hasShownError: true }); // ✅ Mark error as shown
       }
 
-      set({ error: errorMessage, loading: false });
+      set({ error: error.message, loading: false });
     }
   },
 }));
