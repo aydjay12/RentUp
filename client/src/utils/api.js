@@ -1,9 +1,5 @@
-import axios from "axios";
+import api from "../lib/axios";
 
-export const api = axios.create({
-  baseURL: import.meta.env.MODE === "development"
-    ? "http://localhost:8000/api"
-    : "https://rent-up-api.vercel.app/api",
-});
+export { api };
 
-export default axios;
+export default api;

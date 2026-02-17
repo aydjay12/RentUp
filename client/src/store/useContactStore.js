@@ -1,11 +1,6 @@
 import { create } from "zustand";
-import axios from "axios";
+import axiosInstance from "../lib/axios";
 import useSnackbarStore from "./useSnackbarStore";
-
-const API_URL =
-  import.meta.env.MODE === "development"
-    ? "http://localhost:8000/api/contact"
-    : "https://rent-up-api.vercel.app/api/contact";
 
 export const useContactStore = create((set, get) => ({
   contacts: [],
@@ -19,7 +14,7 @@ export const useContactStore = create((set, get) => ({
   getAllContacts: async () => {
     set({ loading: true });
     try {
-      const response = await axios.get(`${API_URL}/all`);
+      const response = await axiosInstance.get("/contact/all");
       set({ contacts: response.data, loading: false });
     } catch (error) {
       set({ loading: false });
@@ -36,7 +31,7 @@ export const useContactStore = create((set, get) => ({
   submitContactForm: async (formData) => {
     set({ mutationLoading: true });
     try {
-      await axios.post(`${API_URL}/submit`, formData);
+      await axiosInstance.post("/contact/submit", formData);
       set({ mutationLoading: false });
       useSnackbarStore.getState().showSnackbar("Message sent successfully!", "success");
     } catch (error) {
@@ -49,7 +44,7 @@ export const useContactStore = create((set, get) => ({
   deleteContact: async (id) => {
     set({ mutationLoading: true });
     try {
-      await axios.delete(`${API_URL}/delete/${id}`);
+      await axiosInstance.delete(`/contact/delete/${id}`);
       set((state) => ({
         contacts: state.contacts.filter((contact) => contact._id !== id),
         mutationLoading: false,

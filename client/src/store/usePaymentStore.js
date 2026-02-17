@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import axios from "axios";
+import axiosInstance from "../lib/axios";
 import useSnackbarStore from "./useSnackbarStore";
 import { loadStripe } from "@stripe/stripe-js";
 import { useCartStore } from "./useCartStore";
@@ -8,10 +8,7 @@ const stripePromise = loadStripe(
   "pk_test_51QpTLTB17munGA210Wnudrt8Qmlqr6DN9BM4SMhyM4vbaln2XZm8y8RUEm0xcwOF7mJo4wH49gJzD82ElbhTYj8S00X17C97tq"
 );
 
-const API_URL =
-  import.meta.env.MODE === "development"
-    ? "http://localhost:8000/api/payments"
-    : "https://rent-up-api.vercel.app/api/payments";
+const API_URL = "/payments"; // Relative to baseURL in axiosInstance
 
 export const usePaymentStore = create((set) => ({
   isProcessing: false,
@@ -29,7 +26,7 @@ export const usePaymentStore = create((set) => ({
       const { isCouponApplied } = useCartStore.getState();
       const couponCode = isCouponApplied && coupon ? coupon.code : null;
 
-      const response = await axios.post(`${API_URL}/create-checkout-session`, {
+      const response = await axiosInstance.post(`${API_URL}/create-checkout-session`, {
         residencies: cartItems,
         couponCode, // ✅ Only send if applied
       });
@@ -55,7 +52,7 @@ export const usePaymentStore = create((set) => ({
     set({ isProcessing: true });
 
     try {
-      const response = await axios.post(`${API_URL}/checkout-success`, {
+      const response = await axiosInstance.post(`${API_URL}/checkout-success`, {
         sessionId,
       });
 

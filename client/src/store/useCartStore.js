@@ -1,17 +1,6 @@
-// useCartStore.js
 import { create } from "zustand";
-import axios from "axios";
+import axiosInstance from "../lib/axios";
 import useSnackbarStore from "./useSnackbarStore";
-
-const API_URL =
-  import.meta.env.MODE === "development"
-    ? "http://localhost:8000/api/cart"
-    : "https://rent-up-api.vercel.app/api/cart";
-
-const COUPON_URL =
-  import.meta.env.MODE === "development"
-    ? "http://localhost:8000/api/coupons"
-    : "https://rent-up-api.vercel.app/api/coupons";
 
 export const useCartStore = create((set, get) => ({
   cartItems: [], // Initial empty array
@@ -26,7 +15,7 @@ export const useCartStore = create((set, get) => ({
 
   getMyCoupon: async () => {
     try {
-      const response = await axios.get(`${COUPON_URL}`);
+      const response = await axiosInstance.get("/coupons");
       set({
         availableCoupons: Array.isArray(response.data) ? response.data : [],
       });
@@ -37,7 +26,7 @@ export const useCartStore = create((set, get) => ({
 
   applyCoupon: async (code) => {
     try {
-      const response = await axios.post(`${COUPON_URL}/validate`, { code });
+      const response = await axiosInstance.post("/coupons/validate", { code });
       set({ coupon: response.data, isCouponApplied: true });
       get().calculateTotals();
       useSnackbarStore.getState().showSnackbar("Coupon applied successfully", "success");
@@ -57,7 +46,7 @@ export const useCartStore = create((set, get) => ({
       if (!options.skipGlobalLoading) {
         set({ loading: true });
       }
-      const response = await axios.get(`${API_URL}/all`);
+      const response = await axiosInstance.get("/cart/all");
       const cartData = Array.isArray(response.data) ? response.data : [];
       set({
         cartItems: cartData,
@@ -78,7 +67,7 @@ export const useCartStore = create((set, get) => ({
 
   clearCart: async () => {
     try {
-      await axios.delete(`${API_URL}/clear`);
+      await axiosInstance.delete("/cart/clear");
       set({ cartItems: [], coupon: null, total: 0, subtotal: 0, isError: false });
     } catch (error) {
       if (!get().hasShownError) {
@@ -90,7 +79,7 @@ export const useCartStore = create((set, get) => ({
 
   addToCart: async (rid) => {
     try {
-      await axios.post(`${API_URL}/add/${rid}`);
+      await axiosInstance.post(`/cart/add/${rid}`);
       useSnackbarStore.getState().showSnackbar("Added to cart", "success");
       await get().fetchCart({ skipGlobalLoading: true });
     } catch (error) {
@@ -100,7 +89,7 @@ export const useCartStore = create((set, get) => ({
 
   removeFromCart: async (rid) => {
     try {
-      await axios.delete(`${API_URL}/remove/${rid}`);
+      await axiosInstance.delete(`/cart/remove/${rid}`);
       useSnackbarStore.getState().showSnackbar("Removed from cart", "success");
       await get().fetchCart({ skipGlobalLoading: true });
     } catch (error) {
@@ -110,7 +99,7 @@ export const useCartStore = create((set, get) => ({
 
   toggleCart: async (rid, options = {}) => {
     try {
-      const response = await axios.post(`${API_URL}/toggle/${rid}`);
+      const response = await axiosInstance.post(`/cart/toggle/${rid}`);
       useSnackbarStore.getState().showSnackbar(response.data.message, "success");
       await get().fetchCart(options);
     } catch (error) {
@@ -125,7 +114,7 @@ export const useCartStore = create((set, get) => ({
     }
 
     try {
-      await axios.put(`${API_URL}/${rid}`, { quantity });
+      await axiosInstance.put(`/cart/${rid}`, { quantity });
       set((state) => ({
         cartItems: Array.isArray(state.cartItems)
           ? state.cartItems.map((item) =>

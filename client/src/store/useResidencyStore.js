@@ -1,12 +1,6 @@
-// useResidencyStore.js
 import { create } from "zustand";
-import axios from "axios";
+import axiosInstance from "../lib/axios";
 import useSnackbarStore from "./useSnackbarStore";
-
-const API_URL =
-  import.meta.env.MODE === "development"
-    ? "http://localhost:8000/api/residency"
-    : "https://rent-up-api.vercel.app/api/residency";
 
 export const useResidencyStore = create((set, get) => ({
   residencies: [],
@@ -23,7 +17,7 @@ export const useResidencyStore = create((set, get) => ({
   fetchAllResidencies: async () => {
     set({ loading: true, isError: false, error: null });
     try {
-      const response = await axios.get(`${API_URL}/allresd`);
+      const response = await axiosInstance.get("/residency/allresd");
       const data = Array.isArray(response.data) ? response.data : [];
       set({ residencies: data, loading: false });
     } catch (error) {
@@ -46,7 +40,7 @@ export const useResidencyStore = create((set, get) => ({
 
     set({ loading: true });
     try {
-      const response = await axios.get(`${API_URL}/${id}`);
+      const response = await axiosInstance.get(`/residency/${id}`);
       set({ loading: false });
       return response.data;
     } catch (error) {
@@ -60,7 +54,7 @@ export const useResidencyStore = create((set, get) => ({
   createResidency: async (data) => {
     set({ mutationLoading: true });
     try {
-      const response = await axios.post(`${API_URL}/create`, data);
+      const response = await axiosInstance.post("/residency/create", data);
       set((state) => ({
         residencies: [...state.residencies, response.data.residency],
         mutationLoading: false,
@@ -78,7 +72,7 @@ export const useResidencyStore = create((set, get) => ({
   removeResidency: async (id) => {
     set({ mutationLoading: true });
     try {
-      await axios.delete(`${API_URL}/remove/${id}`);
+      await axiosInstance.delete(`/residency/remove/${id}`);
       set((state) => ({
         residencies: state.residencies.filter(
           (residency) => residency._id !== id
@@ -98,7 +92,7 @@ export const useResidencyStore = create((set, get) => ({
   fetchRecommendations: async () => {
     set({ loading: true });
     try {
-      const response = await axios.get(`${API_URL}/recommendations`);
+      const response = await axiosInstance.get("/residency/recommendations");
       set({
         recommendedResidencies: Array.isArray(response.data)
           ? response.data
@@ -115,7 +109,7 @@ export const useResidencyStore = create((set, get) => ({
   updateResidency: async (id, data) => {
     set({ mutationLoading: true });
     try {
-      const response = await axios.put(`${API_URL}/update/${id}`, data);
+      const response = await axiosInstance.put(`/residency/update/${id}`, data);
       set((state) => ({
         residencies: state.residencies.map((residency) =>
           residency._id === id ? response.data.residency : residency
