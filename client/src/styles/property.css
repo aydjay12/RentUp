@@ -372,7 +372,7 @@
 }
 
 .property-error-btn:hover {
-    background: var(--primary-dark);
+    background: var(--primary);
     transform: translateY(-2px);
 }
 
