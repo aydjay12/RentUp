@@ -250,7 +250,7 @@ const Property = () => {
                                             transition={{ duration: 0.1 }}
                                         >
                                             <ShoppingCart size={18} />
-                                            Add to Cart
+                                            {isToggling ? "Adding to cart" : "Add to Cart"}
                                         </motion.button>
                                     )}
                                 </AnimatePresence>
