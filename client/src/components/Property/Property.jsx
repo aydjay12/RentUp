@@ -222,7 +222,7 @@ const Property = () => {
 
                             <div className="action-stack">
                                 <AnimatePresence mode="popLayout">
-                                    {isInCart ? (
+                                    {isInCart && !isToggling ? (
                                         <motion.button
                                             key="remove"
                                             className="action-btn remove-btn"

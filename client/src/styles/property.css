@@ -341,12 +341,16 @@
     border: 1px solid var(--border-light);
     box-shadow: var(--shadow-soft);
     max-width: 450px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .property-error-title {
     font-family: 'Merriweather', serif;
     font-size: 1.8rem;
     margin-bottom: 0.5rem;
+    margin-top: 1.4rem;
 }
 
 .property-error-message {
@@ -365,6 +369,11 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
+}
+
+.property-error-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
 }
 
 .remove-btn-no-hover {
