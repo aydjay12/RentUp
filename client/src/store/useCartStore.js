@@ -78,31 +78,60 @@ export const useCartStore = create((set, get) => ({
   },
 
   addToCart: async (rid) => {
+    const previousCart = get().cartItems;
+    // Optimistic add (placeholder)
+    if (!previousCart.some(item => (item.residency?._id === rid || item._id === rid))) {
+      set({ cartItems: [...previousCart, { _id: rid, residency: { _id: rid } }] });
+      get().calculateTotals();
+    }
+
     try {
       await axiosInstance.post(`/cart/add/${rid}`);
       useSnackbarStore.getState().showSnackbar("Added to cart", "success");
       await get().fetchCart({ skipGlobalLoading: true });
     } catch (error) {
+      set({ cartItems: previousCart }); // Revert
+      get().calculateTotals();
       useSnackbarStore.getState().showSnackbar(error.response?.data?.message || "Error adding to cart", "error");
     }
   },
 
   removeFromCart: async (rid) => {
+    const previousCart = get().cartItems;
+    // Optimistic remove
+    set({ cartItems: previousCart.filter(item => (item.residency?._id !== rid && item._id !== rid)) });
+    get().calculateTotals();
+
     try {
       await axiosInstance.delete(`/cart/remove/${rid}`);
       useSnackbarStore.getState().showSnackbar("Removed from cart", "success");
       await get().fetchCart({ skipGlobalLoading: true });
     } catch (error) {
+      set({ cartItems: previousCart }); // Revert
+      get().calculateTotals();
       useSnackbarStore.getState().showSnackbar(error.response?.data?.message || "Error removing from cart", "error");
     }
   },
 
   toggleCart: async (rid, options = {}) => {
+    const previousCart = get().cartItems;
+    const isAlreadyInCart = previousCart.some(item => (item.residency?._id === rid || item._id === rid));
+
+    // Optimistic toggle
+    if (isAlreadyInCart) {
+      set({ cartItems: previousCart.filter(item => (item.residency?._id !== rid && item._id !== rid)) });
+    } else {
+      set({ cartItems: [...previousCart, { _id: rid, residency: { _id: rid } }] });
+    }
+    get().calculateTotals();
+
     try {
       const response = await axiosInstance.post(`/cart/toggle/${rid}`);
       useSnackbarStore.getState().showSnackbar(response.data.message, "success");
-      await get().fetchCart(options);
+      await get().fetchCart({ ...options, skipGlobalLoading: true });
     } catch (error) {
+      set({ cartItems: previousCart }); // Revert
+      get().calculateTotals();
       useSnackbarStore.getState().showSnackbar(error.response?.data?.message || "Error updating cart", "error");
     }
   },

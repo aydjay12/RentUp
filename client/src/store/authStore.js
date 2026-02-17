@@ -187,8 +187,25 @@ export const useAuthStore = create((set, get) => ({
 
   // RentUp specific: Toggle favorited residency
   toFav: async (rid) => {
+    const previousFavs = get().favorites;
+    const isAlreadyFav = previousFavs.includes(rid);
+
+    // Optimistic toggle
+    const nextFavs = isAlreadyFav
+      ? previousFavs.filter(id => id !== rid)
+      : [...previousFavs, rid];
+
+    set((state) => ({
+      user: {
+        ...state.user,
+        favResidenciesID: nextFavs,
+      },
+      favorites: nextFavs,
+    }));
+
     try {
       const response = await axiosInstance.post(`/auth/toFav/${rid}`);
+      // Success - update with actual server data just in case
       set((state) => ({
         user: {
           ...state.user,
@@ -198,6 +215,14 @@ export const useAuthStore = create((set, get) => ({
       }));
       useSnackbarStore.getState().showSnackbar(response.data.message, "success");
     } catch (error) {
+      // Revert if failed
+      set((state) => ({
+        user: {
+          ...state.user,
+          favResidenciesID: previousFavs,
+        },
+        favorites: previousFavs,
+      }));
       useSnackbarStore.getState().showSnackbar(error.response?.data?.message || "Error updating favorites", "error");
     }
   },
