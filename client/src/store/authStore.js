@@ -1,13 +1,6 @@
 import { create } from "zustand";
-import axios from "axios";
+import axiosInstance from "../lib/axios";
 import useSnackbarStore from "./useSnackbarStore";
-
-const API_URL =
-  import.meta.env.MODE === "development"
-    ? "http://localhost:8000/api/auth"
-    : "https://rent-up-api.vercel.app/api/auth";
-
-axios.defaults.withCredentials = true;
 
 // Token management for iOS/cross-origin compatibility
 const TOKEN_KEY = "auth_token";
@@ -47,7 +40,7 @@ export const useAuthStore = create((set, get) => ({
   register: async (userData) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axios.post(`${API_URL}/register`, userData);
+      const response = await axiosInstance.post("/auth/register", userData);
       set({ isLoading: false });
       return response.data;
     } catch (error) {
@@ -61,7 +54,7 @@ export const useAuthStore = create((set, get) => ({
   verifyEmail: async (email, token) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axios.post(`${API_URL}/verify-email`, { email, code: token });
+      const response = await axiosInstance.post("/auth/verify-email", { email, code: token });
       // Store token for iOS/cross-origin compatibility
       if (response.data.token) {
         setStoredToken(response.data.token);
@@ -83,7 +76,7 @@ export const useAuthStore = create((set, get) => ({
   resendVerification: async (email) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axios.post(`${API_URL}/resend-verification`, { email });
+      const response = await axiosInstance.post("/auth/resend-verification", { email });
       set({ isLoading: false });
       return response.data;
     } catch (error) {
@@ -97,7 +90,7 @@ export const useAuthStore = create((set, get) => ({
   login: async (credentials) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axios.post(`${API_URL}/login`, credentials);
+      const response = await axiosInstance.post("/auth/login", credentials);
       // Store token for iOS/cross-origin compatibility
       if (response.data.token) {
         setStoredToken(response.data.token);
@@ -124,7 +117,7 @@ export const useAuthStore = create((set, get) => ({
   checkAuth: async () => {
     set({ isCheckingAuth: true, error: null });
     try {
-      const response = await axios.get(`${API_URL}/check-auth`);
+      const response = await axiosInstance.get("/auth/check-auth");
       set({
         user: response.data.user,
         isAuthenticated: true,
@@ -149,7 +142,7 @@ export const useAuthStore = create((set, get) => ({
   logout: async () => {
     set({ isLoading: true, error: null });
     try {
-      await axios.post(`${API_URL}/logout`);
+      await axiosInstance.post("/auth/logout");
       // Clear stored token
       setStoredToken(null);
       set({
@@ -168,7 +161,7 @@ export const useAuthStore = create((set, get) => ({
   forgotPassword: async (email) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axios.post(`${API_URL}/forgot-password`, { email });
+      const response = await axiosInstance.post("/auth/forgot-password", { email });
       set({ isLoading: false, message: response.data.message });
       return response.data;
     } catch (error) {
@@ -182,7 +175,7 @@ export const useAuthStore = create((set, get) => ({
   resetPassword: async (token, password) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axios.post(`${API_URL}/reset-password`, { token, password });
+      const response = await axiosInstance.post("/auth/reset-password", { token, password });
       set({ isLoading: false, message: response.data.message });
       return response.data;
     } catch (error) {
@@ -195,7 +188,7 @@ export const useAuthStore = create((set, get) => ({
   // RentUp specific: Toggle favorited residency
   toFav: async (rid) => {
     try {
-      const response = await axios.post(`${API_URL}/toFav/${rid}`);
+      const response = await axiosInstance.post(`/auth/toFav/${rid}`);
       set((state) => ({
         user: {
           ...state.user,
@@ -213,7 +206,7 @@ export const useAuthStore = create((set, get) => ({
   getAllFav: async () => {
     set({ favoritesLoading: true });
     try {
-      const response = await axios.get(`${API_URL}/allFav`);
+      const response = await axiosInstance.get("/auth/allFav");
       set({ favorites: response.data, favoritesLoading: false });
     } catch (error) {
       set({ favoritesLoading: false });
@@ -223,7 +216,7 @@ export const useAuthStore = create((set, get) => ({
 
   fetchProfile: async () => {
     try {
-      const response = await axios.get(`${API_URL}/profile`);
+      const response = await axiosInstance.get("/auth/profile");
       set({ user: response.data.user });
     } catch (error) {
       console.error("Error fetching profile:", error);
@@ -233,7 +226,7 @@ export const useAuthStore = create((set, get) => ({
   updateProfile: async (updatedData) => {
     set({ isLoading: true });
     try {
-      const response = await axios.put(`${API_URL}/profile`, updatedData);
+      const response = await axiosInstance.put("/auth/profile", updatedData);
       set({ user: response.data.user, isLoading: false });
       useSnackbarStore.getState().showSnackbar(response.data.message || "Profile updated", "success");
     } catch (error) {
@@ -247,7 +240,7 @@ export const useAuthStore = create((set, get) => ({
     const formData = new FormData();
     formData.append("image", file);
     try {
-      const response = await axios.post(`${API_URL}/profile/upload-image`, formData, {
+      const response = await axiosInstance.post("/auth/profile/upload-image", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       set((state) => ({
