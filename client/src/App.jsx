@@ -119,7 +119,7 @@ const SharedLayout = () => {
 
 const App = () => {
   const queryClient = new QueryClient();
-  const { checkAuth } = useAuthStore();
+  const { checkAuth, isCheckingAuth } = useAuthStore();
   const { fetchCart, cartItems } = useCartStore();
   const { isOpen, message, type, hideSnackbar } = useSnackbarStore();
   const location = useLocation(); // Track route changes
@@ -130,9 +130,12 @@ const App = () => {
   }, [checkAuth]);
 
   // Fetch cart on initial load and route changes
+  // Only fetch after the initial auth check is complete to avoid race conditions
   useEffect(() => {
-    fetchCart();
-  }, [fetchCart, location.pathname]); // Re-fetch when pathname changes
+    if (!isCheckingAuth) {
+      fetchCart();
+    }
+  }, [fetchCart, location.pathname, isCheckingAuth]); // Re-fetch when pathname or auth check status changes
 
   // Log cart items for debugging
   useEffect(() => { }, [cartItems]);
